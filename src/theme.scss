@@ -1,0 +1,32 @@
+$main-color: #5599ff;
+$secondary-color: cyan;
+$danger-color: #992244;
+$success-color: #227744;
+$rainbow: linear-gradient(
+  to bottom right,
+  red 15%,
+  orange 30%,
+  yellow 50%,
+  cyan 70%,
+  blue 85%
+);
+$font-family: sans-serif;
+$border-radius: 0.4rem;
+
+@mixin hover {
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      @content;
+    }
+  }
+
+  &.touching {
+    @content;
+  }
+}
+
+%rainbow-text {
+  background: $rainbow;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

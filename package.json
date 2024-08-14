@@ -1,0 +1,25 @@
+{
+  "name": "triskaidekaphobia",
+  "version": "1.0.0",
+  "main": "index",
+  "scripts": {
+    "build": "npm rum clean && rollup -c",
+    "clean": "rimraf dist && mkdirp dist",
+    "start": "mkdirp out && rollup -c -w"
+  },
+  "devDependencies": {
+    "mkdirp": "^3.0.1",
+    "prettier": "^3.0.3",
+    "rimraf": "^5.0.1",
+    "rollup": "^2.77.3",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-copy": "^3.5.0",
+    "rollup-plugin-html-bundle": "^0.0.3",
+    "rollup-plugin-livereload": "^2.0.5",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-serve": "^2.0.2",
+    "rollup-plugin-styles": "^4.0.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "sass": "^1.66.1"
+  }
+}

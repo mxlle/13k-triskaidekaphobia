@@ -1,0 +1,161 @@
+@import "theme";
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  font-size: 12px;
+
+  @media (min-width: 375px) {
+    font-size: 16px;
+  }
+
+  @media (min-width: 480px) {
+    font-size: 20px;
+  }
+
+  @media (min-width: 600px) {
+    font-size: 24px;
+  }
+}
+
+body {
+  background: #09162a;
+  color: white;
+  font-family: $font-family;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  hyphens: auto;
+  overflow: hidden;
+}
+
+.main-container {
+  text-align: center;
+  display: grid;
+  gap: 1.5rem;
+  grid-auto-rows: min-content;
+  justify-items: center;
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+}
+
+header {
+  display: grid;
+  box-sizing: border-box;
+  padding: 0.5rem 1rem;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.1rem 1.5rem;
+  width: 100%;
+  font-family: cursive;
+
+  h1 {
+    font-size: 1.3rem;
+    margin: 0;
+  }
+}
+
+.game-field {
+  width: min(80vw, 80vh);
+  height: min(80vw, 80vh);
+  display: grid;
+  gap: 0.25rem;
+  grid-template-columns: repeat(13, 1fr);
+  margin: 2rem auto;
+
+  .row {
+    display: contents;
+  }
+
+  .cell {
+    background: #152134;
+    display: grid;
+    place-items: center;
+    color: $main-color;
+    cursor: pointer;
+    border-radius: 6px;
+
+    &.selected {
+      background: #aaccff;
+    }
+  }
+}
+
+input {
+  box-sizing: border-box;
+  font-size: 2rem;
+  width: 100%;
+  background: #152134;
+  border: 1px solid #213345;
+  color: white;
+  text-align: center;
+  border-radius: 4px;
+
+  &::placeholder {
+    font-size: 0.7em;
+    color: #96a6b6;
+    font-style: italic;
+  }
+
+  &:focus-within {
+    outline: none;
+    border-color: cyan;
+  }
+}
+
+button,
+label {
+  font-family: $font-family;
+  cursor: pointer;
+  color: white;
+  border: 1px solid rgba(white, 0.1);
+  background-color: rgba(white, 0.06);
+  padding: 1rem 2rem;
+  border-radius: $border-radius;
+
+  @include hover {
+    background-color: rgba(white, 0.1);
+  }
+
+  &.primary-btn {
+    border: 1px solid $main-color;
+    background-color: rgba($main-color, 0.1);
+
+    @include hover {
+      background-color: rgba($main-color, 0.2);
+    }
+  }
+
+  &[disabled] {
+    opacity: 0.3;
+    pointer-events: none;
+  }
+}
+
+%no-bg-btn {
+  background: none;
+  border: none;
+
+  @include hover {
+    background: none;
+  }
+}
+
+button.icon-btn {
+  @extend %no-bg-btn;
+  padding: 0.5rem;
+  font-size: 0.9em;
+  color: #ccc;
+  transform: scale(1);
+  transition: transform 0.3s;
+
+  @include hover {
+    transform: scale(1.2);
+  }
+}

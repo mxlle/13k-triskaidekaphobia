@@ -1,0 +1,61 @@
+.dialog {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: black;
+  color: white;
+  display: grid;
+  grid-template-rows: 1fr min-content;
+  text-align: center;
+  transform: translateY(0);
+  opacity: 1;
+  transition:
+    transform 0.5s,
+    opacity 0.5s;
+
+  &:not(.open) {
+    transform: translateY(100%);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  &.has-header {
+    grid-template-rows: min-content 1fr min-content;
+  }
+
+  .content {
+    display: grid;
+    margin-bottom: 1.5rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    &.is-overflowing {
+      align-content: start;
+    }
+  }
+
+  .icon-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+  }
+}
+
+.btns {
+  background: black;
+  display: grid;
+  gap: 1rem;
+  margin: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: center;
+  justify-content: center;
+  max-width: 800px;
+  width: calc(100% - 2rem);
+  justify-self: center;
+
+  button {
+    white-space: nowrap;
+  }
+}
