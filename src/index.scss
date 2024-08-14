@@ -79,18 +79,38 @@ header {
     display: grid;
     place-items: center;
     color: $main-color;
-    cursor: pointer;
     font-size: 1.5em;
+    position: relative;
 
     &.table {
       color: transparent;
-      background: #522d1e;
+      background: #563232;
       margin: -1px;
-      cursor: default;
     }
 
-    &.selected:not(.table) {
-      background: #aaccff;
+    &.door {
+      background: #333741;
+    }
+
+    &:not(.table):not(.door) {
+      cursor: pointer;
+
+      &.selected {
+        background: #aaccff;
+      }
+    }
+
+    .fear {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      display: grid;
+      place-items: center;
+      font-size: 0.4em;
+      line-height: 1;
+      background: $danger-color;
+      width: 40%;
+      height: 40%;
     }
   }
 }

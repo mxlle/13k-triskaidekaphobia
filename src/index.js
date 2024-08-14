@@ -65,24 +65,34 @@ function init() {
 
     row.forEach((cell, j) => {
       const cellElem = createElement({
-        cssClass: `cell${cell === "🟫" ? " table" : ""}`,
-        text: cell,
+        cssClass: `cell${cell.type === TABLE ? " table" : ""}${cell.type === DOOR_ ? " door" : ""}`,
+        text: cell.content,
         onClick: (event) => {
           event.target.classList.toggle("selected");
         },
       });
       rowElem.append(cellElem);
+
+      if (cell.fear) {
+        const fearElem = createElement({
+          cssClass: "fear",
+          text: cell.fear,
+        });
+        cellElem.append(fearElem);
+      }
     });
   });
 }
 
+const GUEST = "👤";
 const EMPTY = "";
 const TABLE = "🟫";
 const CHAIR = "🪑";
 const DOOR_ = "🚪";
+const WINDO = "🪟";
 
 const baseField = [
-  [DOOR_, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, DOOR_],
+  [DOOR_, GUEST, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, WINDO],
   [EMPTY, EMPTY, EMPTY, CHAIR, EMPTY, EMPTY, EMPTY, CHAIR, EMPTY, EMPTY, EMPTY],
   [EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY],
   [EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY],
@@ -92,7 +102,7 @@ const baseField = [
   [EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY],
   [EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY],
   [EMPTY, EMPTY, EMPTY, CHAIR, EMPTY, EMPTY, EMPTY, CHAIR, EMPTY, EMPTY, EMPTY],
-  [DOOR_, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, DOOR_],
+  [WINDO, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, WINDO],
 ];
 
 function getGameFieldData() {
@@ -103,16 +113,37 @@ function getGameFieldData() {
     for (let j = 0; j < baseRow.length; j++) {
       const baseCell = baseRow[j];
 
-      if (baseCell === CHAIR) {
-        row.push(Math.random() > 0.4 ? getRandomEmoji() : baseCell);
-      } else {
-        row.push(baseCell);
-      }
+      row.push(getGameFieldObject(baseCell));
     }
     gameField.push(row);
   }
 
   return gameField;
+}
+
+function getGameFieldObject(type) {
+  if (type === CHAIR || type === GUEST) {
+    const content =
+      Math.random() > 0.3 || type === GUEST ? getRandomEmoji() : type;
+    let fear = "";
+
+    if (content !== CHAIR) {
+      do {
+        fear = getRandomEmoji();
+      } while (content === fear);
+    }
+
+    return {
+      type,
+      content,
+      fear,
+    };
+  }
+
+  return {
+    type,
+    content: type,
+  };
 }
 
 function getRandomEmoji() {
