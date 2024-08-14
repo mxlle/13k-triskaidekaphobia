@@ -1,8 +1,7 @@
-import { resetGlobals } from "./globals";
-
 export function newGame() {
-  resetGlobals();
-  initGameData();
+  // resetGlobals();
+  // initGameData();
+  location.reload();
 }
 
 export function initGameData() {
