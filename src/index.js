@@ -65,7 +65,7 @@ function init() {
 
     row.forEach((cell, j) => {
       const cellElem = createElement({
-        cssClass: "cell",
+        cssClass: `cell${cell === "🟫" ? " table" : ""}`,
         text: cell,
         onClick: (event) => {
           event.target.classList.toggle("selected");
@@ -76,14 +76,38 @@ function init() {
   });
 }
 
+const EMPTY = "";
+const TABLE = "🟫";
+const CHAIR = "🪑";
+const DOOR_ = "🚪";
+
+const baseField = [
+  [DOOR_, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, DOOR_],
+  [EMPTY, EMPTY, EMPTY, CHAIR, EMPTY, EMPTY, EMPTY, CHAIR, EMPTY, EMPTY, EMPTY],
+  [EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY],
+  [EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY],
+  [EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY],
+  [EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY],
+  [EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY],
+  [EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY],
+  [EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY],
+  [EMPTY, EMPTY, EMPTY, CHAIR, EMPTY, EMPTY, EMPTY, CHAIR, EMPTY, EMPTY, EMPTY],
+  [DOOR_, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, DOOR_],
+];
+
 function getGameFieldData() {
   const gameField = [];
-  const rows = 13;
-  const cols = 13;
-  for (let i = 0; i < rows; i++) {
+  for (let i = 0; i < baseField.length; i++) {
+    const baseRow = baseField[i];
     const row = [];
-    for (let j = 0; j < cols; j++) {
-      row.push(Math.random() > 0.5 ? getRandomEmoji() : "");
+    for (let j = 0; j < baseRow.length; j++) {
+      const baseCell = baseRow[j];
+
+      if (baseCell === CHAIR) {
+        row.push(Math.random() > 0.4 ? getRandomEmoji() : baseCell);
+      } else {
+        row.push(baseCell);
+      }
     }
     gameField.push(row);
   }

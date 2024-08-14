@@ -65,8 +65,9 @@ header {
   width: min(80vw, 80vh);
   height: min(80vw, 80vh);
   display: grid;
-  gap: 0.25rem;
-  grid-template-columns: repeat(13, 1fr);
+  gap: 1px;
+  grid-template-columns: repeat(11, 1fr);
+  grid-template-rows: repeat(11, 1fr);
   margin: 2rem auto;
 
   .row {
@@ -79,9 +80,16 @@ header {
     place-items: center;
     color: $main-color;
     cursor: pointer;
-    border-radius: 6px;
+    font-size: 1.5em;
 
-    &.selected {
+    &.table {
+      color: transparent;
+      background: #522d1e;
+      margin: -1px;
+      cursor: default;
+    }
+
+    &.selected:not(.table) {
       background: #aaccff;
     }
   }
