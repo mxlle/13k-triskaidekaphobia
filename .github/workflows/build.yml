@@ -1,0 +1,35 @@
+name: Build
+
+on: push
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: bahmutov/npm-install@v1
+
+      - name: Build
+        run: npm run build
+
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: dist
+          path: dist
+
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    steps:
+      - name: Create Deployment
+        id: deploy
+        uses: abendigo/create-deployment@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          payload: ${{ github.run_id }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
