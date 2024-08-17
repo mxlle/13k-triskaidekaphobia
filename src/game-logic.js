@@ -134,3 +134,11 @@ function getGuestsOnTable(gameFieldData, tableIndex) {
     .flat()
     .filter((cell) => cell.tableIndex === tableIndex && hasPerson(cell));
 }
+
+export function getAllGuests(gameFieldData) {
+  return gameFieldData.flat().filter(hasPerson);
+}
+
+export function getHappyGuests(gameFieldData) {
+  return getAllGuests(gameFieldData).filter((guest) => !guest.hasPanic);
+}

@@ -1,6 +1,7 @@
 import { createButton, createElement } from "../../utils/html-utils";
 
 import "./index.scss";
+import { getTranslation, TranslationKey } from "../../translations";
 
 let zIndexCounter = 0;
 
@@ -35,7 +36,7 @@ export function createDialog(innerElement, submitButtonText, headerText) {
     buttons = createElement({ cssClass: "btns" });
 
     cancelButton = createButton({
-      text: "Cancel",
+      text: getTranslation(TranslationKey.CANCEL),
       onClick: closeDialog,
     });
     buttons.appendChild(cancelButton);

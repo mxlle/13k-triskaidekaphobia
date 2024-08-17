@@ -2,12 +2,27 @@ import { getShortLanguageName } from "../utils/language-util";
 
 export const TranslationKey = {
   WELCOME: 0,
+  WIN: 1,
+  PLAY_AGAIN: 2,
+  CANCEL: 3,
 };
 
 const Translation = {
   [TranslationKey.WELCOME]: {
     en: "Welcome",
     de: "Willkommen",
+  },
+  [TranslationKey.WIN]: {
+    en: "You win 🎉",
+    de: "Gewonnen 🎉",
+  },
+  [TranslationKey.PLAY_AGAIN]: {
+    en: "Play again",
+    de: "Nochmal spielen",
+  },
+  [TranslationKey.CANCEL]: {
+    en: "Cancel",
+    de: "Abbrechen",
   },
 };
 

@@ -61,6 +61,13 @@ header {
   }
 }
 
+.win-screen {
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  font-size: 3rem;
+}
+
 input {
   box-sizing: border-box;
   font-size: 2rem;

@@ -3,8 +3,10 @@ import "./index.scss";
 import { createButton, createElement } from "./utils/html-utils";
 import {
   checkTableStates,
+  getAllGuests,
   getGameFieldData,
   getGuestsOnTable,
+  getHappyGuests,
   initGameData,
   newGame,
 } from "./game-logic";
@@ -17,7 +19,7 @@ import {
   updatePanicStates,
 } from "./components/game-field";
 
-let configDialog;
+let configDialog, scoreElement;
 
 let clickedCell;
 
@@ -53,9 +55,15 @@ function init() {
       text: `${getTranslation(TranslationKey.WELCOME)}`,
     }),
   );
-  header.append(
-    createButton({ text: "⚙️", onClick: openConfig, iconBtn: true }),
-  );
+  // header.append(
+  //   createButton({ text: "⚙️", onClick: openConfig, iconBtn: true }),
+  // );
+
+  scoreElement = createElement({
+    cssClass: "score",
+  });
+
+  header.append(scoreElement);
 
   document.body.append(header);
 
@@ -83,6 +91,28 @@ function init() {
 function updateState(gameFieldData) {
   checkTableStates(gameFieldData);
   updatePanicStates(gameFieldData);
+  const happyGuests = getHappyGuests(gameFieldData);
+  const totalGuests = getAllGuests(gameFieldData);
+  const unhappyGuests = totalGuests.filter((g) => !happyGuests.includes(g));
+  const unseatedGuests = totalGuests.filter((g) => g.tableIndex === undefined);
+  const numHappyGuests = happyGuests.length - unseatedGuests.length;
+  scoreElement.textContent = `${unseatedGuests.length}🚪 + ${unhappyGuests.length} 😱 + ${numHappyGuests} 😀 / ${totalGuests.length}`;
+
+  if (numHappyGuests === totalGuests.length) {
+    createDialog(
+      createElement({
+        text: getTranslation(TranslationKey.WIN),
+        cssClass: "win-screen",
+      }),
+      getTranslation(TranslationKey.PLAY_AGAIN),
+    )
+      .open()
+      .then((playAgain) => {
+        if (playAgain) {
+          newGame();
+        }
+      });
+  }
 }
 
 // INIT
