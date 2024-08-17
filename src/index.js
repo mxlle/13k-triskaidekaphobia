@@ -53,9 +53,13 @@ function init() {
     console.log("cell clicked", cell, i, j);
     if (clickedCell) {
       moveGuest(clickedCell, cell);
+      clickedCell.elem.classList.remove("selected");
+      cell.elem.classList.remove("selected");
       clickedCell = undefined;
+      document.body.classList.remove("selecting");
     } else {
       clickedCell = cell;
+      document.body.classList.add("selecting");
     }
   }
 

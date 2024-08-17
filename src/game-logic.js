@@ -30,10 +30,20 @@ export function isDoor(typeOrObject) {
   return type === DOOR_;
 }
 
+export function isWindow(typeOrObject) {
+  const type =
+    typeof typeOrObject === "string" ? typeOrObject : typeOrObject.type;
+  return type === WINDO;
+}
+
 export function isChair(typeOrObject) {
   const type =
     typeof typeOrObject === "string" ? typeOrObject : typeOrObject.type;
   return type === CHAIR;
+}
+
+export function hasPerson(cell) {
+  return !!cell.fear;
 }
 
 const GUEST = "👤";

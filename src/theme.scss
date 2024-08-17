@@ -2,6 +2,7 @@ $main-color: #5599ff;
 $secondary-color: cyan;
 $danger-color: #992244;
 $success-color: #227744;
+$success-color-light: #44aa77;
 $rainbow: linear-gradient(
   to bottom right,
   red 15%,
@@ -29,4 +30,39 @@ $border-radius: 0.4rem;
   background: $rainbow;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+@mixin selectable($bg-base: white) {
+  &:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      to bottom right,
+      rgba($bg-base, 0.1),
+      rgba($bg-base, 0.2)
+    );
+    pointer-events: none;
+    animation: opacityBlink 3s infinite linear;
+  }
+
+  &:hover:after {
+    animation: none;
+    background: rgba($bg-base, 0.3);
+  }
+}
+
+@keyframes opacityBlink {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
 }

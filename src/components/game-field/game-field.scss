@@ -20,23 +20,22 @@
     color: $main-color;
     font-size: 1.5em;
     position: relative;
+    cursor: pointer;
 
     &.table {
       color: transparent;
       background: #563232;
       margin: -1px;
+      pointer-events: none;
     }
 
     &.door {
       background: #333741;
+      pointer-events: none;
     }
 
-    &:not(.table):not(.door) {
-      cursor: pointer;
-
-      &.selected {
-        background: #aaccff;
-      }
+    &.selected {
+      background: #aaccff;
     }
 
     span {
@@ -57,6 +56,33 @@
 
       &.hidden {
         display: none;
+      }
+    }
+  }
+}
+
+body {
+  &:not(.selecting) {
+    .cell {
+      &.has-person {
+        @include selectable;
+      }
+
+      &:not(.has-person) {
+        pointer-events: none;
+      }
+    }
+  }
+
+  &.selecting {
+    .cell {
+      &:not(.chair),
+      &.has-person:not(.selected) {
+        pointer-events: none;
+      }
+
+      &.chair:not(.has-person) {
+        @include selectable($success-color-light);
       }
     }
   }

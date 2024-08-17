@@ -1,7 +1,14 @@
 import "./game-field.scss";
 
 import { createElement } from "../../utils/html-utils";
-import { isDoor, isTable } from "../../game-logic";
+import {
+  hasPerson,
+  isChair,
+  isDoor,
+  isGuest,
+  isTable,
+  isWindow,
+} from "../../game-logic";
 
 export function getGameField(gameFieldData, cellClickHandler) {
   const gameField = createElement({
@@ -16,12 +23,28 @@ export function getGameField(gameFieldData, cellClickHandler) {
 
     row.forEach((cell, j) => {
       const cellElem = createElement({
-        cssClass: `cell${isTable(cell) ? " table" : ""}${isDoor(cell) ? " door" : ""}`,
+        cssClass: "cell",
         onClick: (event) => {
           event.target.classList.toggle("selected");
           cellClickHandler && cellClickHandler(cell, i, j);
         },
       });
+
+      if (hasPerson(cell)) {
+        cellElem.classList.add("has-person");
+      }
+
+      if (isDoor(cell) || isWindow(cell)) {
+        cellElem.classList.add("door");
+      }
+
+      if (isTable(cell)) {
+        cellElem.classList.add("table");
+      }
+
+      if (isChair(cell)) {
+        cellElem.classList.add("chair");
+      }
 
       rowElem.append(cellElem);
 
@@ -51,18 +74,17 @@ export function getGameField(gameFieldData, cellClickHandler) {
 export function moveGuest(fromCell, toCell) {
   const fromContent = fromCell.content;
   const fromFear = fromCell.fear;
-  fromCell.content = fromCell.type;
+  fromCell.content = isGuest(fromCell) ? "" : fromCell.type;
   fromCell.fear = "";
   toCell.content = fromContent;
   toCell.fear = fromFear;
   updateCell(fromCell);
   updateCell(toCell);
-  fromCell.elem.classList.remove("selected");
-  toCell.elem.classList.remove("selected");
 }
 
 function updateCell(cell) {
   cell.textElem.textContent = cell.content;
   cell.fearElem.textContent = cell.fear;
   cell.fearElem.classList.toggle("hidden", !cell.fear);
+  cell.elem.classList.toggle("has-person", hasPerson(cell));
 }
