@@ -5,7 +5,6 @@ import {
   hasPerson,
   isChair,
   isDoor,
-  isGuest,
   isTable,
   isWindow,
 } from "../../game-logic";
@@ -40,6 +39,11 @@ export function getGameField(gameFieldData, cellClickHandler) {
 
       if (isTable(cell)) {
         cellElem.classList.add("table");
+
+        if (i === Math.ceil(gameFieldData.length / 2) - 1) {
+          cellElem.classList.add("middle");
+          cellElem.textContent = "13";
+        }
       }
 
       if (isChair(cell)) {
@@ -54,7 +58,9 @@ export function getGameField(gameFieldData, cellClickHandler) {
         text: cell.content,
       });
 
-      cellElem.append(textElem);
+      if (!isTable(cell)) {
+        cellElem.append(textElem);
+      }
 
       const fearElem = createElement({
         cssClass: `fear${cell.fear ? "" : " hidden"}`,
@@ -62,41 +68,46 @@ export function getGameField(gameFieldData, cellClickHandler) {
       });
       cellElem.append(fearElem);
 
+      const smallFearElem = createElement({
+        cssClass: `fear small${cell.smallFear ? "" : " hidden"}`,
+        text: cell.smallFear,
+      });
+      cellElem.append(smallFearElem);
+
       cell.elem = cellElem;
       cell.textElem = textElem;
       cell.fearElem = fearElem;
+      cell.smallFearElem = smallFearElem;
     });
   });
 
   return gameField;
 }
 
-export function moveGuest(fromCell, toCell) {
-  const fromContent = fromCell.content;
-  const fromFear = fromCell.fear;
-  fromCell.content = isGuest(fromCell) ? "" : fromCell.type;
-  fromCell.fear = "";
-  fromCell.hasPanic = false;
-  toCell.content = fromContent;
-  toCell.fear = fromFear;
-  updateCell(fromCell);
-  updateCell(toCell);
-}
-
-function updateCell(cell) {
+export function updateCell(cell) {
   cell.textElem.textContent = cell.content;
   cell.fearElem.textContent = cell.fear;
   cell.fearElem.classList.toggle("hidden", !cell.fear);
+  cell.smallFearElem.textContent = cell.smallFear;
+  cell.smallFearElem.classList.toggle("hidden", !cell.smallFear);
   cell.elem.classList.toggle("has-person", hasPerson(cell));
   cell.elem.classList.toggle("panic", cell.hasPanic);
 }
 
-export function updatePanicStates(gameFieldData) {
+export function updatePanicStates(gameFieldData, panickedTableCells) {
+  gameFieldData.flat().forEach((cell) => {
+    cell.elem.classList.remove("scary");
+  });
+
   gameFieldData.forEach((row) => {
     row.forEach((cell) => {
       if (isChair(cell) && hasPerson(cell)) {
         cell.elem.classList.toggle("panic", cell.hasPanic);
       }
     });
+  });
+
+  panickedTableCells.forEach((cell) => {
+    cell.elem.classList.add("scary");
   });
 }

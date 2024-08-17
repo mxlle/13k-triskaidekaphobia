@@ -5,9 +5,9 @@ import {
   checkTableStates,
   getAllGuests,
   getGameFieldData,
-  getGuestsOnTable,
   getHappyGuests,
   initGameData,
+  moveGuest,
   newGame,
 } from "./game-logic";
 import { getTranslation, TranslationKey } from "./translations";
@@ -15,7 +15,7 @@ import { createDialog } from "./components/dialog";
 import { PubSubEvent, pubSubService } from "./utils/pub-sub-service";
 import {
   getGameField,
-  moveGuest,
+  updateCell,
   updatePanicStates,
 } from "./components/game-field";
 
@@ -67,9 +67,13 @@ function init() {
 
   document.body.append(header);
 
-  function cellClickHandler(cell, i, j) {
+  function cellClickHandler(cell) {
+    console.log("cellClickHandler", cell);
+
     if (clickedCell) {
       moveGuest(clickedCell, cell);
+      updateCell(clickedCell);
+      updateCell(cell);
       clickedCell.elem.classList.remove("selected");
       cell.elem.classList.remove("selected");
       clickedCell = undefined;
@@ -78,6 +82,9 @@ function init() {
     } else {
       clickedCell = cell;
       document.body.classList.add("selecting");
+      clickedCell.afraidOf?.forEach((afraidOf) => {
+        afraidOf.elem.classList.add("scary");
+      });
     }
   }
 
@@ -89,8 +96,8 @@ function init() {
 }
 
 function updateState(gameFieldData) {
-  checkTableStates(gameFieldData);
-  updatePanicStates(gameFieldData);
+  const panickedTableCells = checkTableStates(gameFieldData);
+  updatePanicStates(gameFieldData, panickedTableCells);
   const happyGuests = getHappyGuests(gameFieldData);
   const totalGuests = getAllGuests(gameFieldData);
   const unhappyGuests = totalGuests.filter((g) => !happyGuests.includes(g));

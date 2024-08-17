@@ -7,7 +7,7 @@
   gap: 1px;
   grid-template-columns: repeat(11, 1fr);
   grid-template-rows: repeat(11, 1fr);
-  margin: 2rem auto;
+  margin: 1rem auto;
 
   .row {
     display: contents;
@@ -27,6 +27,7 @@
       background: #563232;
       margin: -1px;
       pointer-events: none;
+      z-index: 1;
     }
 
     &.door {
@@ -40,6 +41,20 @@
 
     &.panic {
       background: $danger-color-light;
+    }
+
+    &.scary {
+      &.table {
+        animation: scale-pulse-small 2s infinite;
+
+        &.middle {
+          color: $danger-color-light;
+        }
+      }
+
+      span {
+        animation: scale-pulse-big 2s infinite;
+      }
     }
 
     span {
@@ -60,6 +75,13 @@
 
       &.hidden {
         display: none;
+      }
+
+      &.small {
+        width: 35%;
+        height: 35%;
+        left: 0;
+        right: auto;
       }
     }
   }
@@ -89,5 +111,29 @@ body {
         @include selectable($success-color-light);
       }
     }
+  }
+}
+
+@keyframes scale-pulse-small {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes scale-pulse-big {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
   }
 }
