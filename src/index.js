@@ -1,13 +1,15 @@
 import "./index.scss";
 
 import { createButton, createElement } from "./utils/html-utils";
-import { initGameData, newGame } from "./game-logic";
+import { getGameFieldData, initGameData, newGame } from "./game-logic";
 import { getTranslation, TranslationKey } from "./translations";
 import { createDialog } from "./components/dialog";
 import { PubSubEvent, pubSubService } from "./utils/pub-sub-service";
-import { getGameField } from "./components/game-field";
+import { getGameField, moveGuest } from "./components/game-field";
 
 let configDialog;
+
+let clickedCell;
 
 function onNewGameClick() {
   newGame();
@@ -47,7 +49,18 @@ function init() {
 
   document.body.append(header);
 
-  const gameField = getGameField();
+  function cellClickHandler(cell, i, j) {
+    console.log("cell clicked", cell, i, j);
+    if (clickedCell) {
+      moveGuest(clickedCell, cell);
+      clickedCell = undefined;
+    } else {
+      clickedCell = cell;
+    }
+  }
+
+  const gameFieldData = getGameFieldData();
+  const gameField = getGameField(gameFieldData, cellClickHandler);
   document.body.append(gameField);
 }
 
