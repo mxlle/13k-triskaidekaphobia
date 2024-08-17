@@ -69,45 +69,68 @@ const baseField = [
 
 export function getGameFieldData() {
   const gameField = [];
-  for (let i = 0; i < baseField.length; i++) {
-    const baseRow = baseField[i];
-    const row = [];
-    for (let j = 0; j < baseRow.length; j++) {
-      const baseCell = baseRow[j];
+  for (let row = 0; row < baseField.length; row++) {
+    const baseRow = baseField[row];
+    const rowArray = [];
+    for (let column = 0; column < baseRow.length; column++) {
+      const baseCell = baseRow[column];
 
-      row.push(getGameFieldObject(baseCell));
+      rowArray.push(getGameFieldObject(baseCell, row, column));
     }
-    gameField.push(row);
+    gameField.push(rowArray);
   }
 
   return gameField;
 }
 
-function getGameFieldObject(type) {
+function getGameFieldObject(type, row, column) {
+  let content = type;
+  let fear = "";
+  let tableIndex = undefined;
+
   if (isChair(type) || isGuest(type)) {
-    const content =
-      Math.random() > 0.3 || isGuest(type) ? getRandomEmoji() : type;
-    let fear = "";
+    content = Math.random() > 0.3 || isGuest(type) ? getRandomEmoji() : type;
 
     if (!isChair(content)) {
       do {
         fear = getRandomEmoji();
       } while (content === fear);
     }
+  }
 
-    return {
-      type,
-      content,
-      fear,
-    };
+  if (isChair(type)) {
+    tableIndex = column > 4 ? 1 : 0;
   }
 
   return {
     type,
-    content: type,
+    content,
+    fear,
+    row,
+    column,
+    tableIndex,
   };
 }
 
 function getRandomEmoji() {
   return getRandomItem(splitEmojis(phobias));
+}
+
+export function checkTableStates(gameFieldData) {
+  for (let i = 0; i < 2; i++) {
+    const guests = getGuestsOnTable(gameFieldData, i);
+    const isPanic = guests.length === 13;
+    guests.forEach((guest) => {
+      guest.hasPanic =
+        isPanic ||
+        guests.findIndex((otherGuest) => otherGuest.content === guest.fear) !==
+          -1;
+    });
+  }
+}
+
+function getGuestsOnTable(gameFieldData, tableIndex) {
+  return gameFieldData
+    .flat()
+    .filter((cell) => cell.tableIndex === tableIndex && hasPerson(cell));
 }

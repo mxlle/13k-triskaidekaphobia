@@ -76,6 +76,7 @@ export function moveGuest(fromCell, toCell) {
   const fromFear = fromCell.fear;
   fromCell.content = isGuest(fromCell) ? "" : fromCell.type;
   fromCell.fear = "";
+  fromCell.hasPanic = false;
   toCell.content = fromContent;
   toCell.fear = fromFear;
   updateCell(fromCell);
@@ -87,4 +88,15 @@ function updateCell(cell) {
   cell.fearElem.textContent = cell.fear;
   cell.fearElem.classList.toggle("hidden", !cell.fear);
   cell.elem.classList.toggle("has-person", hasPerson(cell));
+  cell.elem.classList.toggle("panic", cell.hasPanic);
+}
+
+export function updatePanicStates(gameFieldData) {
+  gameFieldData.forEach((row) => {
+    row.forEach((cell) => {
+      if (isChair(cell) && hasPerson(cell)) {
+        cell.elem.classList.toggle("panic", cell.hasPanic);
+      }
+    });
+  });
 }

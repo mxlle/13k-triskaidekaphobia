@@ -1,6 +1,7 @@
 $main-color: #5599ff;
 $secondary-color: cyan;
 $danger-color: #992244;
+$danger-color-light: #cc6677;
 $success-color: #227744;
 $success-color-light: #44aa77;
 $rainbow: linear-gradient(
@@ -32,7 +33,7 @@ $border-radius: 0.4rem;
   -webkit-text-fill-color: transparent;
 }
 
-@mixin selectable($bg-base: white) {
+@mixin selectable($bg-base: white, $alpha1: 0.1, $alpha2: 0.2) {
   &:after {
     content: "";
     position: absolute;
@@ -42,8 +43,8 @@ $border-radius: 0.4rem;
     bottom: 0;
     background: linear-gradient(
       to bottom right,
-      rgba($bg-base, 0.1),
-      rgba($bg-base, 0.2)
+      rgba($bg-base, $alpha1),
+      rgba($bg-base, $alpha2)
     );
     pointer-events: none;
     animation: opacityBlink 3s infinite linear;

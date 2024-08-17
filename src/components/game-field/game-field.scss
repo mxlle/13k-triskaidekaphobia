@@ -35,7 +35,11 @@
     }
 
     &.selected {
-      background: #aaccff;
+      @include selectable($secondary-color, 0.3, 0.5);
+    }
+
+    &.panic {
+      background: $danger-color-light;
     }
 
     span {

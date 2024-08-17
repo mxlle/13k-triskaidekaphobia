@@ -1,11 +1,21 @@
 import "./index.scss";
 
 import { createButton, createElement } from "./utils/html-utils";
-import { getGameFieldData, initGameData, newGame } from "./game-logic";
+import {
+  checkTableStates,
+  getGameFieldData,
+  getGuestsOnTable,
+  initGameData,
+  newGame,
+} from "./game-logic";
 import { getTranslation, TranslationKey } from "./translations";
 import { createDialog } from "./components/dialog";
 import { PubSubEvent, pubSubService } from "./utils/pub-sub-service";
-import { getGameField, moveGuest } from "./components/game-field";
+import {
+  getGameField,
+  moveGuest,
+  updatePanicStates,
+} from "./components/game-field";
 
 let configDialog;
 
@@ -50,13 +60,13 @@ function init() {
   document.body.append(header);
 
   function cellClickHandler(cell, i, j) {
-    console.log("cell clicked", cell, i, j);
     if (clickedCell) {
       moveGuest(clickedCell, cell);
       clickedCell.elem.classList.remove("selected");
       cell.elem.classList.remove("selected");
       clickedCell = undefined;
       document.body.classList.remove("selecting");
+      updateState(gameFieldData);
     } else {
       clickedCell = cell;
       document.body.classList.add("selecting");
@@ -66,6 +76,13 @@ function init() {
   const gameFieldData = getGameFieldData();
   const gameField = getGameField(gameFieldData, cellClickHandler);
   document.body.append(gameField);
+
+  updateState(gameFieldData);
+}
+
+function updateState(gameFieldData) {
+  checkTableStates(gameFieldData);
+  updatePanicStates(gameFieldData);
 }
 
 // INIT
