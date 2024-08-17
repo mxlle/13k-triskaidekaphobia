@@ -89,7 +89,7 @@ function getGameFieldObject(type, row, column) {
   let tableIndex = undefined;
 
   if (isChair(type) || isGuest(type)) {
-    content = Math.random() > 0.3 || isGuest(type) ? getRandomEmoji() : type;
+    content = Math.random() > 0.4 || isGuest(type) ? getRandomEmoji() : type;
 
     if (!isChair(content)) {
       do {
