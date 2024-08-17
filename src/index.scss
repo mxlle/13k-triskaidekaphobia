@@ -55,6 +55,25 @@ header {
   width: 100%;
   font-family: cursive;
 
+  @media (max-width: 800px) {
+    h1 {
+      grid-area: 1 / 1 / 2 / 4;
+    }
+
+    button {
+      grid-area: 1 / 5 / 2 / 6;
+
+      &:nth-child(2) {
+        grid-area: 1 / 4 / 2 / 5;
+      }
+    }
+
+    .score {
+      grid-area: 2 / 1 / 2 / 6;
+      justify-self: center;
+    }
+  }
+
   h1 {
     font-size: 1.3rem;
     margin: 0;
