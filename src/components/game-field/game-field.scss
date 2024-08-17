@@ -1,0 +1,55 @@
+@import "../../theme";
+
+.game-field {
+  width: min(80vw, 80vh);
+  height: min(80vw, 80vh);
+  display: grid;
+  gap: 1px;
+  grid-template-columns: repeat(11, 1fr);
+  grid-template-rows: repeat(11, 1fr);
+  margin: 2rem auto;
+
+  .row {
+    display: contents;
+  }
+
+  .cell {
+    background: #152134;
+    display: grid;
+    place-items: center;
+    color: $main-color;
+    font-size: 1.5em;
+    position: relative;
+
+    &.table {
+      color: transparent;
+      background: #563232;
+      margin: -1px;
+    }
+
+    &.door {
+      background: #333741;
+    }
+
+    &:not(.table):not(.door) {
+      cursor: pointer;
+
+      &.selected {
+        background: #aaccff;
+      }
+    }
+
+    .fear {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      display: grid;
+      place-items: center;
+      font-size: 0.4em;
+      line-height: 1;
+      background: $danger-color;
+      width: 40%;
+      height: 40%;
+    }
+  }
+}
