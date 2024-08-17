@@ -19,7 +19,7 @@ import {
   updatePanicStates,
 } from "./components/game-field";
 
-let configDialog, scoreElement;
+let configDialog, helpDialog, scoreElement;
 
 let clickedCell;
 
@@ -40,6 +40,21 @@ function openConfig() {
   configDialog.open();
 }
 
+function openHelp() {
+  if (!helpDialog) {
+    helpDialog = createDialog(
+      createElement({
+        text: getTranslation(TranslationKey.RULES_CONTENT),
+        cssClass: "rules",
+      }),
+      undefined,
+      getTranslation(TranslationKey.RULES),
+    );
+  }
+
+  helpDialog.open();
+}
+
 function init() {
   initGameData();
 
@@ -49,6 +64,9 @@ function init() {
   header.append(
     createButton({ text: "🔄", onClick: onNewGameClick, iconBtn: true }),
   );
+
+  header.append(createButton({ text: "❓", onClick: openHelp, iconBtn: true }));
+
   header.append(
     createElement({
       tag: "h1",
@@ -112,6 +130,8 @@ function updateState(gameFieldData) {
         cssClass: "win-screen",
       }),
       getTranslation(TranslationKey.PLAY_AGAIN),
+      undefined,
+      true,
     )
       .open()
       .then((playAgain) => {

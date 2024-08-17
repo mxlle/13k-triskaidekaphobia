@@ -5,11 +5,20 @@ import { getTranslation, TranslationKey } from "../../translations";
 
 let zIndexCounter = 0;
 
-export function createDialog(innerElement, submitButtonText, headerText) {
+export function createDialog(
+  innerElement,
+  submitButtonText,
+  headerText,
+  shineThrough = false,
+) {
   const dialog = createElement({
     cssClass: "dialog",
     onClick: (event) => event.stopPropagation(), // TODO - why?
   });
+
+  if (shineThrough) {
+    dialog.classList.add("shine-through");
+  }
 
   let header;
   if (headerText) {

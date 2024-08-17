@@ -63,7 +63,7 @@
 
     .fear {
       position: absolute;
-      right: 0;
+      left: 0;
       bottom: 0;
       display: grid;
       place-items: center;
@@ -80,8 +80,8 @@
       &.small {
         width: 35%;
         height: 35%;
-        left: 0;
-        right: auto;
+        right: 0;
+        left: auto;
       }
     }
   }
