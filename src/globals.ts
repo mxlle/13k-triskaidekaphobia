@@ -1,15 +1,18 @@
-const defaultGlobals = {
+interface GameGlobals {
+  language: string;
+}
+
+const defaultGlobals: GameGlobals = {
   language: "en",
 };
 
-export const globals = {};
-resetGlobals();
+export const globals: GameGlobals = { ...defaultGlobals };
 
 export function resetGlobals() {
   Object.assign(globals, defaultGlobals);
 }
 
-function getNumFromParam(param, fallback) {
+function getNumFromParam(param: string, fallback: number) {
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
   const valueParam = urlParams.get(param);

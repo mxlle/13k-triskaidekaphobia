@@ -6,18 +6,20 @@ import serve from "rollup-plugin-serve";
 import styles from "rollup-plugin-styles";
 import { terser } from "rollup-plugin-terser";
 import copy from "rollup-plugin-copy";
+import typescript from '@rollup/plugin-typescript';
 
 const production = !process.env.ROLLUP_WATCH;
 const outputDir = production ? "dist" : "out";
 
 export default {
-  input: "src/index.js",
+  input: "src/index.ts",
   output: {
     file: `${outputDir}/game.js`,
     name: "FindX",
     format: "iife",
   },
   plugins: [
+    typescript({target: 'es6'}),
     nodeResolve(),
     commonjs(),
     styles(),

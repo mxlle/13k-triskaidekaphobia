@@ -1,15 +1,13 @@
 import "./game-field.scss";
 
 import { createElement } from "../../utils/html-utils";
-import {
-  hasPerson,
-  isChair,
-  isDoor,
-  isTable,
-  isWindow,
-} from "../../game-logic";
+import { hasPerson, isChair, isDoor, isTable, isWindow } from "../../game-logic";
+import { Cell, GameFieldData } from "../../types";
 
-export function getGameField(gameFieldData, cellClickHandler) {
+export function getGameField(
+  gameFieldData: Cell[][],
+  cellClickHandler: (cell: Cell, row: number, column: number) => void
+) {
   const gameField = createElement({
     cssClass: "game-field",
   });
@@ -45,7 +43,7 @@ export function getGameField(gameFieldData, cellClickHandler) {
 
           const textElem = createElement({
             tag: "span",
-            text: 13,
+            text: "13",
           });
 
           cellElem.append(textElem);
@@ -90,43 +88,43 @@ export function getGameField(gameFieldData, cellClickHandler) {
   return gameField;
 }
 
-export function updateCell(cell) {
-  cell.textElem.textContent = cell.content;
-  cell.fearElem.textContent = cell.fear;
-  cell.fearElem.classList.toggle("hidden", !cell.fear);
-  cell.smallFearElem.textContent = cell.smallFear;
-  cell.smallFearElem.classList.toggle("hidden", !cell.smallFear);
-  cell.elem.classList.toggle("has-person", hasPerson(cell));
-  cell.elem.classList.toggle("panic", cell.hasPanic);
+export function updateCell(cell: Cell) {
+  cell.textElem!.textContent = cell.content;
+  cell.fearElem!.textContent = cell.fear ?? null;
+  cell.fearElem!.classList.toggle("hidden", !cell.fear);
+  cell.smallFearElem!.textContent = cell.smallFear ?? null;
+  cell.smallFearElem!.classList.toggle("hidden", !cell.smallFear);
+  cell.elem!.classList.toggle("has-person", hasPerson(cell));
+  cell.elem!.classList.toggle("panic", cell.hasPanic);
 }
 
-export function updatePanicStates(gameFieldData, panickedTableCells) {
+export function updatePanicStates(gameFieldData: GameFieldData, panickedTableCells: Cell[]) {
   gameFieldData.flat().forEach((cell) => {
-    cell.elem.classList.remove("scary");
-    cell.elem.classList.remove("scared");
-    cell.elem.classList.remove("triskaidekaphobia");
+    cell.elem!.classList.remove("scary");
+    cell.elem!.classList.remove("scared");
+    cell.elem!.classList.remove("triskaidekaphobia");
 
     if (hasPerson(cell)) {
-      cell.elem.classList.toggle("panic", cell.hasPanic);
+      cell.elem!.classList.toggle("panic", cell.hasPanic);
     }
   });
 
   panickedTableCells.forEach((cell) => {
-    cell.elem.classList.add("triskaidekaphobia");
+    cell.elem!.classList.add("triskaidekaphobia");
   });
 }
 
-export function updateStateForSelection(gameFieldData, selectedCell) {
+export function updateStateForSelection(gameFieldData: GameFieldData, selectedCell: Cell) {
   gameFieldData.flat().forEach((cell) => {
-    cell.elem.classList.remove("scary");
-    cell.elem.classList.remove("scared");
+    cell.elem!.classList.remove("scary");
+    cell.elem!.classList.remove("scared");
   });
 
   selectedCell?.afraidOf?.forEach((afraidOf) => {
-    afraidOf.elem.classList.add("scary");
+    afraidOf.elem?.classList.add("scary");
   });
 
   selectedCell?.makesAfraid?.forEach((makesAfraid) => {
-    makesAfraid.elem.classList.add("scared");
+    makesAfraid.elem?.classList.add("scared");
   });
 }

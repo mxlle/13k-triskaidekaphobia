@@ -1,13 +1,13 @@
 import { getShortLanguageName } from "../utils/language-util";
 
-export const TranslationKey = {
-  WELCOME: 0,
-  WIN: 1,
-  PLAY_AGAIN: 2,
-  CANCEL: 3,
-  RULES: 4,
-  RULES_CONTENT: 5,
-};
+export const enum TranslationKey {
+  WELCOME,
+  WIN,
+  PLAY_AGAIN,
+  CANCEL,
+  RULES,
+  RULES_CONTENT,
+}
 
 const Translation = {
   [TranslationKey.WELCOME]: {

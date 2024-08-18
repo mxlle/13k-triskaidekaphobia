@@ -1,16 +1,16 @@
 import { getRandomItem, removeDuplicates } from "./array-utils";
 
-export function getLanguagesFromVoices(voices) {
+export function getLanguagesFromVoices(voices: SpeechSynthesisVoice[]) {
   return removeDuplicates(
     voices
       .map((voice) => {
         return getShortLanguageName(voice.lang);
       })
-      .filter((lang) => lang),
+      .filter((lang) => lang)
   );
 }
 
-export function getShortLanguageName(lang) {
+export function getShortLanguageName(lang: string) {
   return lang?.slice(0, 2);
 }
 
@@ -19,13 +19,16 @@ export function getDefaultLanguage(long = false) {
 }
 
 export function getLanguagesWithoutDefault(
-  languages,
-  defaultLanguage = getDefaultLanguage(),
+  languages: string[],
+  defaultLanguage = getDefaultLanguage()
 ) {
   return languages.filter((lang) => lang !== defaultLanguage);
 }
 
-export function getLanguageForGame(languages, useNonDefaultLanguage = false) {
+export function getLanguageForGame(
+  languages: string[],
+  useNonDefaultLanguage = false
+) {
   if (useNonDefaultLanguage) {
     languages = getLanguagesWithoutDefault(languages);
   }

@@ -1,8 +1,9 @@
 import { getRandomItem } from "./utils/array-utils";
 import { splitEmojis } from "./utils/emojis/emoji-util";
 import { phobias } from "./utils/emojis/sets";
+import { Cell, CellType, GameFieldData, Guest, Phobia } from "./types";
 
-const phobiaEmojis = splitEmojis(phobias);
+const phobiaEmojis = splitEmojis(phobias) as Phobia[];
 
 export function newGame() {
   // resetGlobals();
@@ -14,70 +15,44 @@ export function initGameData() {
   console.warn("not implemented yet");
 }
 
-export function isTable(typeOrObject) {
-  const type =
-    typeof typeOrObject === "string" ? typeOrObject : typeOrObject.type;
-  return type === TABLE;
-}
+const getType = (typeOrObject: string | Cell) => (typeof typeOrObject === "string" ? typeOrObject : typeOrObject.type);
 
-export function isGuest(typeOrObject) {
-  const type =
-    typeof typeOrObject === "string" ? typeOrObject : typeOrObject.type;
-  return type === GUEST;
-}
+export const isTable = (typeOrObject: string | Cell) => getType(typeOrObject) === CellType.TABLE;
+export const isGuest = (typeOrObject: string | Cell) => getType(typeOrObject) === CellType.GUEST;
+export const isDoor = (typeOrObject: string | Cell) => getType(typeOrObject) === CellType.DOOR;
+export const isWindow = (typeOrObject: string | Cell) => getType(typeOrObject) === CellType.WINDOW;
+export const isChair = (typeOrObject: string | Cell) => getType(typeOrObject) === CellType.CHAIR;
 
-export function isDoor(typeOrObject) {
-  const type =
-    typeof typeOrObject === "string" ? typeOrObject : typeOrObject.type;
-  return type === DOOR_;
-}
-
-export function isWindow(typeOrObject) {
-  const type =
-    typeof typeOrObject === "string" ? typeOrObject : typeOrObject.type;
-  return type === WINDO;
-}
-
-export function isChair(typeOrObject) {
-  const type =
-    typeof typeOrObject === "string" ? typeOrObject : typeOrObject.type;
-  return type === CHAIR;
-}
-
-export function hasPerson(cell) {
+export function hasPerson(cell: Cell): cell is Guest {
   return !!cell.fear || !!cell.smallFear;
 }
 
-export function isSameCell(cell1, cell2) {
+export function isSameCell(cell1: Cell, cell2: Cell) {
   return cell1.row === cell2.row && cell1.column === cell2.column;
 }
 
-const GUEST = "👤";
-const EMPTY = "";
-const TABLE = "🟫";
-const CHAIR = "🪑";
-const DOOR_ = "🚪";
-const WINDO = "🪟";
-
-const baseField = [
-  [DOOR_, GUEST, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, WINDO],
-  [EMPTY, EMPTY, EMPTY, CHAIR, EMPTY, EMPTY, EMPTY, CHAIR, EMPTY, EMPTY, EMPTY],
-  [EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY],
-  [EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY],
-  [EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY],
-  [EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY],
-  [EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY],
-  [EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY],
-  [EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY],
-  [EMPTY, EMPTY, EMPTY, CHAIR, EMPTY, EMPTY, EMPTY, CHAIR, EMPTY, EMPTY, EMPTY],
-  [WINDO, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, WINDO],
-];
+const baseField = (() => {
+  const { GUEST, EMPTY, TABLE, CHAIR, DOOR: DOOR_, WINDOW: WINDO } = CellType;
+  return [
+    [DOOR_, GUEST, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, WINDO],
+    [EMPTY, EMPTY, EMPTY, CHAIR, EMPTY, EMPTY, EMPTY, CHAIR, EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY],
+    [EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY],
+    [EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY],
+    [EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY],
+    [EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY],
+    [EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY],
+    [EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY, CHAIR, EMPTY, EMPTY, EMPTY, CHAIR, EMPTY, EMPTY, EMPTY],
+    [WINDO, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, WINDO],
+  ];
+})();
 
 export function getGameFieldData() {
-  const gameField = [];
+  const gameField: GameFieldData = [];
   for (let row = 0; row < baseField.length; row++) {
     const baseRow = baseField[row];
-    const rowArray = [];
+    const rowArray: Cell[] = [];
     for (let column = 0; column < baseRow.length; column++) {
       const baseCell = baseRow[column];
 
@@ -86,66 +61,57 @@ export function getGameFieldData() {
     gameField.push(rowArray);
   }
 
-  const { guestsInvolvedInDeadlock, fearedAtLeastOnce } =
-    findGuestsInvolvedInDeadlock(gameField);
+  const { guestsInvolvedInDeadlock, fearedAtLeastOnce } = findGuestsInvolvedInDeadlock(gameField);
   resolveDeadlock(gameField, guestsInvolvedInDeadlock, fearedAtLeastOnce);
 
   return gameField;
 }
 
-function getGameFieldObject(type, row, column) {
-  let content = type;
-  let fear = "";
-  let smallFear = "";
-  let tableIndex = undefined;
+function getGameFieldObject(type: CellType, row: number, column: number): Cell {
+  const obj: Cell = {
+    type,
+    row,
+    column,
+    content: type,
+  };
 
   if (isChair(type) || isGuest(type)) {
-    content = Math.random() > 0.4 || isGuest(type) ? getRandomEmoji() : type;
+    obj.content = Math.random() > 0.4 || isGuest(type) ? getRandomPhobia() : type;
 
-    if (!isChair(content)) {
+    if (!isChair(obj.content)) {
       const fearTypeRandomValue = Math.random();
 
       if (fearTypeRandomValue > 0.4) {
-        fear = getRandomEmojiExcluding([content]);
+        obj.fear = getRandomPhobiaExcluding([obj.content]);
       }
 
       if (fearTypeRandomValue < 0.6) {
-        smallFear = getRandomEmojiExcluding([content, fear]);
+        obj.smallFear = getRandomPhobiaExcluding([obj.content, obj.fear]);
       }
     }
   }
 
   if (isChair(type) || isTable(type)) {
-    tableIndex = column > 4 ? 1 : 0;
+    obj.tableIndex = column > 4 ? 1 : 0;
   }
 
-  return {
-    type,
-    content,
-    fear,
-    smallFear,
-    row,
-    column,
-    tableIndex,
-  };
+  return obj;
 }
 
-function getRandomEmoji(emojis = phobiaEmojis) {
-  return getRandomItem(emojis);
-}
+const getRandomPhobia = () => getRandomItem(phobiaEmojis);
 
-function getRandomEmojiExcluding(excluded) {
+function getRandomPhobiaExcluding(excluded: (Phobia | unknown)[]) {
   const emojis = phobiaEmojis.filter((emoji) => !excluded.includes(emoji));
   return getRandomItem(emojis);
 }
 
-export function moveGuest(fromCell, toCell) {
+export function moveGuest(fromCell: Cell, toCell: Cell) {
   const fromContent = fromCell.content;
   const fromFear = fromCell.fear;
   const fromSmallFear = fromCell.smallFear;
-  fromCell.content = isGuest(fromCell) ? "" : fromCell.type;
-  fromCell.fear = "";
-  fromCell.smallFear = "";
+  fromCell.content = isGuest(fromCell) ? CellType.EMPTY : fromCell.type;
+  fromCell.fear = undefined;
+  fromCell.smallFear = undefined;
   fromCell.hasPanic = false;
   toCell.content = fromContent;
   toCell.fear = fromFear;
@@ -153,8 +119,8 @@ export function moveGuest(fromCell, toCell) {
   toCell.hasPanic = false;
 }
 
-export function checkTableStates(gameFieldData) {
-  const panickedTableCells = [];
+export function checkTableStates(gameFieldData: GameFieldData) {
+  const panickedTableCells: Cell[] = [];
 
   for (let tableIndex = 0; tableIndex < 2; tableIndex++) {
     const guests = getGuestsOnTable(gameFieldData, tableIndex);
@@ -165,9 +131,7 @@ export function checkTableStates(gameFieldData) {
     }
 
     guests.forEach((guest) => {
-      const afraidOf = guests.filter(
-        (otherGuest) => otherGuest.content === guest.fear,
-      );
+      const afraidOf = guests.filter((otherGuest) => otherGuest.content === guest.fear);
       const alsoAfraidOf = getScaryNeighbors(gameFieldData, guest);
       afraidOf.push(...alsoAfraidOf);
 
@@ -176,9 +140,7 @@ export function checkTableStates(gameFieldData) {
     });
   }
 
-  const otherGuestsInRoom = getAllGuests(gameFieldData).filter(
-    (guest) => guest.tableIndex === undefined,
-  );
+  const otherGuestsInRoom = getAllGuests(gameFieldData).filter((guest) => guest.tableIndex === undefined);
   otherGuestsInRoom.forEach((guest) => {
     const afraidOf = getScaryNeighbors(gameFieldData, guest);
     guest.hasPanic = afraidOf.length > 0;
@@ -189,34 +151,28 @@ export function checkTableStates(gameFieldData) {
   const afraidGuests = allGuests.filter((guest) => guest.hasPanic);
   allGuests.forEach((guest) => {
     guest.makesAfraid = afraidGuests.filter((otherGuest) =>
-      otherGuest.afraidOf?.find((afraidOf) => isSameCell(afraidOf, guest)),
+      otherGuest.afraidOf?.find((afraidOf) => isSameCell(afraidOf, guest))
     );
   });
 
   return panickedTableCells;
 }
 
-function getScaryNeighbors(gameFieldData, cell) {
+function getScaryNeighbors(gameFieldData: GameFieldData, cell: Cell) {
   const neighbors = getNeighbors(gameFieldData, cell.row, cell.column);
-  return neighbors.filter((neighbor) => neighbor.content === cell.smallFear);
+  return neighbors.filter((neighbor) => neighbor.content === cell.smallFear) as Guest[];
 }
 
-function getGuestsOnTable(gameFieldData, tableIndex) {
-  return gameFieldData
-    .flat()
-    .filter((cell) => cell.tableIndex === tableIndex && hasPerson(cell));
+function getGuestsOnTable(gameFieldData: GameFieldData, tableIndex: number): Guest[] {
+  return gameFieldData.flat().filter((cell): cell is Guest => cell.tableIndex === tableIndex && hasPerson(cell));
 }
 
 // get all 8 neighbors of a cell, plus the three cells on the other side of the table
-function getNeighbors(gameFieldData, row, column) {
-  const neighbors = [];
+function getNeighbors(gameFieldData: GameFieldData, row: number, column: number): Cell[] {
+  const neighbors: Cell[] = [];
 
   for (let rowIndex = row - 1; rowIndex <= row + 1; rowIndex++) {
-    for (
-      let columnIndex = column - 1;
-      columnIndex <= column + 1;
-      columnIndex++
-    ) {
+    for (let columnIndex = column - 1; columnIndex <= column + 1; columnIndex++) {
       if (rowIndex === row && columnIndex === column) {
         continue;
       }
@@ -239,7 +195,7 @@ function getNeighbors(gameFieldData, row, column) {
         cell.column !== column &&
         cell.row <= row + 1 &&
         cell.row >= row - 1 &&
-        neighbors.indexOf(cell) === -1,
+        neighbors.indexOf(cell) === -1
     );
 
   neighbors.push(...additionalNeighbors);
@@ -247,23 +203,19 @@ function getNeighbors(gameFieldData, row, column) {
   return neighbors;
 }
 
-export function getAllGuests(gameFieldData) {
+export function getAllGuests(gameFieldData: GameFieldData) {
   return gameFieldData.flat().filter(hasPerson);
 }
 
-export function getHappyGuests(gameFieldData) {
+export function getHappyGuests(gameFieldData: GameFieldData) {
   return getAllGuests(gameFieldData).filter((guest) => !guest.hasPanic);
 }
 
-export function getHappyStats(gameFieldData) {
+export function getHappyStats(gameFieldData: GameFieldData) {
   const happyGuestList = getHappyGuests(gameFieldData);
   const totalGuestList = getAllGuests(gameFieldData);
-  const unhappyGuestList = totalGuestList.filter(
-    (g) => !happyGuestList.includes(g),
-  );
-  const unseatedGuestList = totalGuestList.filter(
-    (g) => g.tableIndex === undefined,
-  );
+  const unhappyGuestList = totalGuestList.filter((g) => !happyGuestList.includes(g));
+  const unseatedGuestList = totalGuestList.filter((g) => g.tableIndex === undefined);
   const happyGuests = happyGuestList.length - unseatedGuestList.length;
 
   return {
@@ -274,22 +226,19 @@ export function getHappyStats(gameFieldData) {
   };
 }
 
-function getTableCells(gameFieldData, tableIndex) {
-  return gameFieldData
-    .flat()
-    .filter((cell) => isTable(cell) && cell.tableIndex === tableIndex);
+function getTableCells(gameFieldData: GameFieldData, tableIndex: number) {
+  return gameFieldData.flat().filter((cell) => isTable(cell) && cell.tableIndex === tableIndex);
 }
 
-function findGuestsInvolvedInDeadlock(gameFieldData) {
+function findGuestsInvolvedInDeadlock(gameFieldData: GameFieldData) {
   const allGuests = getAllGuests(gameFieldData).map((guest) => ({ ...guest }));
   const guestsWithBigFear = allGuests.filter((guest) => guest.fear);
-  const guestsPotentiallyInvolvedInDeadlock = [];
-  const scaryGuestsWithBigFear = [];
-  const fearedAtLeastOnce = [];
+  const guestsPotentiallyInvolvedInDeadlock: Guest[] = [];
+  const scaryGuestsWithBigFear: Guest[] = [];
+  const fearedAtLeastOnce: Phobia[] = [];
 
   guestsWithBigFear.forEach((guest) => {
-    const afraidByMany =
-      guestsWithBigFear.filter((g) => g.fear === guest.content).length > 1;
+    const afraidByMany = guestsWithBigFear.filter((g) => g.fear === guest.content).length > 1;
 
     const afraidOf = guestsWithBigFear.filter((g) => g.content === guest.fear);
 
@@ -313,17 +262,12 @@ function findGuestsInvolvedInDeadlock(gameFieldData) {
     }
   });
 
-  console.log(
-    "guestsPotentiallyInvolvedInDeadlock",
-    guestsPotentiallyInvolvedInDeadlock,
-  );
+  console.log("guestsPotentiallyInvolvedInDeadlock", guestsPotentiallyInvolvedInDeadlock);
   console.log("scaryGuestsWithBigFear", scaryGuestsWithBigFear);
 
-  const guestsInvolvedInDeadlock = guestsPotentiallyInvolvedInDeadlock.filter(
-    (guest) => {
-      return scaryGuestsWithBigFear.includes(guest);
-    },
-  );
+  const guestsInvolvedInDeadlock = guestsPotentiallyInvolvedInDeadlock.filter((guest) => {
+    return scaryGuestsWithBigFear.includes(guest);
+  });
 
   console.log("guestsInvolvedInDeadlock", guestsInvolvedInDeadlock);
   console.log("fearedAtLeastOnce", fearedAtLeastOnce);
@@ -331,32 +275,28 @@ function findGuestsInvolvedInDeadlock(gameFieldData) {
   return { guestsInvolvedInDeadlock, fearedAtLeastOnce };
 }
 
-function pushCellIfNotInList(cell, list) {
+function pushCellIfNotInList(cell: Cell, list: Cell[]) {
   if (!list.find((c) => isSameCell(c, cell))) {
     list.push(cell);
   }
 }
 
-function pushPrimativeIfNotInList(value, list) {
+function pushPrimativeIfNotInList<T>(value: T, list: T[]) {
   if (!list.includes(value)) {
     list.push(value);
   }
 }
 
-function resolveDeadlock(
-  gameFieldData,
-  guestsInvolvedInDeadlock,
-  fearedAtLeastOnce,
-) {
+function resolveDeadlock(gameFieldData: GameFieldData, guestsInvolvedInDeadlock: Guest[], fearedAtLeastOnce: Phobia[]) {
   for (let i = 0; i < guestsInvolvedInDeadlock.length; i++) {
     const copyOfGuest = guestsInvolvedInDeadlock[i];
     const guest = gameFieldData[copyOfGuest.row][copyOfGuest.column];
 
-    guest.fear = getRandomEmojiExcluding([guest.content, ...fearedAtLeastOnce]);
+    guest.fear = getRandomPhobiaExcluding([guest.content, ...fearedAtLeastOnce]);
     if (guest.fear) {
       fearedAtLeastOnce.push(guest.fear);
     } else {
-      guest.smallFear = getRandomEmoji();
+      guest.smallFear = getRandomPhobia();
     }
 
     console.log("updated guest to resolve deadlock", copyOfGuest, guest);

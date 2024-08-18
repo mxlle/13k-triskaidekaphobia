@@ -14,12 +14,8 @@ import {
 import { getTranslation, TranslationKey } from "./translations";
 import { createDialog } from "./components/dialog";
 import { PubSubEvent, pubSubService } from "./utils/pub-sub-service";
-import {
-  getGameField,
-  updateCell,
-  updatePanicStates,
-  updateStateForSelection,
-} from "./components/game-field";
+import { getGameField, updateCell, updatePanicStates, updateStateForSelection } from "./components/game-field";
+import { Cell } from "./types";
 
 let configDialog, helpDialog, scoreElement;
 
@@ -32,11 +28,7 @@ function onNewGameClick() {
 
 function openConfig() {
   if (!configDialog) {
-    configDialog = createDialog(
-      createElement({ text: "Config :-)" }),
-      undefined,
-      "Title :-)",
-    );
+    configDialog = createDialog(createElement({ text: "Config :-)" }), undefined, "Title :-)");
   }
 
   configDialog.open();
@@ -50,7 +42,7 @@ function openHelp() {
         cssClass: "rules",
       }),
       undefined,
-      getTranslation(TranslationKey.RULES),
+      getTranslation(TranslationKey.RULES)
     );
   }
 
@@ -63,9 +55,7 @@ function init() {
   const header = createElement({
     tag: "header",
   });
-  header.append(
-    createButton({ text: "🔄", onClick: onNewGameClick, iconBtn: true }),
-  );
+  header.append(createButton({ text: "🔄", onClick: onNewGameClick, iconBtn: true }));
 
   header.append(createButton({ text: "❓", onClick: openHelp, iconBtn: true }));
 
@@ -73,7 +63,7 @@ function init() {
     createElement({
       tag: "h1",
       text: `${getTranslation(TranslationKey.WELCOME)}`,
-    }),
+    })
   );
   // header.append(
   //   createButton({ text: "⚙️", onClick: openConfig, iconBtn: true }),
@@ -87,7 +77,7 @@ function init() {
 
   document.body.append(header);
 
-  function cellClickHandler(cell) {
+  function cellClickHandler(cell: Cell) {
     if (clickedCell) {
       if (isSameCell(clickedCell, cell)) {
         resetSelection(cell);
@@ -136,8 +126,7 @@ function resetSelection(cell) {
 function updateState(gameFieldData) {
   const panickedTableCells = checkTableStates(gameFieldData);
   updatePanicStates(gameFieldData, panickedTableCells);
-  const { unseatedGuests, unhappyGuests, happyGuests, totalGuests } =
-    getHappyStats(gameFieldData);
+  const { unseatedGuests, unhappyGuests, happyGuests, totalGuests } = getHappyStats(gameFieldData);
   scoreElement.textContent = `${unseatedGuests}🚪 + ${unhappyGuests} 😱 + ${happyGuests} 😀 / ${totalGuests}`;
 
   if (happyGuests === totalGuests) {
@@ -148,7 +137,7 @@ function updateState(gameFieldData) {
       }),
       getTranslation(TranslationKey.PLAY_AGAIN),
       undefined,
-      true,
+      true
     )
       .open()
       .then((playAgain) => {

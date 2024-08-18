@@ -5,12 +5,20 @@ import { getTranslation, TranslationKey } from "../../translations";
 
 let zIndexCounter = 0;
 
+export interface Dialog {
+  open: (openImmediately?: boolean) => Promise<boolean>;
+  close: () => void;
+  changeHeader: (headerText: string) => void;
+  toggleSubmitDisabled: (isDisabled: boolean) => void;
+  recreateDialogContent: (newInnerElement: HTMLElement) => void;
+}
+
 export function createDialog(
-  innerElement,
-  submitButtonText,
-  headerText,
-  shineThrough = false,
-) {
+  innerElement: HTMLElement,
+  submitButtonText?: string,
+  headerText?: string,
+  shineThrough = false
+): Dialog {
   const dialog = createElement({
     cssClass: "dialog",
     onClick: (event) => event.stopPropagation(), // TODO - why?
@@ -58,9 +66,7 @@ export function createDialog(
     dialog.appendChild(buttons);
   }
 
-  dialog.appendChild(
-    createButton({ text: "X", onClick: closeDialog, iconBtn: true }),
-  );
+  dialog.appendChild(createButton({ text: "X", onClick: closeDialog, iconBtn: true }));
 
   document.body.appendChild(dialog);
 
@@ -75,10 +81,7 @@ export function createDialog(
         setTimeout(() => dialog.classList.add("open"), 0);
       }
 
-      dialogContent.classList.toggle(
-        "is-overflowing",
-        dialogContent.scrollHeight > dialogContent.clientHeight,
-      );
+      dialogContent.classList.toggle("is-overflowing", dialogContent.scrollHeight > dialogContent.clientHeight);
 
       dialogContent.scrollTop = 0;
 
