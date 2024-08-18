@@ -42,7 +42,13 @@ export function getGameField(gameFieldData, cellClickHandler) {
 
         if (i === Math.ceil(gameFieldData.length / 2) - 1) {
           cellElem.classList.add("middle");
-          cellElem.textContent = "13";
+
+          const textElem = createElement({
+            tag: "span",
+            text: 13,
+          });
+
+          cellElem.append(textElem);
         }
       }
 
@@ -97,6 +103,7 @@ export function updateCell(cell) {
 export function updatePanicStates(gameFieldData, panickedTableCells) {
   gameFieldData.flat().forEach((cell) => {
     cell.elem.classList.remove("scary");
+    cell.elem.classList.remove("triskaidekaphobia");
   });
 
   gameFieldData.forEach((row) => {
@@ -108,16 +115,12 @@ export function updatePanicStates(gameFieldData, panickedTableCells) {
   });
 
   panickedTableCells.forEach((cell) => {
-    cell.elem.classList.add("scary");
+    cell.elem.classList.add("triskaidekaphobia");
   });
 }
 
 export function updateStateForSelection(gameFieldData, selectedCell) {
   gameFieldData.flat().forEach((cell) => {
-    if (!hasPerson(cell)) {
-      return; // keep for table
-    }
-
     cell.elem.classList.remove("scary");
   });
 

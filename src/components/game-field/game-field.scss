@@ -64,24 +64,32 @@ $tile-color-2: #162235;
 
     &.scary {
       z-index: 2;
-
-      &.table {
-        z-index: 3;
-        animation: scale-pulse-small 2s infinite;
-
-        &.middle {
-          color: $danger-color-light;
-        }
-      }
-
-      &:not(.table) {
-        outline: 0.25rem dashed $danger-color;
-      }
+      outline: 0.25rem dashed $danger-color;
 
       span {
         z-index: 1;
         animation: scary-pulse 2s infinite;
         animation-timing-function: step-end;
+      }
+    }
+
+    &.triskaidekaphobia {
+      z-index: 2;
+
+      &.table {
+        z-index: 3;
+        animation: scary-pulse-small 2s infinite;
+        animation-timing-function: step-end;
+
+        &.middle {
+          color: $danger-color-light;
+
+          span {
+            z-index: 1;
+            animation: scary-pulse 2s infinite;
+            animation-timing-function: step-end;
+          }
+        }
       }
     }
 
@@ -189,6 +197,24 @@ body {
   }
   60% {
     transform: scale(1.6);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes scary-pulse-small {
+  0% {
+    transform: scale(1);
+  }
+  20% {
+    transform: scale(1.02);
+  }
+  40% {
+    transform: scale(1.07);
+  }
+  60% {
+    transform: scale(1.15);
   }
   100% {
     transform: scale(1);
