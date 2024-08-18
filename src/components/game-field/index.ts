@@ -1,91 +1,107 @@
 import "./game-field.scss";
 
 import { createElement } from "../../utils/html-utils";
-import { hasPerson, isChair, isDoor, isTable, isWindow } from "../../game-logic";
+import {
+  hasPerson,
+  isChair,
+  isDoor,
+  isTable,
+  isWindow,
+} from "../../game-logic";
 import { Cell, GameFieldData } from "../../types";
 
 export function getGameField(
   gameFieldData: Cell[][],
-  cellClickHandler: (cell: Cell, row: number, column: number) => void
+  cellClickHandler: (cell: Cell, row: number, column: number) => void,
 ) {
   const gameField = createElement({
     cssClass: "game-field",
   });
 
-  gameFieldData.forEach((row, i) => {
+  gameFieldData.forEach((row, rowIndex) => {
     const rowElem = createElement({
       cssClass: "row",
     });
     gameField.append(rowElem);
 
-    row.forEach((cell, j) => {
-      const cellElem = createElement({
-        cssClass: "cell",
-        onClick: (event) => {
-          event.target.classList.toggle("selected");
-          cellClickHandler && cellClickHandler(cell, i, j);
-        },
+    row.forEach((cell, columnIndex) => {
+      const isInMiddle = rowIndex === Math.ceil(gameFieldData.length / 2) - 1;
+      createCellElement(cell, isInMiddle);
+
+      if (!cell.elem) {
+        console.error("Cell element is not created");
+        return;
+      }
+
+      cell.elem.addEventListener("click", () => {
+        cellClickHandler(cell, rowIndex, columnIndex);
       });
 
-      if (hasPerson(cell)) {
-        cellElem.classList.add("has-person");
-      }
-
-      if (isDoor(cell) || isWindow(cell)) {
-        cellElem.classList.add("door");
-      }
-
-      if (isTable(cell)) {
-        cellElem.classList.add("table");
-
-        if (i === Math.ceil(gameFieldData.length / 2) - 1) {
-          cellElem.classList.add("middle");
-
-          const textElem = createElement({
-            tag: "span",
-            text: "13",
-          });
-
-          cellElem.append(textElem);
-        }
-      }
-
-      if (isChair(cell)) {
-        cellElem.classList.add("chair");
-      }
-
-      rowElem.append(cellElem);
-
-      const textElem = createElement({
-        tag: "span",
-        cssClass: "text",
-        text: cell.content,
-      });
-
-      if (!isTable(cell)) {
-        cellElem.append(textElem);
-      }
-
-      const fearElem = createElement({
-        cssClass: `fear${cell.fear ? "" : " hidden"}`,
-        text: cell.fear,
-      });
-      cellElem.append(fearElem);
-
-      const smallFearElem = createElement({
-        cssClass: `fear small${cell.smallFear ? "" : " hidden"}`,
-        text: cell.smallFear,
-      });
-      cellElem.append(smallFearElem);
-
-      cell.elem = cellElem;
-      cell.textElem = textElem;
-      cell.fearElem = fearElem;
-      cell.smallFearElem = smallFearElem;
+      rowElem.append(cell.elem!);
     });
   });
 
   return gameField;
+}
+
+export function createCellElement(cell: Cell, isInMiddle: boolean = false) {
+  const cellElem = createElement({
+    cssClass: "cell",
+  });
+
+  if (hasPerson(cell)) {
+    cellElem.classList.add("has-person");
+  }
+
+  if (isDoor(cell) || isWindow(cell)) {
+    cellElem.classList.add("door");
+  }
+
+  if (isTable(cell)) {
+    cellElem.classList.add("table");
+
+    if (isInMiddle) {
+      cellElem.classList.add("middle");
+
+      const textElem = createElement({
+        tag: "span",
+        text: "13",
+      });
+
+      cellElem.append(textElem);
+    }
+  }
+
+  if (isChair(cell)) {
+    cellElem.classList.add("chair");
+  }
+
+  const textElem = createElement({
+    tag: "span",
+    cssClass: "text",
+    text: cell.content,
+  });
+
+  if (!isTable(cell)) {
+    cellElem.append(textElem);
+  }
+
+  const fearElem = createElement({
+    cssClass: `fear${cell.fear ? "" : " hidden"}`,
+    text: cell.fear,
+  });
+  cellElem.append(fearElem);
+
+  const smallFearElem = createElement({
+    cssClass: `fear small${cell.smallFear ? "" : " hidden"}`,
+    text: cell.smallFear,
+  });
+  cellElem.append(smallFearElem);
+
+  cell.elem = cellElem;
+  cell.textElem = textElem;
+  cell.fearElem = fearElem;
+  cell.smallFearElem = smallFearElem;
 }
 
 export function updateCell(cell: Cell) {
@@ -98,7 +114,10 @@ export function updateCell(cell: Cell) {
   cell.elem!.classList.toggle("panic", cell.hasPanic);
 }
 
-export function updatePanicStates(gameFieldData: GameFieldData, panickedTableCells: Cell[]) {
+export function updatePanicStates(
+  gameFieldData: GameFieldData,
+  panickedTableCells: Cell[],
+) {
   gameFieldData.flat().forEach((cell) => {
     cell.elem!.classList.remove("scary");
     cell.elem!.classList.remove("scared");
@@ -114,7 +133,10 @@ export function updatePanicStates(gameFieldData: GameFieldData, panickedTableCel
   });
 }
 
-export function updateStateForSelection(gameFieldData: GameFieldData, selectedCell: Cell) {
+export function updateStateForSelection(
+  gameFieldData: GameFieldData,
+  selectedCell: Cell,
+) {
   gameFieldData.flat().forEach((cell) => {
     cell.elem!.classList.remove("scary");
     cell.elem!.classList.remove("scared");

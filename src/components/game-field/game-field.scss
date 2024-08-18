@@ -35,124 +35,124 @@ $border-style: outset;
       }
     }
   }
+}
 
-  .cell {
-    background-color: var(--tile-color-2);
-    border: 0.0625rem var(--border-style) var(--tile-color-2);
-    display: grid;
-    place-items: center;
-    color: $main-color;
-    position: relative;
-    cursor: pointer;
+.cell {
+  background-color: var(--tile-color-2);
+  border: 0.0625rem var(--border-style) var(--tile-color-2);
+  display: grid;
+  place-items: center;
+  color: $main-color;
+  position: relative;
+  cursor: pointer;
 
-    &.table {
-      color: transparent;
-      background: #563232 !important;
-      border: none;
-      pointer-events: none;
+  &.table {
+    color: transparent;
+    background: #563232 !important;
+    border: none;
+    pointer-events: none;
 
-      &.middle {
-        z-index: 2;
-        font-family: cursive;
-
-        &::after {
-          content: "";
-          position: absolute;
-          width: 100%;
-          height: calc(700% + 6 * var(--gap));
-          background: #563232;
-          border: 0.125rem var(--border-style) #905d5d;
-          box-sizing: border-box;
-        }
-      }
-    }
-
-    &.door {
-      pointer-events: none;
-    }
-
-    &.selected {
-      @include selectable($secondary-color, 0.3, 0.5);
-
-      z-index: 4;
-      outline: 0.125rem dashed $secondary-color;
-    }
-
-    &.panic {
-      border: 0.2rem var(--border-style) $danger-color-light;
-
-      span {
-        animation: tremble 0.5s infinite;
-        transform-origin: 50% 50%;
-      }
-    }
-
-    $scary-scale-props: 2.5s infinite step-end;
-
-    &.scary {
+    &.middle {
       z-index: 2;
-      outline: 0.25rem dashed $danger-color;
+      font-family: cursive;
 
-      span {
-        z-index: 1;
-        animation: scary-pulse $scary-scale-props;
+      &::after {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: calc(700% + 6 * var(--gap));
+        background: #563232;
+        border: 0.125rem var(--border-style) #905d5d;
+        box-sizing: border-box;
       }
     }
+  }
 
-    &.scared:not(.scary) {
-      z-index: 2;
-      outline: 0.125rem dotted $danger-color;
+  &.door {
+    pointer-events: none;
+  }
 
-      span {
-        z-index: 1;
-        animation: scared-pulse $scary-scale-props;
-      }
-    }
+  &.selected {
+    @include selectable($secondary-color, 0.3, 0.5);
 
-    &.triskaidekaphobia {
-      z-index: 2;
+    z-index: 4;
+    outline: 0.125rem dashed $secondary-color;
+  }
 
-      &.table {
-        &.middle {
-          z-index: 5;
-          color: $danger-color-light;
-          animation: scary-pulse-table $scary-scale-props;
-
-          span {
-            z-index: 1;
-            animation: scary-pulse $scary-scale-props;
-          }
-        }
-      }
-    }
+  &.panic {
+    border: 0.2rem var(--border-style) $danger-color-light;
 
     span {
-      pointer-events: none;
+      animation: tremble 0.5s infinite;
+      transform-origin: 50% 50%;
+    }
+  }
+
+  $scary-scale-props: 2.5s infinite step-end;
+
+  &.scary {
+    z-index: 2;
+    outline: 0.25rem dashed $danger-color;
+
+    span {
+      z-index: 1;
+      animation: scary-pulse $scary-scale-props;
+    }
+  }
+
+  &.scared:not(.scary) {
+    z-index: 2;
+    outline: 0.125rem dotted $danger-color;
+
+    span {
+      z-index: 1;
+      animation: scared-pulse $scary-scale-props;
+    }
+  }
+
+  &.triskaidekaphobia {
+    z-index: 2;
+
+    &.table {
+      &.middle {
+        z-index: 5;
+        color: $danger-color-light;
+        animation: scary-pulse-table $scary-scale-props;
+
+        span {
+          z-index: 1;
+          animation: scary-pulse $scary-scale-props;
+        }
+      }
+    }
+  }
+
+  span {
+    pointer-events: none;
+  }
+
+  .fear {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    display: grid;
+    place-items: center;
+    font-size: 0.5em;
+    line-height: 1;
+    background: rgba($danger-color, 0.6);
+    width: 45%;
+    height: 45%;
+
+    &.hidden {
+      display: none;
     }
 
-    .fear {
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      display: grid;
-      place-items: center;
-      font-size: 0.5em;
-      line-height: 1;
-      background: rgba($danger-color, 0.6);
-      width: 45%;
-      height: 45%;
-
-      &.hidden {
-        display: none;
-      }
-
-      &.small {
-        width: 35%;
-        height: 35%;
-        font-size: 0.4em;
-        right: 0;
-        left: auto;
-      }
+    &.small {
+      width: 35%;
+      height: 35%;
+      font-size: 0.4em;
+      right: 0;
+      left: auto;
     }
   }
 }

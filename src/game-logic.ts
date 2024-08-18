@@ -12,16 +12,22 @@ export function newGame() {
 }
 
 export function initGameData() {
-  console.warn("not implemented yet");
+  // console.warn("not implemented yet");
 }
 
-const getType = (typeOrObject: string | Cell) => (typeof typeOrObject === "string" ? typeOrObject : typeOrObject.type);
+const getType = (typeOrObject: string | Cell) =>
+  typeof typeOrObject === "string" ? typeOrObject : typeOrObject.type;
 
-export const isTable = (typeOrObject: string | Cell) => getType(typeOrObject) === CellType.TABLE;
-export const isGuest = (typeOrObject: string | Cell) => getType(typeOrObject) === CellType.GUEST;
-export const isDoor = (typeOrObject: string | Cell) => getType(typeOrObject) === CellType.DOOR;
-export const isWindow = (typeOrObject: string | Cell) => getType(typeOrObject) === CellType.WINDOW;
-export const isChair = (typeOrObject: string | Cell) => getType(typeOrObject) === CellType.CHAIR;
+export const isTable = (typeOrObject: string | Cell) =>
+  getType(typeOrObject) === CellType.TABLE;
+export const isGuest = (typeOrObject: string | Cell) =>
+  getType(typeOrObject) === CellType.GUEST;
+export const isDoor = (typeOrObject: string | Cell) =>
+  getType(typeOrObject) === CellType.DOOR;
+export const isWindow = (typeOrObject: string | Cell) =>
+  getType(typeOrObject) === CellType.WINDOW;
+export const isChair = (typeOrObject: string | Cell) =>
+  getType(typeOrObject) === CellType.CHAIR;
 
 export function hasPerson(cell: Cell): cell is Guest {
   return !!cell.fear || !!cell.smallFear;
@@ -34,17 +40,149 @@ export function isSameCell(cell1: Cell, cell2: Cell) {
 const baseField = (() => {
   const { GUEST, EMPTY, TABLE, CHAIR, DOOR: DOOR_, WINDOW: WINDO } = CellType;
   return [
-    [DOOR_, GUEST, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, WINDO],
-    [EMPTY, EMPTY, EMPTY, CHAIR, EMPTY, EMPTY, EMPTY, CHAIR, EMPTY, EMPTY, EMPTY],
-    [EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY],
-    [EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY],
-    [EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY],
-    [EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY],
-    [EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY],
-    [EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY],
-    [EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY],
-    [EMPTY, EMPTY, EMPTY, CHAIR, EMPTY, EMPTY, EMPTY, CHAIR, EMPTY, EMPTY, EMPTY],
-    [WINDO, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, WINDO],
+    [
+      DOOR_,
+      GUEST,
+      EMPTY,
+      EMPTY,
+      EMPTY,
+      EMPTY,
+      EMPTY,
+      EMPTY,
+      EMPTY,
+      EMPTY,
+      WINDO,
+    ],
+    [
+      EMPTY,
+      EMPTY,
+      EMPTY,
+      CHAIR,
+      EMPTY,
+      EMPTY,
+      EMPTY,
+      CHAIR,
+      EMPTY,
+      EMPTY,
+      EMPTY,
+    ],
+    [
+      EMPTY,
+      EMPTY,
+      CHAIR,
+      TABLE,
+      CHAIR,
+      EMPTY,
+      CHAIR,
+      TABLE,
+      CHAIR,
+      EMPTY,
+      EMPTY,
+    ],
+    [
+      EMPTY,
+      EMPTY,
+      CHAIR,
+      TABLE,
+      CHAIR,
+      EMPTY,
+      CHAIR,
+      TABLE,
+      CHAIR,
+      EMPTY,
+      EMPTY,
+    ],
+    [
+      EMPTY,
+      EMPTY,
+      CHAIR,
+      TABLE,
+      CHAIR,
+      EMPTY,
+      CHAIR,
+      TABLE,
+      CHAIR,
+      EMPTY,
+      EMPTY,
+    ],
+    [
+      EMPTY,
+      EMPTY,
+      CHAIR,
+      TABLE,
+      CHAIR,
+      EMPTY,
+      CHAIR,
+      TABLE,
+      CHAIR,
+      EMPTY,
+      EMPTY,
+    ],
+    [
+      EMPTY,
+      EMPTY,
+      CHAIR,
+      TABLE,
+      CHAIR,
+      EMPTY,
+      CHAIR,
+      TABLE,
+      CHAIR,
+      EMPTY,
+      EMPTY,
+    ],
+    [
+      EMPTY,
+      EMPTY,
+      CHAIR,
+      TABLE,
+      CHAIR,
+      EMPTY,
+      CHAIR,
+      TABLE,
+      CHAIR,
+      EMPTY,
+      EMPTY,
+    ],
+    [
+      EMPTY,
+      EMPTY,
+      CHAIR,
+      TABLE,
+      CHAIR,
+      EMPTY,
+      CHAIR,
+      TABLE,
+      CHAIR,
+      EMPTY,
+      EMPTY,
+    ],
+    [
+      EMPTY,
+      EMPTY,
+      EMPTY,
+      CHAIR,
+      EMPTY,
+      EMPTY,
+      EMPTY,
+      CHAIR,
+      EMPTY,
+      EMPTY,
+      EMPTY,
+    ],
+    [
+      WINDO,
+      EMPTY,
+      EMPTY,
+      EMPTY,
+      EMPTY,
+      EMPTY,
+      EMPTY,
+      EMPTY,
+      EMPTY,
+      EMPTY,
+      WINDO,
+    ],
   ];
 })();
 
@@ -61,7 +199,8 @@ export function getGameFieldData() {
     gameField.push(rowArray);
   }
 
-  const { guestsInvolvedInDeadlock, fearedAtLeastOnce } = findGuestsInvolvedInDeadlock(gameField);
+  const { guestsInvolvedInDeadlock, fearedAtLeastOnce } =
+    findGuestsInvolvedInDeadlock(gameField);
   resolveDeadlock(gameField, guestsInvolvedInDeadlock, fearedAtLeastOnce);
 
   return gameField;
@@ -76,7 +215,8 @@ function getGameFieldObject(type: CellType, row: number, column: number): Cell {
   };
 
   if (isChair(type) || isGuest(type)) {
-    obj.content = Math.random() > 0.4 || isGuest(type) ? getRandomPhobia() : type;
+    obj.content =
+      Math.random() > 0.4 || isGuest(type) ? getRandomPhobia() : type;
 
     if (!isChair(obj.content)) {
       const fearTypeRandomValue = Math.random();
@@ -98,9 +238,9 @@ function getGameFieldObject(type: CellType, row: number, column: number): Cell {
   return obj;
 }
 
-const getRandomPhobia = () => getRandomItem(phobiaEmojis);
+export const getRandomPhobia = () => getRandomItem(phobiaEmojis);
 
-function getRandomPhobiaExcluding(excluded: (Phobia | unknown)[]) {
+export function getRandomPhobiaExcluding(excluded: (Phobia | unknown)[]) {
   const emojis = phobiaEmojis.filter((emoji) => !excluded.includes(emoji));
   return getRandomItem(emojis);
 }
@@ -131,7 +271,9 @@ export function checkTableStates(gameFieldData: GameFieldData) {
     }
 
     guests.forEach((guest) => {
-      const afraidOf = guests.filter((otherGuest) => otherGuest.content === guest.fear);
+      const afraidOf = guests.filter(
+        (otherGuest) => otherGuest.content === guest.fear,
+      );
       const alsoAfraidOf = getScaryNeighbors(gameFieldData, guest);
       afraidOf.push(...alsoAfraidOf);
 
@@ -140,7 +282,9 @@ export function checkTableStates(gameFieldData: GameFieldData) {
     });
   }
 
-  const otherGuestsInRoom = getAllGuests(gameFieldData).filter((guest) => guest.tableIndex === undefined);
+  const otherGuestsInRoom = getAllGuests(gameFieldData).filter(
+    (guest) => guest.tableIndex === undefined,
+  );
   otherGuestsInRoom.forEach((guest) => {
     const afraidOf = getScaryNeighbors(gameFieldData, guest);
     guest.hasPanic = afraidOf.length > 0;
@@ -151,7 +295,7 @@ export function checkTableStates(gameFieldData: GameFieldData) {
   const afraidGuests = allGuests.filter((guest) => guest.hasPanic);
   allGuests.forEach((guest) => {
     guest.makesAfraid = afraidGuests.filter((otherGuest) =>
-      otherGuest.afraidOf?.find((afraidOf) => isSameCell(afraidOf, guest))
+      otherGuest.afraidOf?.find((afraidOf) => isSameCell(afraidOf, guest)),
     );
   });
 
@@ -160,19 +304,37 @@ export function checkTableStates(gameFieldData: GameFieldData) {
 
 function getScaryNeighbors(gameFieldData: GameFieldData, cell: Cell) {
   const neighbors = getNeighbors(gameFieldData, cell.row, cell.column);
-  return neighbors.filter((neighbor) => neighbor.content === cell.smallFear) as Guest[];
+  return neighbors.filter(
+    (neighbor) => neighbor.content === cell.smallFear,
+  ) as Guest[];
 }
 
-function getGuestsOnTable(gameFieldData: GameFieldData, tableIndex: number): Guest[] {
-  return gameFieldData.flat().filter((cell): cell is Guest => cell.tableIndex === tableIndex && hasPerson(cell));
+function getGuestsOnTable(
+  gameFieldData: GameFieldData,
+  tableIndex: number,
+): Guest[] {
+  return gameFieldData
+    .flat()
+    .filter(
+      (cell): cell is Guest =>
+        cell.tableIndex === tableIndex && hasPerson(cell),
+    );
 }
 
 // get all 8 neighbors of a cell, plus the three cells on the other side of the table
-function getNeighbors(gameFieldData: GameFieldData, row: number, column: number): Cell[] {
+function getNeighbors(
+  gameFieldData: GameFieldData,
+  row: number,
+  column: number,
+): Cell[] {
   const neighbors: Cell[] = [];
 
   for (let rowIndex = row - 1; rowIndex <= row + 1; rowIndex++) {
-    for (let columnIndex = column - 1; columnIndex <= column + 1; columnIndex++) {
+    for (
+      let columnIndex = column - 1;
+      columnIndex <= column + 1;
+      columnIndex++
+    ) {
       if (rowIndex === row && columnIndex === column) {
         continue;
       }
@@ -195,7 +357,7 @@ function getNeighbors(gameFieldData: GameFieldData, row: number, column: number)
         cell.column !== column &&
         cell.row <= row + 1 &&
         cell.row >= row - 1 &&
-        neighbors.indexOf(cell) === -1
+        neighbors.indexOf(cell) === -1,
     );
 
   neighbors.push(...additionalNeighbors);
@@ -214,8 +376,12 @@ export function getHappyGuests(gameFieldData: GameFieldData) {
 export function getHappyStats(gameFieldData: GameFieldData) {
   const happyGuestList = getHappyGuests(gameFieldData);
   const totalGuestList = getAllGuests(gameFieldData);
-  const unhappyGuestList = totalGuestList.filter((g) => !happyGuestList.includes(g));
-  const unseatedGuestList = totalGuestList.filter((g) => g.tableIndex === undefined);
+  const unhappyGuestList = totalGuestList.filter(
+    (g) => !happyGuestList.includes(g),
+  );
+  const unseatedGuestList = totalGuestList.filter(
+    (g) => g.tableIndex === undefined,
+  );
   const happyGuests = happyGuestList.length - unseatedGuestList.length;
 
   return {
@@ -227,7 +393,9 @@ export function getHappyStats(gameFieldData: GameFieldData) {
 }
 
 function getTableCells(gameFieldData: GameFieldData, tableIndex: number) {
-  return gameFieldData.flat().filter((cell) => isTable(cell) && cell.tableIndex === tableIndex);
+  return gameFieldData
+    .flat()
+    .filter((cell) => isTable(cell) && cell.tableIndex === tableIndex);
 }
 
 function findGuestsInvolvedInDeadlock(gameFieldData: GameFieldData) {
@@ -238,7 +406,8 @@ function findGuestsInvolvedInDeadlock(gameFieldData: GameFieldData) {
   const fearedAtLeastOnce: Phobia[] = [];
 
   guestsWithBigFear.forEach((guest) => {
-    const afraidByMany = guestsWithBigFear.filter((g) => g.fear === guest.content).length > 1;
+    const afraidByMany =
+      guestsWithBigFear.filter((g) => g.fear === guest.content).length > 1;
 
     const afraidOf = guestsWithBigFear.filter((g) => g.content === guest.fear);
 
@@ -262,12 +431,17 @@ function findGuestsInvolvedInDeadlock(gameFieldData: GameFieldData) {
     }
   });
 
-  console.log("guestsPotentiallyInvolvedInDeadlock", guestsPotentiallyInvolvedInDeadlock);
+  console.log(
+    "guestsPotentiallyInvolvedInDeadlock",
+    guestsPotentiallyInvolvedInDeadlock,
+  );
   console.log("scaryGuestsWithBigFear", scaryGuestsWithBigFear);
 
-  const guestsInvolvedInDeadlock = guestsPotentiallyInvolvedInDeadlock.filter((guest) => {
-    return scaryGuestsWithBigFear.includes(guest);
-  });
+  const guestsInvolvedInDeadlock = guestsPotentiallyInvolvedInDeadlock.filter(
+    (guest) => {
+      return scaryGuestsWithBigFear.includes(guest);
+    },
+  );
 
   console.log("guestsInvolvedInDeadlock", guestsInvolvedInDeadlock);
   console.log("fearedAtLeastOnce", fearedAtLeastOnce);
@@ -287,12 +461,19 @@ function pushPrimativeIfNotInList<T>(value: T, list: T[]) {
   }
 }
 
-function resolveDeadlock(gameFieldData: GameFieldData, guestsInvolvedInDeadlock: Guest[], fearedAtLeastOnce: Phobia[]) {
+function resolveDeadlock(
+  gameFieldData: GameFieldData,
+  guestsInvolvedInDeadlock: Guest[],
+  fearedAtLeastOnce: Phobia[],
+) {
   for (let i = 0; i < guestsInvolvedInDeadlock.length; i++) {
     const copyOfGuest = guestsInvolvedInDeadlock[i];
     const guest = gameFieldData[copyOfGuest.row][copyOfGuest.column];
 
-    guest.fear = getRandomPhobiaExcluding([guest.content, ...fearedAtLeastOnce]);
+    guest.fear = getRandomPhobiaExcluding([
+      guest.content,
+      ...fearedAtLeastOnce,
+    ]);
     if (guest.fear) {
       fearedAtLeastOnce.push(guest.fear);
     } else {

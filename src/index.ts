@@ -5,6 +5,8 @@ import {
   checkTableStates,
   getGameFieldData,
   getHappyStats,
+  getRandomPhobia,
+  getRandomPhobiaExcluding,
   hasPerson,
   initGameData,
   isSameCell,
@@ -14,8 +16,14 @@ import {
 import { getTranslation, TranslationKey } from "./translations";
 import { createDialog } from "./components/dialog";
 import { PubSubEvent, pubSubService } from "./utils/pub-sub-service";
-import { getGameField, updateCell, updatePanicStates, updateStateForSelection } from "./components/game-field";
-import { Cell } from "./types";
+import {
+  createCellElement,
+  getGameField,
+  updateCell,
+  updatePanicStates,
+  updateStateForSelection,
+} from "./components/game-field";
+import { Cell, CellType } from "./types";
 
 let configDialog, helpDialog, scoreElement;
 
@@ -28,7 +36,11 @@ function onNewGameClick() {
 
 function openConfig() {
   if (!configDialog) {
-    configDialog = createDialog(createElement({ text: "Config :-)" }), undefined, "Title :-)");
+    configDialog = createDialog(
+      createElement({ text: "Config :-)" }),
+      undefined,
+      "Title :-)",
+    );
   }
 
   configDialog.open();
@@ -36,13 +48,48 @@ function openConfig() {
 
 function openHelp() {
   if (!helpDialog) {
+    const helpContent = createElement({
+      cssClass: "rules",
+    });
+
+    const helpText = createElement({
+      text: getTranslation(TranslationKey.RULES_CONTENT),
+    });
+
+    const helpVisualization = createElement({
+      cssClass: "visualization",
+    });
+    const content = getRandomPhobia();
+    const fear = getRandomPhobiaExcluding([content]);
+    const smallFear = getRandomPhobiaExcluding([content, fear]);
+    const exampleCell: Cell = {
+      type: CellType.CHAIR,
+      content,
+      fear,
+      smallFear,
+      row: -1,
+      column: -1,
+    };
+    createCellElement(exampleCell);
+
+    const exampleHeading = createElement({
+      tag: "h3",
+      text: getTranslation(TranslationKey.EXAMPLE),
+    });
+    const exampleText = createElement({
+      text: `${getTranslation(TranslationKey.EXAMPLE_EMOJI, content)}
+${getTranslation(TranslationKey.EXAMPLE_BIG_FEAR, content, fear)}
+${getTranslation(TranslationKey.EXAMPLE_SMALL_FEAR, content, smallFear)}`,
+    });
+
+    helpVisualization.append(exampleHeading, exampleText, exampleCell.elem);
+
+    helpContent.append(helpText, helpVisualization);
+
     helpDialog = createDialog(
-      createElement({
-        text: getTranslation(TranslationKey.RULES_CONTENT),
-        cssClass: "rules",
-      }),
+      helpContent,
       undefined,
-      getTranslation(TranslationKey.RULES)
+      getTranslation(TranslationKey.RULES),
     );
   }
 
@@ -55,7 +102,9 @@ function init() {
   const header = createElement({
     tag: "header",
   });
-  header.append(createButton({ text: "🔄", onClick: onNewGameClick, iconBtn: true }));
+  header.append(
+    createButton({ text: "🔄", onClick: onNewGameClick, iconBtn: true }),
+  );
 
   header.append(createButton({ text: "❓", onClick: openHelp, iconBtn: true }));
 
@@ -63,7 +112,7 @@ function init() {
     createElement({
       tag: "h1",
       text: `${getTranslation(TranslationKey.WELCOME)}`,
-    })
+    }),
   );
   // header.append(
   //   createButton({ text: "⚙️", onClick: openConfig, iconBtn: true }),
@@ -126,7 +175,8 @@ function resetSelection(cell) {
 function updateState(gameFieldData) {
   const panickedTableCells = checkTableStates(gameFieldData);
   updatePanicStates(gameFieldData, panickedTableCells);
-  const { unseatedGuests, unhappyGuests, happyGuests, totalGuests } = getHappyStats(gameFieldData);
+  const { unseatedGuests, unhappyGuests, happyGuests, totalGuests } =
+    getHappyStats(gameFieldData);
   scoreElement.textContent = `${unseatedGuests}🚪 + ${unhappyGuests} 😱 + ${happyGuests} 😀 / ${totalGuests}`;
 
   if (happyGuests === totalGuests) {
@@ -137,7 +187,7 @@ function updateState(gameFieldData) {
       }),
       getTranslation(TranslationKey.PLAY_AGAIN),
       undefined,
-      true
+      true,
     )
       .open()
       .then((playAgain) => {

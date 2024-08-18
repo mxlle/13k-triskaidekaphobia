@@ -5,6 +5,10 @@ export const enum TranslationKey {
   WIN,
   PLAY_AGAIN,
   CANCEL,
+  EXAMPLE,
+  EXAMPLE_EMOJI,
+  EXAMPLE_BIG_FEAR,
+  EXAMPLE_SMALL_FEAR,
   RULES,
   RULES_CONTENT,
 }
@@ -25,6 +29,22 @@ const Translation = {
   [TranslationKey.CANCEL]: {
     en: "Cancel",
     de: "Abbrechen",
+  },
+  [TranslationKey.EXAMPLE]: {
+    en: "Example",
+    de: "Beispiel",
+  },
+  [TranslationKey.EXAMPLE_EMOJI]: {
+    en: "{0} wants to be seated at the table.",
+    de: "{0} möchte am Tisch sitzen.",
+  },
+  [TranslationKey.EXAMPLE_BIG_FEAR]: {
+    en: "But {0} is afraid if {1} sits at the same table.",
+    de: "Aber {0} hat Angst, wenn {1} am selben Tisch sitzt.",
+  },
+  [TranslationKey.EXAMPLE_SMALL_FEAR]: {
+    en: "And {0} is afraid if {1} sits next to or across from them.",
+    de: "Und {0} hat Angst, wenn {1} daneben oder gegenüber sitzt.",
   },
   [TranslationKey.RULES]: {
     en: "Rules",
@@ -65,9 +85,13 @@ export function getTranslation(key, ...args) {
 
   document.documentElement.setAttribute("lang", language);
 
-  if (args.length > 0) {
-    return Translation[key][language].replace("{0}", args[0]);
+  let translation = Translation[key][language];
+
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+    const regex = new RegExp(`\\{${i}\\}`, "g");
+    translation = translation.replace(regex, arg);
   }
 
-  return Translation[key][language];
+  return translation;
 }
