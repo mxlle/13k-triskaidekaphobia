@@ -3,58 +3,83 @@
 @import "../../theme";
 
 $tile-color-1: #152134;
-$tile-color-2: #162235;
+$tile-color-2: #1b273a;
+$border-style: outset;
 
 .game-field {
   @include grid-mixins.board-tile-grid;
+  @include grid-mixins.board-tile-grid-variables;
+
   margin: 1rem auto;
   justify-content: center;
+  --tile-color-1: #{$tile-color-1};
+  --tile-color-2: #{$tile-color-2};
+  --border-style: #{$border-style};
 
   .row {
     display: contents;
 
-    &:nth-child(odd) {
+    &:nth-child(even) {
       .cell {
-        background-color: $tile-color-2;
-
         &:nth-child(odd) {
-          background-color: $tile-color-1;
+          --tile-color-1: #{$tile-color-2};
+          --tile-color-2: #{$tile-color-1};
         }
+      }
+    }
+
+    &:nth-child(odd) {
+      .cell:not(:nth-child(odd)) {
+        --tile-color-1: #{$tile-color-2};
+        --tile-color-2: #{$tile-color-1};
       }
     }
   }
 
   .cell {
-    background-color: $tile-color-1;
+    background-color: var(--tile-color-2);
+    border: 0.0625rem var(--border-style) var(--tile-color-2);
     display: grid;
     place-items: center;
     color: $main-color;
     position: relative;
     cursor: pointer;
 
-    &:nth-child(odd) {
-      background-color: $tile-color-2;
-    }
-
     &.table {
       color: transparent;
       background: #563232 !important;
-      margin: -1px;
+      border: none;
       pointer-events: none;
-      z-index: 1;
+
+      &.middle {
+        z-index: 2;
+        font-family: cursive;
+
+        &::after {
+          content: "";
+          position: absolute;
+          width: 100%;
+          height: calc(700% + 6 * var(--gap));
+          background: #563232;
+          border: 0.125rem var(--border-style) #905d5d;
+          box-sizing: border-box;
+        }
+      }
     }
 
     &.door {
-      background: #333741;
       pointer-events: none;
     }
 
     &.selected {
       @include selectable($secondary-color, 0.3, 0.5);
+
+      z-index: 4;
+      outline: 0.125rem dashed $secondary-color;
     }
 
     &.panic {
-      border: 0.25rem solid $danger-color-light;
+      border: 0.2rem var(--border-style) $danger-color-light;
 
       span {
         animation: tremble 0.5s infinite;
@@ -88,11 +113,10 @@ $tile-color-2: #162235;
       z-index: 2;
 
       &.table {
-        z-index: 3;
-        animation: scary-pulse-small $scary-scale-props;
-
         &.middle {
+          z-index: 5;
           color: $danger-color-light;
+          animation: scary-pulse-table $scary-scale-props;
 
           span {
             z-index: 1;
@@ -140,7 +164,7 @@ body {
         @include selectable;
 
         &:not(.chair) {
-          border: 0.125rem dashed rgba(white, 0.4);
+          border: 0.125rem var(--border-style) rgba(white, 0.4);
 
           &.panic {
             border-color: $danger-color-light;
@@ -212,21 +236,21 @@ body {
   }
 }
 
-@keyframes scary-pulse-small {
+@keyframes scary-pulse-table {
   0% {
-    transform: scale(1);
+    transform: scale(1, 1);
   }
   15% {
-    transform: scale(1.02);
+    transform: scale(1.02, 1.01);
   }
   30% {
-    transform: scale(1.07);
+    transform: scale(1.07, 1.02);
   }
   50% {
-    transform: scale(1.15);
+    transform: scale(1.15, 1.05);
   }
   100% {
-    transform: scale(1);
+    transform: scale(1, 1);
   }
 }
 

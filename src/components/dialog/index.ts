@@ -3,7 +3,7 @@ import { createButton, createElement } from "../../utils/html-utils";
 import "./index.scss";
 import { getTranslation, TranslationKey } from "../../translations";
 
-let zIndexCounter = 0;
+let zIndexCounter = 10; // start at 5 to be above regular content
 
 export interface Dialog {
   open: (openImmediately?: boolean) => Promise<boolean>;
@@ -17,7 +17,7 @@ export function createDialog(
   innerElement: HTMLElement,
   submitButtonText?: string,
   headerText?: string,
-  shineThrough = false
+  shineThrough = false,
 ): Dialog {
   const dialog = createElement({
     cssClass: "dialog",
@@ -66,7 +66,9 @@ export function createDialog(
     dialog.appendChild(buttons);
   }
 
-  dialog.appendChild(createButton({ text: "X", onClick: closeDialog, iconBtn: true }));
+  dialog.appendChild(
+    createButton({ text: "X", onClick: closeDialog, iconBtn: true }),
+  );
 
   document.body.appendChild(dialog);
 
@@ -81,7 +83,10 @@ export function createDialog(
         setTimeout(() => dialog.classList.add("open"), 0);
       }
 
-      dialogContent.classList.toggle("is-overflowing", dialogContent.scrollHeight > dialogContent.clientHeight);
+      dialogContent.classList.toggle(
+        "is-overflowing",
+        dialogContent.scrollHeight > dialogContent.clientHeight,
+      );
 
       dialogContent.scrollTop = 0;
 
