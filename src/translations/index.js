@@ -11,8 +11,8 @@ export const TranslationKey = {
 
 const Translation = {
   [TranslationKey.WELCOME]: {
-    en: "Society of Polyphobics",
-    de: "Gesellschaft der Polyphobiker",
+    en: "Society of Multiphobics",
+    de: "Gesellschaft der Multiphobiker",
   },
   [TranslationKey.WIN]: {
     en: "You win 🎉",
