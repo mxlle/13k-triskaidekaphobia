@@ -1,4 +1,6 @@
 @import "../../theme";
+$tile-color-1: #152134;
+$tile-color-2: #162235;
 
 .game-field {
   width: min(90vw, 85vh);
@@ -11,10 +13,20 @@
 
   .row {
     display: contents;
+
+    &:nth-child(odd) {
+      .cell {
+        background-color: $tile-color-2;
+
+        &:nth-child(odd) {
+          background-color: $tile-color-1;
+        }
+      }
+    }
   }
 
   .cell {
-    background: #152134;
+    background-color: $tile-color-1;
     display: grid;
     place-items: center;
     color: $main-color;
@@ -22,9 +34,13 @@
     position: relative;
     cursor: pointer;
 
+    &:nth-child(odd) {
+      background-color: $tile-color-2;
+    }
+
     &.table {
       color: transparent;
-      background: #563232;
+      background: #563232 !important;
       margin: -1px;
       pointer-events: none;
       z-index: 1;
@@ -40,11 +56,19 @@
     }
 
     &.panic {
-      background: $danger-color-light;
+      border: 4px solid $danger-color-light;
+
+      span {
+        animation: tremble 0.5s infinite;
+        transform-origin: 50% 50%;
+      }
     }
 
     &.scary {
+      z-index: 2;
+
       &.table {
+        z-index: 3;
         animation: scale-pulse-small 2s infinite;
 
         &.middle {
@@ -52,8 +76,14 @@
         }
       }
 
+      &:not(.table) {
+        outline: 4px dashed $danger-color;
+      }
+
       span {
-        animation: scale-pulse-big 2s infinite;
+        z-index: 1;
+        animation: scary-pulse 2s infinite;
+        animation-timing-function: step-end;
       }
     }
 
@@ -110,6 +140,12 @@ body {
       &.chair:not(.has-person) {
         @include selectable($success-color-light);
       }
+
+      &.panic:not(.selected):not(.scary) {
+        span {
+          animation: none;
+        }
+      }
     }
   }
 }
@@ -130,10 +166,65 @@ body {
   0% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(1.5);
   }
   100% {
     transform: scale(1);
+  }
+}
+
+@keyframes scary-pulse {
+  0% {
+    transform: scale(1);
+  }
+  20% {
+    transform: scale(1.1);
+  }
+  40% {
+    transform: scale(1.25);
+  }
+  60% {
+    transform: scale(1.6);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes tremble {
+  0% {
+    transform: translate(2px, 1px) rotate(0deg);
+  }
+  10% {
+    transform: translate(-1px, -2px) rotate(-1deg);
+  }
+  20% {
+    transform: translate(-3px, 0px) rotate(1deg);
+  }
+  30% {
+    transform: translate(0px, 2px) rotate(0deg);
+  }
+  40% {
+    transform: translate(1px, -1px) rotate(1deg);
+  }
+  50% {
+    transform: translate(-1px, 2px) rotate(-1deg);
+  }
+  60% {
+    transform: translate(-3px, 1px) rotate(0deg);
+  }
+  70% {
+    transform: translate(2px, 1px) rotate(-1deg);
+  }
+  80% {
+    transform: translate(-1px, -1px) rotate(1deg);
+  }
+  90% {
+    transform: translate(2px, 2px) rotate(0deg);
+  }
+  100% {
+    transform: translate(1px, -2px) rotate(-1deg);
   }
 }
