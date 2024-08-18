@@ -1,0 +1,43 @@
+$squareCount: 11;
+$gap: 1px;
+$totalGap: ($squareCount - 1) * $gap;
+$buffer: 2rem; // = 2 * margin
+$headerHeight: 100px;
+// $maxWidth: 40rem + $buffer + $totalGap;
+$squareSize: calc(
+  calc(min(100vw, calc(100vh - $headerHeight)) - $buffer - $totalGap) /
+    $squareCount
+);
+$font-size: calc(0.6 * $squareSize);
+
+@mixin board-tile-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--columns, $squareCount), $squareSize);
+  grid-template-rows: repeat(var(--rows, $squareCount + 1), $squareSize);
+  gap: $gap;
+  font-size: $font-size;
+  line-height: 1;
+}
+
+@mixin board-tile-grid-variables {
+  --square-size: #{$squareSize};
+  --gap: #{$gap};
+}
+
+@mixin neighbors {
+  &.has-neighbor-top {
+    margin-top: -1px;
+  }
+
+  &.has-neighbor-left {
+    margin-left: -1px;
+  }
+
+  &.has-neighbor-right {
+    margin-right: -1px;
+  }
+
+  &.has-neighbor-bottom {
+    margin-bottom: -1px;
+  }
+}

@@ -1,15 +1,14 @@
+@use "../../grid-mixins";
+
 @import "../../theme";
+
 $tile-color-1: #152134;
 $tile-color-2: #162235;
 
 .game-field {
-  width: min(90vw, 85vh);
-  height: min(90vw, 85vh);
-  display: grid;
-  gap: 1px;
-  grid-template-columns: repeat(11, 1fr);
-  grid-template-rows: repeat(11, 1fr);
+  @include grid-mixins.board-tile-grid;
   margin: 1rem auto;
+  justify-content: center;
 
   .row {
     display: contents;
@@ -30,7 +29,6 @@ $tile-color-2: #162235;
     display: grid;
     place-items: center;
     color: $main-color;
-    font-size: 1.5em;
     position: relative;
     cursor: pointer;
 
@@ -56,7 +54,7 @@ $tile-color-2: #162235;
     }
 
     &.panic {
-      border: 4px solid $danger-color-light;
+      border: 0.25rem solid $danger-color-light;
 
       span {
         animation: tremble 0.5s infinite;
@@ -77,7 +75,7 @@ $tile-color-2: #162235;
       }
 
       &:not(.table) {
-        outline: 4px dashed $danger-color;
+        outline: 0.25rem dashed $danger-color;
       }
 
       span {
@@ -110,6 +108,7 @@ $tile-color-2: #162235;
       &.small {
         width: 35%;
         height: 35%;
+        font-size: 0.4em;
         right: 0;
         left: auto;
       }
@@ -124,7 +123,7 @@ body {
         @include selectable;
 
         &:not(.chair) {
-          border: 2px dashed rgba(white, 0.4);
+          border: 0.125rem dashed rgba(white, 0.4);
 
           &.panic {
             border-color: $danger-color-light;
