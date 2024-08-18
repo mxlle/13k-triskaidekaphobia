@@ -94,6 +94,13 @@ header {
   max-width: 800px;
   padding: 0 1rem;
 
+  em {
+    font-style: normal;
+    font-weight: bold;
+    font-family: cursive;
+    color: $danger-color-light;
+  }
+
   .visualization {
     display: grid;
     gap: 1rem;

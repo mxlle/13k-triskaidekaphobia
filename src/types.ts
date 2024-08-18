@@ -1,5 +1,4 @@
-import { SetRequired, Tagged } from "type-fest";
-import { Emoji } from "./utils/emojis/emoji-util";
+import { Phobia } from "./phobia";
 
 export enum CellType {
   GUEST = "👤",
@@ -9,8 +8,6 @@ export enum CellType {
   DOOR = "🚪",
   WINDOW = "🪟",
 }
-
-export type Phobia = Tagged<Emoji, "Phobia">;
 
 export interface Cell {
   type: CellType;

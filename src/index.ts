@@ -13,7 +13,11 @@ import {
   moveGuest,
   newGame,
 } from "./game-logic";
-import { getTranslation, TranslationKey } from "./translations";
+import {
+  getTranslation,
+  isGermanLanguage,
+  TranslationKey,
+} from "./translations";
 import { createDialog } from "./components/dialog";
 import { PubSubEvent, pubSubService } from "./utils/pub-sub-service";
 import {
@@ -24,6 +28,7 @@ import {
   updateStateForSelection,
 } from "./components/game-field";
 import { Cell, CellType } from "./types";
+import { getPhobiaName } from "./phobia";
 
 let configDialog, helpDialog, scoreElement;
 
@@ -52,9 +57,8 @@ function openHelp() {
       cssClass: "rules",
     });
 
-    const helpText = createElement({
-      text: getTranslation(TranslationKey.RULES_CONTENT),
-    });
+    const helpText = createElement({});
+    helpText.innerHTML = getTranslation(TranslationKey.RULES_CONTENT);
 
     const helpVisualization = createElement({
       cssClass: "visualization",
@@ -72,15 +76,18 @@ function openHelp() {
     };
     createCellElement(exampleCell);
 
+    const isGerman = isGermanLanguage();
+    const fearName = getPhobiaName(fear, isGerman);
+    const smallFearName = getPhobiaName(smallFear, isGerman);
+
     const exampleHeading = createElement({
       tag: "h3",
       text: getTranslation(TranslationKey.EXAMPLE),
     });
-    const exampleText = createElement({
-      text: `${getTranslation(TranslationKey.EXAMPLE_EMOJI, content)}
-${getTranslation(TranslationKey.EXAMPLE_BIG_FEAR, content, fear)}
-${getTranslation(TranslationKey.EXAMPLE_SMALL_FEAR, content, smallFear)}`,
-    });
+    const exampleText = createElement({});
+    exampleText.innerHTML = `${getTranslation(TranslationKey.EXAMPLE_EMOJI, content)}<br/>
+${getTranslation(TranslationKey.EXAMPLE_BIG_FEAR, content, fearName, fear)}<br/>
+${getTranslation(TranslationKey.EXAMPLE_SMALL_FEAR, content, smallFearName, smallFear)}`;
 
     helpVisualization.append(exampleHeading, exampleText, exampleCell.elem);
 

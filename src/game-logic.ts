@@ -1,9 +1,6 @@
 import { getRandomItem } from "./utils/array-utils";
-import { splitEmojis } from "./utils/emojis/emoji-util";
-import { phobias } from "./utils/emojis/sets";
-import { Cell, CellType, GameFieldData, Guest, Phobia } from "./types";
-
-const phobiaEmojis = splitEmojis(phobias) as Phobia[];
+import { Cell, CellType, GameFieldData, Guest } from "./types";
+import { Phobia, PHOBIAS_EMOJIS } from "./phobia";
 
 export function newGame() {
   // resetGlobals();
@@ -238,10 +235,13 @@ function getGameFieldObject(type: CellType, row: number, column: number): Cell {
   return obj;
 }
 
-export const getRandomPhobia = () => getRandomItem(phobiaEmojis);
+export const getRandomPhobia = (): Phobia =>
+  getRandomItem<Phobia>([...PHOBIAS_EMOJIS]);
 
-export function getRandomPhobiaExcluding(excluded: (Phobia | unknown)[]) {
-  const emojis = phobiaEmojis.filter((emoji) => !excluded.includes(emoji));
+export function getRandomPhobiaExcluding(
+  excluded: (Phobia | unknown)[],
+): Phobia {
+  const emojis = PHOBIAS_EMOJIS.filter((emoji) => !excluded.includes(emoji));
   return getRandomItem(emojis);
 }
 

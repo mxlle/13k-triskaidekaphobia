@@ -39,12 +39,12 @@ const Translation = {
     de: "{0} möchte am Tisch sitzen.",
   },
   [TranslationKey.EXAMPLE_BIG_FEAR]: {
-    en: "But {0} is afraid if {1} sits at the same table.",
-    de: "Aber {0} hat Angst, wenn {1} am selben Tisch sitzt.",
+    en: "But {0} has <em>{1}</em> and is afraid if {2} sits at the same table.",
+    de: "Aber {0} hat <em>{1}</em> und fürchtet sich, wenn {2} am selben Tisch sitzt.",
   },
   [TranslationKey.EXAMPLE_SMALL_FEAR]: {
-    en: "And {0} is afraid if {1} sits next to or across from them.",
-    de: "Und {0} hat Angst, wenn {1} daneben oder gegenüber sitzt.",
+    en: "Also, {0} has <em>{1}</em> and is afraid if {2} sits next to or across from them.",
+    de: "{0} hat auch <em>{1}</em> und fürchtet sich, wenn {2} daneben oder gegenüber sitzt.",
   },
   [TranslationKey.RULES]: {
     en: "Rules",
@@ -59,7 +59,7 @@ const Translation = {
 🍽️ The big fear triggers already if the emoji is seated on the same table as the emoji they are afraid of.
 🪑 The small fear triggers only if the emoji is seated next to or across (also diagonally) from the emoji they are afraid of.
 
-1️⃣3️⃣🙀 Also all emojis are afraid of the number 13.
+1️⃣3️⃣🙀 Also all emojis suffer from <em>Triskaidekaphobia</em>.
 
 😀 If all emojis are happy, you win! 🎉`,
     de: `🏁 Das Ziel ist es, alle Emojis an den Tischen zu platzieren.
@@ -70,11 +70,15 @@ const Translation = {
 🍽️ Die große Angst wird bereits ausgelöst, wenn das Emoji am selben Tisch wie das Emoji sitzt, vor dem es Angst hat.
 🪑 Die kleine Angst wird nur ausgelöst, wenn das Emoji neben oder gegenüber dem Emoji sitzt, vor dem es Angst hat (auch schräg gegenüber).
 
-1️⃣3️⃣🙀 Außerdem haben alle Emojis Angst vor der Zahl 13.
+1️⃣3️⃣🙀 Außerdem haben alle Emojis <em>Triskaidekaphobie</em>!
 
 😀 Wenn alle glücklich sind, gewinnst du!`,
   },
 };
+
+export function isGermanLanguage() {
+  return getShortLanguageName(navigator.language) === "de";
+}
 
 export function getTranslation(key, ...args) {
   let language = getShortLanguageName(navigator.language);
