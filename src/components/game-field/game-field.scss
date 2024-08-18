@@ -62,14 +62,25 @@ $tile-color-2: #162235;
       }
     }
 
+    $scary-scale-props: 2.5s infinite step-end;
+
     &.scary {
       z-index: 2;
       outline: 0.25rem dashed $danger-color;
 
       span {
         z-index: 1;
-        animation: scary-pulse 2s infinite;
-        animation-timing-function: step-end;
+        animation: scary-pulse $scary-scale-props;
+      }
+    }
+
+    &.scared:not(.scary) {
+      z-index: 2;
+      outline: 0.125rem dotted $danger-color;
+
+      span {
+        z-index: 1;
+        animation: scared-pulse $scary-scale-props;
       }
     }
 
@@ -78,16 +89,14 @@ $tile-color-2: #162235;
 
       &.table {
         z-index: 3;
-        animation: scary-pulse-small 2s infinite;
-        animation-timing-function: step-end;
+        animation: scary-pulse-small $scary-scale-props;
 
         &.middle {
           color: $danger-color-light;
 
           span {
             z-index: 1;
-            animation: scary-pulse 2s infinite;
-            animation-timing-function: step-end;
+            animation: scary-pulse $scary-scale-props;
           }
         }
       }
@@ -151,7 +160,7 @@ body {
         @include selectable($success-color-light);
       }
 
-      &.panic:not(.selected):not(.scary) {
+      &.panic:not(.selected):not(.scary):not(.scared) {
         span {
           animation: none;
         }
@@ -189,13 +198,13 @@ body {
   0% {
     transform: scale(1);
   }
-  20% {
+  15% {
     transform: scale(1.1);
   }
-  40% {
+  30% {
     transform: scale(1.25);
   }
-  60% {
+  50% {
     transform: scale(1.6);
   }
   100% {
@@ -207,14 +216,32 @@ body {
   0% {
     transform: scale(1);
   }
-  20% {
+  15% {
     transform: scale(1.02);
   }
-  40% {
+  30% {
     transform: scale(1.07);
   }
-  60% {
+  50% {
     transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes scared-pulse {
+  0% {
+    transform: scale(1);
+  }
+  15% {
+    transform: scale(0.9);
+  }
+  30% {
+    transform: scale(0.75);
+  }
+  50% {
+    transform: scale(0.4);
   }
   100% {
     transform: scale(1);

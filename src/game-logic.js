@@ -185,6 +185,14 @@ export function checkTableStates(gameFieldData) {
     guest.afraidOf = afraidOf;
   });
 
+  const allGuests = getAllGuests(gameFieldData);
+  const afraidGuests = allGuests.filter((guest) => guest.hasPanic);
+  allGuests.forEach((guest) => {
+    guest.makesAfraid = afraidGuests.filter((otherGuest) =>
+      otherGuest.afraidOf?.find((afraidOf) => isSameCell(afraidOf, guest)),
+    );
+  });
+
   return panickedTableCells;
 }
 

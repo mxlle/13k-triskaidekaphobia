@@ -103,15 +103,12 @@ export function updateCell(cell) {
 export function updatePanicStates(gameFieldData, panickedTableCells) {
   gameFieldData.flat().forEach((cell) => {
     cell.elem.classList.remove("scary");
+    cell.elem.classList.remove("scared");
     cell.elem.classList.remove("triskaidekaphobia");
-  });
 
-  gameFieldData.forEach((row) => {
-    row.forEach((cell) => {
-      if (hasPerson(cell)) {
-        cell.elem.classList.toggle("panic", cell.hasPanic);
-      }
-    });
+    if (hasPerson(cell)) {
+      cell.elem.classList.toggle("panic", cell.hasPanic);
+    }
   });
 
   panickedTableCells.forEach((cell) => {
@@ -122,9 +119,14 @@ export function updatePanicStates(gameFieldData, panickedTableCells) {
 export function updateStateForSelection(gameFieldData, selectedCell) {
   gameFieldData.flat().forEach((cell) => {
     cell.elem.classList.remove("scary");
+    cell.elem.classList.remove("scared");
   });
 
   selectedCell?.afraidOf?.forEach((afraidOf) => {
     afraidOf.elem.classList.add("scary");
+  });
+
+  selectedCell?.makesAfraid?.forEach((makesAfraid) => {
+    makesAfraid.elem.classList.add("scared");
   });
 }
