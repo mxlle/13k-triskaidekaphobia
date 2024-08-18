@@ -225,6 +225,25 @@ export function getHappyGuests(gameFieldData) {
   return getAllGuests(gameFieldData).filter((guest) => !guest.hasPanic);
 }
 
+export function getHappyStats(gameFieldData) {
+  const happyGuestList = getHappyGuests(gameFieldData);
+  const totalGuestList = getAllGuests(gameFieldData);
+  const unhappyGuestList = totalGuestList.filter(
+    (g) => !happyGuestList.includes(g),
+  );
+  const unseatedGuestList = totalGuestList.filter(
+    (g) => g.tableIndex === undefined,
+  );
+  const happyGuests = happyGuestList.length - unseatedGuestList.length;
+
+  return {
+    unseatedGuests: unseatedGuestList.length,
+    unhappyGuests: unhappyGuestList.length,
+    happyGuests,
+    totalGuests: totalGuestList.length,
+  };
+}
+
 function getTableCells(gameFieldData, tableIndex) {
   return gameFieldData
     .flat()

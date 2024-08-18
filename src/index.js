@@ -3,9 +3,8 @@ import "./index.scss";
 import { createButton, createElement } from "./utils/html-utils";
 import {
   checkTableStates,
-  getAllGuests,
   getGameFieldData,
-  getHappyGuests,
+  getHappyStats,
   initGameData,
   moveGuest,
   newGame,
@@ -116,14 +115,11 @@ function init() {
 function updateState(gameFieldData) {
   const panickedTableCells = checkTableStates(gameFieldData);
   updatePanicStates(gameFieldData, panickedTableCells);
-  const happyGuests = getHappyGuests(gameFieldData);
-  const totalGuests = getAllGuests(gameFieldData);
-  const unhappyGuests = totalGuests.filter((g) => !happyGuests.includes(g));
-  const unseatedGuests = totalGuests.filter((g) => g.tableIndex === undefined);
-  const numHappyGuests = happyGuests.length - unseatedGuests.length;
-  scoreElement.textContent = `${unseatedGuests.length}🚪 + ${unhappyGuests.length} 😱 + ${numHappyGuests} 😀 / ${totalGuests.length}`;
+  const { unseatedGuests, unhappyGuests, happyGuests, totalGuests } =
+    getHappyStats(gameFieldData);
+  scoreElement.textContent = `${unseatedGuests}🚪 + ${unhappyGuests} 😱 + ${happyGuests} 😀 / ${totalGuests}`;
 
-  if (numHappyGuests === totalGuests.length) {
+  if (happyGuests === totalGuests) {
     createDialog(
       createElement({
         text: getTranslation(TranslationKey.WIN),
