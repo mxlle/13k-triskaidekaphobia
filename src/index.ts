@@ -14,8 +14,10 @@ import {
   newGame,
 } from "./game-logic";
 import {
+  getRandomTranslationFromList,
   getTranslation,
   isGermanLanguage,
+  ListsOfTranslationsKey,
   TranslationKey,
 } from "./translations";
 import { createDialog } from "./components/dialog";
@@ -29,6 +31,7 @@ import {
 } from "./components/game-field";
 import { Cell, CellType } from "./types";
 import { getPhobiaName } from "./phobia";
+import { speak } from "./utils/speech";
 
 let configDialog, helpDialog, scoreElement;
 
@@ -133,32 +136,63 @@ function init() {
 
   document.body.append(header);
 
-  function cellClickHandler(cell: Cell) {
+  async function cellClickHandler(cell: Cell) {
     if (clickedCell) {
       if (isSameCell(clickedCell, cell)) {
         resetSelection(cell);
         updateStateForSelection(gameFieldData, clickedCell);
-        return;
-      }
-
-      if (hasPerson(cell)) {
+      } else if (hasPerson(cell)) {
         clickedCell.elem.classList.remove("selected");
         clickedCell = cell;
         updateStateForSelection(gameFieldData, clickedCell);
-        return;
+      } else {
+        moveGuest(clickedCell, cell);
+        updateCell(clickedCell);
+        updateCell(cell);
+        resetSelection(cell);
+        updateState(gameFieldData);
       }
-
-      moveGuest(clickedCell, cell);
-      updateCell(clickedCell);
-      updateCell(cell);
-      resetSelection(cell);
-      updateState(gameFieldData);
     } else {
       clickedCell = cell;
       updateStateForSelection(gameFieldData, clickedCell);
     }
 
     document.body.classList.toggle("selecting", !!clickedCell);
+
+    if (cell === clickedCell && hasPerson(cell)) {
+      if (cell.hasPanic && !cell.afraidOf?.length) {
+        await speak(
+          getRandomTranslationFromList(
+            ListsOfTranslationsKey.TRISKAIDEKAPHOBIA,
+          ),
+          1.3,
+          1.2,
+        );
+
+        return;
+      }
+
+      await speak(
+        getRandomTranslationFromList(
+          ListsOfTranslationsKey.GREETING,
+          cell.content,
+        ),
+        1.2,
+        1,
+      );
+
+      for (let i = 0; i < cell.afraidOf?.length; i++) {
+        let afraidCell = cell.afraidOf[i];
+        await speak(
+          getRandomTranslationFromList(
+            ListsOfTranslationsKey.FEAR,
+            afraidCell.content,
+          ),
+          1.2,
+          1,
+        );
+      }
+    }
   }
 
   const gameFieldData = getGameFieldData();
@@ -187,9 +221,10 @@ function updateState(gameFieldData) {
   scoreElement.textContent = `${unseatedGuests}🚪 + ${unhappyGuests} 😱 + ${happyGuests} 😀 / ${totalGuests}`;
 
   if (happyGuests === totalGuests) {
+    void speak(getTranslation(TranslationKey.WIN), 1, 1.2);
     createDialog(
       createElement({
-        text: getTranslation(TranslationKey.WIN),
+        text: getTranslation(TranslationKey.WIN) + " 🎉",
         cssClass: "win-screen",
       }),
       getTranslation(TranslationKey.PLAY_AGAIN),

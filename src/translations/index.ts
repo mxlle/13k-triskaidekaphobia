@@ -1,4 +1,5 @@
 import { getShortLanguageName } from "../utils/language-util";
+import { getRandomItem } from "../utils/array-utils";
 
 export const enum TranslationKey {
   WELCOME,
@@ -19,8 +20,8 @@ const Translation = {
     de: "Gesellschaft der Multiphobiker",
   },
   [TranslationKey.WIN]: {
-    en: "You win 🎉",
-    de: "Gewonnen 🎉",
+    en: "You win!",
+    de: "Gewonnen!",
   },
   [TranslationKey.PLAY_AGAIN]: {
     en: "Play again",
@@ -76,11 +77,54 @@ const Translation = {
   },
 };
 
+export const enum ListsOfTranslationsKey {
+  FEAR,
+  GREETING,
+  TRISKAIDEKAPHOBIA,
+}
+
+const ListsOfTranslations = {
+  [ListsOfTranslationsKey.FEAR]: {
+    en: ["Oh no! {0}!!!", "Aaah, {0}!!!", "{0} all over. Why did I come?"],
+    de: [
+      "Oh nein! {0}!!!",
+      "Aaah, {0}!!!",
+      "Ach du Schreck!! {0}!!",
+      "{0} überall. Warum bin ich nur gekommen?",
+    ],
+  },
+  [ListsOfTranslationsKey.GREETING]: {
+    en: [
+      "Hello, I am {0}!",
+      "Hi, I am {0}!",
+      "Hey, I am {0}!",
+      "Hi there, I am {0}!",
+    ],
+    de: ["Hallo, ich bin {0}!", "Hi, ich bin {0}!", "Hey, ich bin {0}!"],
+  },
+  [ListsOfTranslationsKey.TRISKAIDEKAPHOBIA]: {
+    en: [
+      "Oh no! My Triskaidekaphobia!",
+      "When 13 dine together, the first to rise will be the first to die",
+      "13 is an unlucky number",
+      "I'm afraid of the number 13",
+      "Aaaaaaaah! 13!",
+    ],
+    de: [
+      "Oh nein! Meine Triskaidekaphobie!",
+      "Wenn 13 zusammen essen, wird der erste, der aufsteht, der erste sein, der stirbt",
+      "13 ist eine Unglückszahl",
+      "Ich habe Angst vor der Zahl 13",
+      "Aaaaaaaah! 13!",
+    ],
+  },
+};
+
 export function isGermanLanguage() {
   return getShortLanguageName(navigator.language) === "de";
 }
 
-export function getTranslation(key, ...args) {
+export function getTranslation(key: TranslationKey, ...args) {
   let language = getShortLanguageName(navigator.language);
 
   language = language in Translation[key] ? language : "en";
@@ -98,4 +142,24 @@ export function getTranslation(key, ...args) {
   }
 
   return translation;
+}
+
+export function getRandomTranslationFromList(
+  key: ListsOfTranslationsKey,
+  ...args
+) {
+  let language = getShortLanguageName(navigator.language);
+
+  language = language in ListsOfTranslations[key] ? language : "en";
+
+  const speechList = ListsOfTranslations[key][language];
+  let speech = getRandomItem<string>(speechList);
+
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+    const regex = new RegExp(`\\{${i}\\}`, "g");
+    speech = speech.replace(regex, arg);
+  }
+
+  return speech;
 }
