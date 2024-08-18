@@ -9,6 +9,8 @@ import {
   isWindow,
 } from "../../game-logic";
 import { Cell, GameFieldData } from "../../types";
+import { isGermanLanguage } from "../../translations";
+import { getPhobiaName } from "../../phobia";
 
 export function getGameField(
   gameFieldData: Cell[][],
@@ -102,6 +104,8 @@ export function createCellElement(cell: Cell, isInMiddle: boolean = false) {
   cell.textElem = textElem;
   cell.fearElem = fearElem;
   cell.smallFearElem = smallFearElem;
+
+  setCellFearTooltips(cell);
 }
 
 export function updateCell(cell: Cell) {
@@ -112,6 +116,17 @@ export function updateCell(cell: Cell) {
   cell.smallFearElem!.classList.toggle("hidden", !cell.smallFear);
   cell.elem!.classList.toggle("has-person", hasPerson(cell));
   cell.elem!.classList.toggle("panic", cell.hasPanic);
+  setCellFearTooltips(cell);
+}
+
+function setCellFearTooltips(cell: Cell) {
+  const isGerman = isGermanLanguage();
+  const fearName = cell.fear ? getPhobiaName(cell.fear, isGerman) : "";
+  const smallFearName = cell.smallFear
+    ? getPhobiaName(cell.smallFear, isGerman)
+    : "";
+  cell.fearElem!.setAttribute("title", fearName);
+  cell.smallFearElem!.setAttribute("title", smallFearName);
 }
 
 export function updatePanicStates(
