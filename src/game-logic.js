@@ -2,6 +2,8 @@ import { getRandomItem } from "./utils/array-utils";
 import { splitEmojis } from "./utils/emojis/emoji-util";
 import { phobias } from "./utils/emojis/sets";
 
+const phobiaEmojis = splitEmojis(phobias);
+
 export function newGame() {
   // resetGlobals();
   // initGameData();
@@ -84,6 +86,10 @@ export function getGameFieldData() {
     gameField.push(rowArray);
   }
 
+  const { guestsInvolvedInDeadlock, fearedAtLeastOnce } =
+    findGuestsInvolvedInDeadlock(gameField);
+  resolveDeadlock(gameField, guestsInvolvedInDeadlock, fearedAtLeastOnce);
+
   return gameField;
 }
 
@@ -100,15 +106,11 @@ function getGameFieldObject(type, row, column) {
       const fearTypeRandomValue = Math.random();
 
       if (fearTypeRandomValue > 0.4) {
-        do {
-          fear = getRandomEmoji();
-        } while (content === fear);
+        fear = getRandomEmojiExcluding([content]);
       }
 
       if (fearTypeRandomValue < 0.6) {
-        do {
-          smallFear = getRandomEmoji();
-        } while (content === smallFear || fear === smallFear);
+        smallFear = getRandomEmojiExcluding([content, fear]);
       }
     }
   }
@@ -128,8 +130,13 @@ function getGameFieldObject(type, row, column) {
   };
 }
 
-function getRandomEmoji() {
-  return getRandomItem(splitEmojis(phobias));
+function getRandomEmoji(emojis = phobiaEmojis) {
+  return getRandomItem(emojis);
+}
+
+function getRandomEmojiExcluding(excluded) {
+  const emojis = phobiaEmojis.filter((emoji) => !excluded.includes(emoji));
+  return getRandomItem(emojis);
 }
 
 export function moveGuest(fromCell, toCell) {
@@ -263,4 +270,87 @@ function getTableCells(gameFieldData, tableIndex) {
   return gameFieldData
     .flat()
     .filter((cell) => isTable(cell) && cell.tableIndex === tableIndex);
+}
+
+function findGuestsInvolvedInDeadlock(gameFieldData) {
+  const allGuests = getAllGuests(gameFieldData).map((guest) => ({ ...guest }));
+  const guestsWithBigFear = allGuests.filter((guest) => guest.fear);
+  const guestsPotentiallyInvolvedInDeadlock = [];
+  const scaryGuestsWithBigFear = [];
+  const fearedAtLeastOnce = [];
+
+  guestsWithBigFear.forEach((guest) => {
+    const afraidByMany =
+      guestsWithBigFear.filter((g) => g.fear === guest.content).length > 1;
+
+    const afraidOf = guestsWithBigFear.filter((g) => g.content === guest.fear);
+
+    if (afraidByMany && afraidOf.length > 0) {
+      pushCellIfNotInList(guest, guestsPotentiallyInvolvedInDeadlock);
+      pushCellIfNotInList(guest, scaryGuestsWithBigFear);
+    }
+
+    if (afraidOf.length > 1) {
+      pushCellIfNotInList(guest, guestsPotentiallyInvolvedInDeadlock);
+
+      for (let i = 0; i < afraidOf.length; i++) {
+        pushCellIfNotInList(afraidOf[i], scaryGuestsWithBigFear);
+      }
+    }
+
+    if (afraidOf.length > 0) {
+      for (let i = 0; i < afraidOf.length; i++) {
+        pushPrimativeIfNotInList(afraidOf[i].content, fearedAtLeastOnce);
+      }
+    }
+  });
+
+  console.log(
+    "guestsPotentiallyInvolvedInDeadlock",
+    guestsPotentiallyInvolvedInDeadlock,
+  );
+  console.log("scaryGuestsWithBigFear", scaryGuestsWithBigFear);
+
+  const guestsInvolvedInDeadlock = guestsPotentiallyInvolvedInDeadlock.filter(
+    (guest) => {
+      return scaryGuestsWithBigFear.includes(guest);
+    },
+  );
+
+  console.log("guestsInvolvedInDeadlock", guestsInvolvedInDeadlock);
+  console.log("fearedAtLeastOnce", fearedAtLeastOnce);
+
+  return { guestsInvolvedInDeadlock, fearedAtLeastOnce };
+}
+
+function pushCellIfNotInList(cell, list) {
+  if (!list.find((c) => isSameCell(c, cell))) {
+    list.push(cell);
+  }
+}
+
+function pushPrimativeIfNotInList(value, list) {
+  if (!list.includes(value)) {
+    list.push(value);
+  }
+}
+
+function resolveDeadlock(
+  gameFieldData,
+  guestsInvolvedInDeadlock,
+  fearedAtLeastOnce,
+) {
+  for (let i = 0; i < guestsInvolvedInDeadlock.length; i++) {
+    const copyOfGuest = guestsInvolvedInDeadlock[i];
+    const guest = gameFieldData[copyOfGuest.row][copyOfGuest.column];
+
+    guest.fear = getRandomEmojiExcluding([guest.content, ...fearedAtLeastOnce]);
+    if (guest.fear) {
+      fearedAtLeastOnce.push(guest.fear);
+    } else {
+      guest.smallFear = getRandomEmoji();
+    }
+
+    console.log("updated guest to resolve deadlock", copyOfGuest, guest);
+  }
 }
