@@ -122,6 +122,14 @@ body {
     .cell {
       &.has-person {
         @include selectable;
+
+        &:not(.chair) {
+          border: 2px dashed rgba(white, 0.4);
+
+          &.panic {
+            border-color: $danger-color-light;
+          }
+        }
       }
 
       &:not(.has-person) {
@@ -132,11 +140,6 @@ body {
 
   &.selecting {
     .cell {
-      &:not(.chair),
-      &.has-person:not(.selected) {
-        pointer-events: none;
-      }
-
       &.chair:not(.has-person) {
         @include selectable($success-color-light);
       }

@@ -101,7 +101,7 @@ export function updatePanicStates(gameFieldData, panickedTableCells) {
 
   gameFieldData.forEach((row) => {
     row.forEach((cell) => {
-      if (isChair(cell) && hasPerson(cell)) {
+      if (hasPerson(cell)) {
         cell.elem.classList.toggle("panic", cell.hasPanic);
       }
     });
@@ -109,5 +109,19 @@ export function updatePanicStates(gameFieldData, panickedTableCells) {
 
   panickedTableCells.forEach((cell) => {
     cell.elem.classList.add("scary");
+  });
+}
+
+export function updateStateForSelection(gameFieldData, selectedCell) {
+  gameFieldData.flat().forEach((cell) => {
+    if (!hasPerson(cell)) {
+      return; // keep for table
+    }
+
+    cell.elem.classList.remove("scary");
+  });
+
+  selectedCell?.afraidOf?.forEach((afraidOf) => {
+    afraidOf.elem.classList.add("scary");
   });
 }

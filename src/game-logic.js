@@ -46,6 +46,10 @@ export function hasPerson(cell) {
   return !!cell.fear || !!cell.smallFear;
 }
 
+export function isSameCell(cell1, cell2) {
+  return cell1.row === cell2.row && cell1.column === cell2.column;
+}
+
 const GUEST = "👤";
 const EMPTY = "";
 const TABLE = "🟫";
@@ -157,10 +161,7 @@ export function checkTableStates(gameFieldData) {
       const afraidOf = guests.filter(
         (otherGuest) => otherGuest.content === guest.fear,
       );
-      const neighbors = getNeighbors(gameFieldData, guest.row, guest.column);
-      const alsoAfraidOf = neighbors.filter(
-        (neighbor) => neighbor.content === guest.smallFear,
-      );
+      const alsoAfraidOf = getScaryNeighbors(gameFieldData, guest);
       afraidOf.push(...alsoAfraidOf);
 
       guest.hasPanic = isPanic || afraidOf.length > 0;
@@ -168,7 +169,21 @@ export function checkTableStates(gameFieldData) {
     });
   }
 
+  const otherGuestsInRoom = getAllGuests(gameFieldData).filter(
+    (guest) => guest.tableIndex === undefined,
+  );
+  otherGuestsInRoom.forEach((guest) => {
+    const afraidOf = getScaryNeighbors(gameFieldData, guest);
+    guest.hasPanic = afraidOf.length > 0;
+    guest.afraidOf = afraidOf;
+  });
+
   return panickedTableCells;
+}
+
+function getScaryNeighbors(gameFieldData, cell) {
+  const neighbors = getNeighbors(gameFieldData, cell.row, cell.column);
+  return neighbors.filter((neighbor) => neighbor.content === cell.smallFear);
 }
 
 function getGuestsOnTable(gameFieldData, tableIndex) {

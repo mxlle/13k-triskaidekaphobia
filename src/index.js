@@ -5,7 +5,9 @@ import {
   checkTableStates,
   getGameFieldData,
   getHappyStats,
+  hasPerson,
   initGameData,
+  isSameCell,
   moveGuest,
   newGame,
 } from "./game-logic";
@@ -16,6 +18,7 @@ import {
   getGameField,
   updateCell,
   updatePanicStates,
+  updateStateForSelection,
 } from "./components/game-field";
 
 let configDialog, helpDialog, scoreElement;
@@ -85,24 +88,31 @@ function init() {
   document.body.append(header);
 
   function cellClickHandler(cell) {
-    console.log("cellClickHandler", cell);
-
     if (clickedCell) {
+      if (isSameCell(clickedCell, cell)) {
+        resetSelection(cell);
+        updateStateForSelection(gameFieldData, clickedCell);
+        return;
+      }
+
+      if (hasPerson(cell)) {
+        clickedCell.elem.classList.remove("selected");
+        clickedCell = cell;
+        updateStateForSelection(gameFieldData, clickedCell);
+        return;
+      }
+
       moveGuest(clickedCell, cell);
       updateCell(clickedCell);
       updateCell(cell);
-      clickedCell.elem.classList.remove("selected");
-      cell.elem.classList.remove("selected");
-      clickedCell = undefined;
-      document.body.classList.remove("selecting");
+      resetSelection(cell);
       updateState(gameFieldData);
     } else {
       clickedCell = cell;
-      document.body.classList.add("selecting");
-      clickedCell.afraidOf?.forEach((afraidOf) => {
-        afraidOf.elem.classList.add("scary");
-      });
+      updateStateForSelection(gameFieldData, clickedCell);
     }
+
+    document.body.classList.toggle("selecting", !!clickedCell);
   }
 
   const gameFieldData = getGameFieldData();
@@ -110,6 +120,17 @@ function init() {
   document.body.append(gameField);
 
   updateState(gameFieldData);
+}
+
+function resetSelection(cell) {
+  if (clickedCell) {
+    clickedCell.elem.classList.remove("selected");
+    clickedCell = undefined;
+  }
+
+  cell.elem.classList.remove("selected");
+
+  document.body.classList.remove("selecting");
 }
 
 function updateState(gameFieldData) {
