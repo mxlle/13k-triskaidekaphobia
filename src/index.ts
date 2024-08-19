@@ -18,7 +18,7 @@ import {
   isGermanLanguage,
   TranslationKey,
 } from "./translations";
-import { createDialog } from "./components/dialog";
+import { createDialog, Dialog } from "./components/dialog";
 import { PubSubEvent, pubSubService } from "./utils/pub-sub-service";
 import {
   createCellElement,
@@ -29,10 +29,16 @@ import {
 } from "./components/game-field";
 import { Cell, CellType } from "./types";
 import { getPhobiaName } from "./phobia";
+import { CPlayer } from "./audio/small-player";
+import { song } from "./audio/chords-song-major";
 
-let configDialog, helpDialog, scoreElement;
+let configDialog: Dialog, helpDialog: Dialog, scoreElement: HTMLElement;
 
-let clickedCell;
+let clickedCell: Cell;
+
+let audioElem: HTMLAudioElement;
+
+const initializeMuted = true;
 
 function onNewGameClick() {
   newGame();
@@ -109,11 +115,32 @@ function init() {
   const header = createElement({
     tag: "header",
   });
-  header.append(
+
+  const btnContainer = createElement({
+    cssClass: "btn-container",
+  });
+
+  btnContainer.append(
     createButton({ text: "🔄", onClick: onNewGameClick, iconBtn: true }),
   );
 
-  header.append(createButton({ text: "❓", onClick: openHelp, iconBtn: true }));
+  const muteButton = createButton({
+    text: initializeMuted ? "🔇" : "🔊",
+    onClick: (event: MouseEvent) => {
+      const shouldPlay = audioElem.paused || audioElem.ended;
+      shouldPlay ? audioElem.play() : audioElem.pause();
+      (event.target as HTMLElement).textContent = shouldPlay ? "🔊" : "🔇";
+    },
+    iconBtn: true,
+  });
+
+  btnContainer.append(muteButton);
+
+  btnContainer.append(
+    createButton({ text: "❓", onClick: openHelp, iconBtn: true }),
+  );
+
+  header.append(btnContainer);
 
   header.append(
     createElement({
@@ -205,5 +232,23 @@ function updateState(gameFieldData) {
   }
 }
 
+function initAudio() {
+  const player = new CPlayer();
+  player.init(song);
+
+  player.generate();
+  const wave = player.createWave();
+  audioElem = document.createElement("audio");
+  audioElem.src = URL.createObjectURL(new Blob([wave], { type: "audio/wav" }));
+  audioElem.loop = true;
+  audioElem.volume = 0.1;
+  audioElem.playbackRate = 0.75;
+
+  if (!initializeMuted) {
+    audioElem.play();
+  }
+}
+
 // INIT
+initAudio();
 init();
