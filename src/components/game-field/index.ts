@@ -150,18 +150,24 @@ export function updatePanicStates(
 
 export function updateStateForSelection(
   gameFieldData: GameFieldData,
-  selectedCell: Cell,
+  selectedCell: Cell | undefined,
 ) {
   gameFieldData.flat().forEach((cell) => {
     cell.elem!.classList.remove("scary");
     cell.elem!.classList.remove("scared");
   });
 
-  selectedCell?.afraidOf?.forEach((afraidOf) => {
+  if (!selectedCell) {
+    return;
+  }
+
+  selectedCell.elem!.classList.add("selected");
+
+  selectedCell.afraidOf?.forEach((afraidOf) => {
     afraidOf.elem?.classList.add("scary");
   });
 
-  selectedCell?.makesAfraid?.forEach((makesAfraid) => {
+  selectedCell.makesAfraid?.forEach((makesAfraid) => {
     makesAfraid.elem?.classList.add("scared");
   });
 }
