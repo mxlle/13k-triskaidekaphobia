@@ -84,6 +84,7 @@ $border-style: outset;
 
     span {
       animation: tremble 0.5s infinite;
+      animation-iteration-count: 3;
       transform-origin: 50% 50%;
     }
   }
