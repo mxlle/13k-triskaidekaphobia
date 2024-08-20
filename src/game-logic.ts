@@ -35,7 +35,7 @@ export function isSameCell(cell1: Cell, cell2: Cell) {
   return cell1.row === cell2.row && cell1.column === cell2.column;
 }
 
-const baseField = (() => {
+export const baseField = (() => {
   const { GUEST, EMPTY, TABLE, CHAIR, DOOR: DOOR_, WINDOW: WINDO } = CellType;
   return [
     [
@@ -184,7 +184,7 @@ const baseField = (() => {
   ];
 })();
 
-export function getGameFieldData() {
+export function getGameFieldData(skipAssignment: boolean = false) {
   const gameField: GameFieldData = [];
   for (let row = 0; row < baseField.length; row++) {
     const baseRow = baseField[row];
@@ -192,7 +192,7 @@ export function getGameFieldData() {
     for (let column = 0; column < baseRow.length; column++) {
       const baseCell = baseRow[column];
 
-      rowArray.push(getGameFieldObject(baseCell, row, column));
+      rowArray.push(getGameFieldObject(baseCell, row, column, skipAssignment));
     }
     gameField.push(rowArray);
   }
@@ -204,13 +204,23 @@ export function getGameFieldData() {
   return gameField;
 }
 
-function getGameFieldObject(type: CellType, row: number, column: number): Cell {
+function getGameFieldObject(
+  type: CellType,
+  row: number,
+  column: number,
+  skipAssignment: boolean,
+): Cell {
   const obj: Cell = {
     type,
     row,
     column,
     content: type,
+    hasPanic: false,
   };
+
+  if (skipAssignment) {
+    return obj;
+  }
 
   if (isChair(type) || isGuest(type)) {
     obj.content =

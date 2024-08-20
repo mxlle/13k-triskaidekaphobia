@@ -15,10 +15,6 @@ export function createCellElement(cell: Cell, isInMiddle: boolean = false) {
     cssClass: "cell",
   });
 
-  if (hasPerson(cell)) {
-    cellElem.classList.add("has-person");
-  }
-
   if (isDoor(cell) || isWindow(cell)) {
     cellElem.classList.add("door");
   }
@@ -52,16 +48,10 @@ export function createCellElement(cell: Cell, isInMiddle: boolean = false) {
     cellElem.append(textElem);
   }
 
-  const fearElem = createElement({
-    cssClass: `fear${cell.fear ? "" : " hidden"}`,
-    text: cell.fear,
-  });
+  const fearElem = createElement({ cssClass: `fear hidden` });
   cellElem.append(fearElem);
 
-  const smallFearElem = createElement({
-    cssClass: `fear small${cell.smallFear ? "" : " hidden"}`,
-    text: cell.smallFear,
-  });
+  const smallFearElem = createElement({ cssClass: `fear small hidden` });
   cellElem.append(smallFearElem);
 
   cell.elem = cellElem;
@@ -69,7 +59,7 @@ export function createCellElement(cell: Cell, isInMiddle: boolean = false) {
   cell.fearElem = fearElem;
   cell.smallFearElem = smallFearElem;
 
-  setCellFearTooltips(cell);
+  updateCell(cell);
 }
 
 export function updateCell(cell: Cell) {

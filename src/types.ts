@@ -17,7 +17,7 @@ export interface Cell {
   content: CellType | Phobia;
   fear?: Phobia;
   smallFear?: Phobia;
-  hasPanic?: boolean;
+  hasPanic: boolean;
   afraidOf?: Guest[];
   makesAfraid?: Guest[];
   elem?: HTMLElement;

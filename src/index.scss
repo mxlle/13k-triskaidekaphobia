@@ -85,6 +85,15 @@ header {
   }
 }
 
+.start-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 6;
+  font-size: 2rem;
+}
+
 input {
   box-sizing: border-box;
   font-size: 2rem;
@@ -123,10 +132,10 @@ label {
 
   &.primary-btn {
     border: 1px solid $main-color;
-    background-color: rgba($main-color, 0.1);
+    background-color: rgba($main-color, 0.3);
 
     @include hover {
-      background-color: rgba($main-color, 0.2);
+      background-color: rgba($main-color, 0.4);
     }
   }
 

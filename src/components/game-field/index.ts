@@ -17,6 +17,20 @@ import { createCellElement, updateCell } from "./cell-component";
 let gameFieldElem: HTMLElement | undefined;
 let clickedCell: Cell | undefined;
 
+export function createEmptyGameField() {
+  if (gameFieldElem) {
+    document.body.classList.remove("selecting");
+    gameFieldElem.remove();
+    gameFieldElem = undefined;
+  }
+
+  const baseData = getGameFieldData(true);
+
+  gameFieldElem = getGameFieldElement(baseData, () => {});
+
+  document.body.append(gameFieldElem);
+}
+
 export function createGameField() {
   if (gameFieldElem) {
     document.body.classList.remove("selecting");
@@ -54,7 +68,7 @@ export function createGameField() {
     document.body.classList.toggle("selecting", !!clickedCell);
   }
 
-  gameFieldElem = getGameField(gameFieldData, cellClickHandler);
+  gameFieldElem = getGameFieldElement(gameFieldData, cellClickHandler);
   document.body.append(gameFieldElem);
 
   updateState(gameFieldData);
@@ -83,7 +97,7 @@ function updateState(gameFieldData: Cell[][]) {
   }
 }
 
-export function getGameField(
+export function getGameFieldElement(
   gameFieldData: Cell[][],
   cellClickHandler: (cell: Cell, row: number, column: number) => void,
 ) {
@@ -115,6 +129,10 @@ export function getGameField(
   });
 
   return gameField;
+}
+
+export function updateGameField(gameFieldData: GameFieldData) {
+  gameFieldData.flat().forEach(updateCell);
 }
 
 export function updatePanicStates(

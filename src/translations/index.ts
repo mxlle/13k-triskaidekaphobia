@@ -2,6 +2,7 @@ import { getShortLanguageName } from "../utils/language-util";
 
 export const enum TranslationKey {
   WELCOME,
+  START_GAME,
   WIN,
   PLAY_AGAIN,
   CANCEL,
@@ -17,6 +18,10 @@ const Translation = {
   [TranslationKey.WELCOME]: {
     en: "Society of Multiphobics",
     de: "Gesellschaft der Multiphobiker",
+  },
+  [TranslationKey.START_GAME]: {
+    en: "Start game",
+    de: "Spiel starten",
   },
   [TranslationKey.WIN]: {
     en: "You win 🎉",

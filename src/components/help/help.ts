@@ -36,6 +36,7 @@ export function openHelp() {
       smallFear,
       row: -1,
       column: -1,
+      hasPanic: false,
     };
     createCellElement(exampleCell);
 
