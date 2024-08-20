@@ -1,11 +1,12 @@
 import { getRandomItem } from "./utils/array-utils";
 import { Cell, CellType, GameFieldData, Guest } from "./types";
 import { Phobia, PHOBIAS_EMOJIS } from "./phobia";
+import { PubSubEvent, pubSubService } from "./utils/pub-sub-service";
 
 export function newGame() {
   // resetGlobals();
   // initGameData();
-  location.reload();
+  pubSubService.publish(PubSubEvent.NEW_GAME);
 }
 
 export function initGameData() {

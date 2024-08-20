@@ -2,15 +2,110 @@ import "./game-field.scss";
 
 import { createElement } from "../../utils/html-utils";
 import {
+  checkTableStates,
+  getGameFieldData,
+  getHappyStats,
   hasPerson,
   isChair,
   isDoor,
+  isSameCell,
   isTable,
   isWindow,
+  moveGuest,
+  newGame,
 } from "../../game-logic";
 import { Cell, GameFieldData } from "../../types";
-import { isGermanLanguage } from "../../translations";
+import {
+  getTranslation,
+  isGermanLanguage,
+  TranslationKey,
+} from "../../translations";
 import { getPhobiaName } from "../../phobia";
+import { createDialog } from "../dialog";
+import { scoreElement } from "../../index";
+
+let gameFieldElem: HTMLElement | undefined;
+let clickedCell: Cell | undefined;
+
+export function createGameField() {
+  if (gameFieldElem) {
+    document.body.classList.remove("selecting");
+    gameFieldElem.remove();
+    gameFieldElem = undefined;
+  }
+
+  const gameFieldData = getGameFieldData();
+
+  function cellClickHandler(cell: Cell) {
+    if (clickedCell) {
+      if (isSameCell(clickedCell, cell)) {
+        resetSelection(cell);
+        updateStateForSelection(gameFieldData, clickedCell);
+        return;
+      }
+
+      if (hasPerson(cell)) {
+        clickedCell.elem.classList.remove("selected");
+        clickedCell = cell;
+        updateStateForSelection(gameFieldData, clickedCell);
+        return;
+      }
+
+      moveGuest(clickedCell, cell);
+      updateCell(clickedCell);
+      updateCell(cell);
+      resetSelection(cell);
+      updateState(gameFieldData);
+    } else {
+      clickedCell = cell;
+      updateStateForSelection(gameFieldData, clickedCell);
+    }
+
+    document.body.classList.toggle("selecting", !!clickedCell);
+  }
+
+  gameFieldElem = getGameField(gameFieldData, cellClickHandler);
+  document.body.append(gameFieldElem);
+
+  updateState(gameFieldData);
+}
+
+function resetSelection(cell: Cell) {
+  if (clickedCell) {
+    clickedCell.elem.classList.remove("selected");
+    clickedCell = undefined;
+  }
+
+  cell.elem.classList.remove("selected");
+
+  document.body.classList.remove("selecting");
+}
+
+function updateState(gameFieldData: Cell[][]) {
+  const panickedTableCells = checkTableStates(gameFieldData);
+  updatePanicStates(gameFieldData, panickedTableCells);
+  const { unseatedGuests, unhappyGuests, happyGuests, totalGuests } =
+    getHappyStats(gameFieldData);
+  scoreElement.textContent = `${unseatedGuests}🚪 + ${unhappyGuests} 😱 + ${happyGuests} 😀 / ${totalGuests}`;
+
+  if (happyGuests === totalGuests) {
+    createDialog(
+      createElement({
+        text: getTranslation(TranslationKey.WIN),
+        cssClass: "win-screen",
+      }),
+      getTranslation(TranslationKey.PLAY_AGAIN),
+      undefined,
+      true,
+    )
+      .open()
+      .then((playAgain) => {
+        if (playAgain) {
+          newGame();
+        }
+      });
+  }
+}
 
 export function getGameField(
   gameFieldData: Cell[][],

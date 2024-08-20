@@ -1,0 +1,32 @@
+@import "../../theme";
+
+.rules {
+  margin: 1rem auto;
+  white-space: pre-line;
+  text-align: left;
+  max-width: 800px;
+  padding: 0 1rem;
+
+  em {
+    font-style: normal;
+    font-weight: bold;
+    font-family: cursive;
+    color: $danger-color-light;
+  }
+
+  .visualization {
+    display: grid;
+    gap: 1rem;
+    justify-items: center;
+    margin: 1rem auto;
+    max-width: 600px;
+    text-align: center;
+
+    .cell {
+      $example-size: 8rem;
+      width: $example-size;
+      height: $example-size;
+      font-size: 0.6 * $example-size;
+    }
+  }
+}
