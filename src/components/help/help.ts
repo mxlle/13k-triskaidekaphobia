@@ -8,9 +8,9 @@ import {
 } from "../../translations";
 import { getRandomPhobia, getRandomPhobiaExcluding } from "../../game-logic";
 import { Cell, CellType } from "../../types";
-import { createCellElement } from "../game-field";
 import { getPhobiaName } from "../../phobia";
 import { createDialog, Dialog } from "../dialog";
+import { createCellElement } from "../game-field/cell-component";
 
 let helpDialog: Dialog | undefined;
 
