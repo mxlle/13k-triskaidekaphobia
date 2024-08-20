@@ -29,16 +29,13 @@ import {
 } from "./components/game-field";
 import { Cell, CellType } from "./types";
 import { getPhobiaName } from "./phobia";
-import { CPlayer } from "./audio/small-player";
-import { song } from "./audio/chords-song-major";
+import { initAudio, togglePlayer } from "./audio/music-control";
 
 let configDialog: Dialog, helpDialog: Dialog, scoreElement: HTMLElement;
 
 let clickedCell: Cell;
 
-let audioElem: HTMLAudioElement;
-
-const initializeMuted = true;
+const initializeMuted = false;
 
 function onNewGameClick() {
   newGame();
@@ -127,8 +124,7 @@ function init() {
   const muteButton = createButton({
     text: initializeMuted ? "🔇" : "🔊",
     onClick: (event: MouseEvent) => {
-      const shouldPlay = audioElem.paused || audioElem.ended;
-      shouldPlay ? audioElem.play() : audioElem.pause();
+      const shouldPlay = togglePlayer();
       (event.target as HTMLElement).textContent = shouldPlay ? "🔊" : "🔇";
     },
     iconBtn: true,
@@ -232,23 +228,6 @@ function updateState(gameFieldData) {
   }
 }
 
-function initAudio() {
-  const player = new CPlayer();
-  player.init(song);
-
-  player.generate();
-  const wave = player.createWave();
-  audioElem = document.createElement("audio");
-  audioElem.src = URL.createObjectURL(new Blob([wave], { type: "audio/wav" }));
-  audioElem.loop = true;
-  audioElem.volume = 0.1;
-  audioElem.playbackRate = 0.75;
-
-  if (!initializeMuted) {
-    audioElem.play();
-  }
-}
-
 // INIT
-initAudio();
+void initAudio(initializeMuted);
 init();
