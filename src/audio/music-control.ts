@@ -1,29 +1,38 @@
 import { CPlayer } from "./small-player";
 import { songWithDrums } from "./songs/chords-song-major-v3-with-drums";
+import { LocalStorageKey, setLocalStorageItem } from "../utils/local-storage";
 
 let audioElem: HTMLAudioElement;
+let isActive = false;
+let initialized = false;
 
-export async function initAudio(initializeMuted) {
+export async function initAudio(initializeMuted: boolean) {
+  isActive = !initializeMuted;
+
+  audioElem = document.createElement("audio");
+  audioElem.loop = true;
+  audioElem.volume = 0.1;
+  audioElem.playbackRate = 1;
+
   const player = new CPlayer();
   player.init(songWithDrums);
 
   await generateUntilDone(player);
   const wave = player.createWave();
-  audioElem = document.createElement("audio");
   audioElem.src = URL.createObjectURL(new Blob([wave], { type: "audio/wav" }));
-  audioElem.loop = true;
-  audioElem.volume = 0.1;
-  audioElem.playbackRate = 1;
-
-  if (!initializeMuted && !document.hidden) {
-    void audioElem.play();
-  }
 
   document.addEventListener("visibilitychange", () => {
-    if (document.hidden) {
-      audioElem.pause();
-    } else {
-      audioElem.play();
+    audioElem.muted = document.hidden;
+  });
+
+  document.addEventListener("click", () => {
+    if (!initialized) {
+      initialized = true;
+
+      const isCurrentlyPlaying = !audioElem.paused && !audioElem.ended;
+      if (isActive && !isCurrentlyPlaying) {
+        audioElem.play();
+      }
     }
   });
 }
@@ -40,7 +49,15 @@ function generateUntilDone(player): Promise<void> {
 }
 
 export function togglePlayer(): boolean {
-  const shouldPlay = audioElem.paused || audioElem.ended;
-  shouldPlay ? audioElem.play() : audioElem.pause();
-  return shouldPlay;
+  isActive = !isActive;
+  const isCurrentlyPlaying = !audioElem.paused && !audioElem.ended;
+  if (isActive && !isCurrentlyPlaying) {
+    audioElem.play();
+  } else if (!isActive && isCurrentlyPlaying) {
+    audioElem.pause();
+  }
+
+  setLocalStorageItem(LocalStorageKey.MUTED, isActive ? "false" : "true");
+
+  return isActive;
 }

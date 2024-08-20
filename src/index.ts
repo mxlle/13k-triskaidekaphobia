@@ -30,12 +30,13 @@ import {
 import { Cell, CellType } from "./types";
 import { getPhobiaName } from "./phobia";
 import { initAudio, togglePlayer } from "./audio/music-control";
+import { getLocalStorageItem, LocalStorageKey } from "./utils/local-storage";
 
 let configDialog: Dialog, helpDialog: Dialog, scoreElement: HTMLElement;
 
 let clickedCell: Cell;
 
-const initializeMuted = false;
+const initializeMuted = getLocalStorageItem(LocalStorageKey.MUTED) === "true";
 
 function onNewGameClick() {
   newGame();
@@ -124,8 +125,8 @@ function init() {
   const muteButton = createButton({
     text: initializeMuted ? "🔇" : "🔊",
     onClick: (event: MouseEvent) => {
-      const shouldPlay = togglePlayer();
-      (event.target as HTMLElement).textContent = shouldPlay ? "🔊" : "🔇";
+      const isActive = togglePlayer();
+      (event.target as HTMLElement).textContent = isActive ? "🔊" : "🔇";
     },
     iconBtn: true,
   });
