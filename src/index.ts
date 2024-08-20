@@ -76,26 +76,18 @@ function init() {
 
   scoreElement = createElement({
     cssClass: "score",
+    text: "? 🚪 + ? 😱 + ? 😀 / ?",
   });
 
   header.append(scoreElement);
 
   document.body.append(header);
 
-  const startButton = createButton({
-    text: getTranslation(TranslationKey.START_GAME),
-    onClick: newGame,
-  });
-  startButton.classList.add("start-button", "primary-btn");
-
   createEmptyGameField();
 
   pubSubService.subscribe(PubSubEvent.NEW_GAME, () => {
     createGameField();
-    startButton?.remove();
   });
-
-  document.body.append(startButton);
 }
 
 // INIT

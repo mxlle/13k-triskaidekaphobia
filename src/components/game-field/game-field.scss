@@ -10,6 +10,7 @@ $border-style: outset;
   @include grid-mixins.board-tile-grid;
   @include grid-mixins.board-tile-grid-variables;
 
+  position: relative;
   margin: 1rem auto;
   justify-content: center;
   --tile-color-1: #{$tile-color-1};

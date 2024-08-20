@@ -1,6 +1,6 @@
 import "./game-field.scss";
 
-import { createElement } from "../../utils/html-utils";
+import { createButton, createElement } from "../../utils/html-utils";
 import {
   checkTableStates,
   getGameFieldData,
@@ -8,11 +8,13 @@ import {
   hasPerson,
   isSameCell,
   moveGuest,
+  newGame,
 } from "../../game-logic";
 import { Cell, GameFieldData } from "../../types";
 import { scoreElement } from "../../index";
 import { createWinScreen } from "../win-screen/win-screen";
 import { createCellElement, updateCell } from "./cell-component";
+import { getTranslation, TranslationKey } from "../../translations";
 
 let gameFieldElem: HTMLElement | undefined;
 let clickedCell: Cell | undefined;
@@ -27,6 +29,14 @@ export function createEmptyGameField() {
   const baseData = getGameFieldData(true);
 
   gameFieldElem = getGameFieldElement(baseData, () => {});
+
+  const startButton = createButton({
+    text: getTranslation(TranslationKey.START_GAME),
+    onClick: newGame,
+  });
+  startButton.classList.add("start-button", "primary-btn");
+
+  gameFieldElem.append(startButton);
 
   document.body.append(gameFieldElem);
 }
