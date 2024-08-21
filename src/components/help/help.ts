@@ -1,19 +1,12 @@
 import "./help.scss";
 
 import { createElement } from "../../utils/html-utils";
-import {
-  getTranslation,
-  isGermanLanguage,
-  TranslationKey,
-} from "../../translations";
-import {
-  getRandomPhobia,
-  getRandomPhobiaExcluding,
-} from "../../logic/game-logic";
+import { getTranslation, isGermanLanguage, TranslationKey } from "../../translations";
 import { CellType, OccupiedCell } from "../../types";
 import { getPhobiaName } from "../../phobia";
 import { createDialog, Dialog } from "../dialog";
 import { createCellElement } from "../game-field/cell-component";
+import { getRandomPhobia, getRandomPhobiaExcluding } from "../../logic/initialize";
 
 let helpDialog: Dialog | undefined;
 
@@ -61,19 +54,11 @@ export function openHelp() {
 ${getTranslation(TranslationKey.EXAMPLE_BIG_FEAR, name, fearName, fear)}<br/>
 ${getTranslation(TranslationKey.EXAMPLE_SMALL_FEAR, name, smallFearName, smallFear)}`;
 
-    helpVisualization.append(
-      exampleHeading,
-      exampleText,
-      exampleCellElementObject.elem,
-    );
+    helpVisualization.append(exampleHeading, exampleText, exampleCellElementObject.elem);
 
     helpContent.append(helpText, helpVisualization);
 
-    helpDialog = createDialog(
-      helpContent,
-      undefined,
-      getTranslation(TranslationKey.RULES),
-    );
+    helpDialog = createDialog(helpContent, undefined, getTranslation(TranslationKey.RULES));
   }
 
   helpDialog.open();

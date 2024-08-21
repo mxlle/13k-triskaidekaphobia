@@ -1,26 +1,16 @@
 import "./game-field.scss";
 
 import { createButton, createElement } from "../../utils/html-utils";
-import {
-  checkTableStates,
-  getGameFieldData,
-  getHappyStats,
-  hasPerson,
-  isSameCell,
-  moveGuest,
-  newGame,
-} from "../../logic/game-logic";
-import { Cell, GameFieldData } from "../../types";
+import { moveGuest, newGame } from "../../logic/game-logic";
+import { Cell, GameFieldData, hasPerson, isSameCell } from "../../types";
 import { scoreElement } from "../../index";
 import { createWinScreen } from "../win-screen/win-screen";
-import {
-  CellElementObject,
-  createCellElement,
-  updateCell,
-} from "./cell-component";
+import { CellElementObject, createCellElement, updateCell } from "./cell-component";
 import { getTranslation, TranslationKey } from "../../translations";
 import { globals } from "../../globals";
 import { sleep } from "../../utils/promise-utils";
+import { getGameFieldData } from "../../logic/initialize";
+import { checkTableStates, getHappyStats } from "../../logic/checks";
 
 let gameFieldElem: HTMLElement | undefined;
 let clickedCell: Cell | undefined;
@@ -126,8 +116,7 @@ function resetSelection(cell: Cell) {
 function updateState(gameFieldData: Cell[][], skipWinCheck = false) {
   const panickedTableCells = checkTableStates(gameFieldData);
   updatePanicStates(gameFieldData, panickedTableCells);
-  const { unseatedGuests, unhappyGuests, happyGuests, totalGuests } =
-    getHappyStats(gameFieldData);
+  const { unseatedGuests, unhappyGuests, happyGuests, totalGuests } = getHappyStats(gameFieldData);
   scoreElement.textContent = `${unseatedGuests}🚪 + ${unhappyGuests} 😱 + ${happyGuests} 😀 / ${totalGuests}`;
 
   if (happyGuests === totalGuests && !skipWinCheck) {
@@ -179,10 +168,7 @@ export async function updateGameFieldElement(gameFieldData: GameFieldData) {
   }
 }
 
-export function updatePanicStates(
-  gameFieldData: GameFieldData,
-  panickedTableCells: Cell[],
-) {
+export function updatePanicStates(gameFieldData: GameFieldData, panickedTableCells: Cell[]) {
   gameFieldData.flat().forEach((cell) => {
     const cellElementObject = getCellElementObject(cell);
     cellElementObject.elem.classList.remove("scary");
@@ -200,10 +186,7 @@ export function updatePanicStates(
   });
 }
 
-export function updateStateForSelection(
-  gameFieldData: GameFieldData,
-  selectedCell: Cell | undefined,
-) {
+export function updateStateForSelection(gameFieldData: GameFieldData, selectedCell: Cell | undefined) {
   gameFieldData.flat().forEach((cell) => {
     const cellElementObject = getCellElementObject(cell);
     cellElementObject.elem.classList.remove("scary");

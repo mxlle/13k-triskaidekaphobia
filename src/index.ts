@@ -1,14 +1,11 @@
 import "./index.scss";
 
 import { createButton, createElement } from "./utils/html-utils";
-import { initGameData, newGame } from "./logic/game-logic";
+import { newGame } from "./logic/game-logic";
 import { getTranslation, TranslationKey } from "./translations";
 import { createDialog, Dialog } from "./components/dialog";
 import { PubSubEvent, pubSubService } from "./utils/pub-sub-service";
-import {
-  initializeEmptyGameField,
-  startNewGame,
-} from "./components/game-field";
+import { initializeEmptyGameField, startNewGame } from "./components/game-field";
 import { initAudio, togglePlayer } from "./audio/music-control";
 import { getLocalStorageItem, LocalStorageKey } from "./utils/local-storage";
 import { openHelp } from "./components/help/help";
@@ -25,19 +22,13 @@ function onNewGameClick() {
 
 function openConfig() {
   if (!configDialog) {
-    configDialog = createDialog(
-      createElement({ text: "Config :-)" }),
-      undefined,
-      "Title :-)",
-    );
+    configDialog = createDialog(createElement({ text: "Config :-)" }), undefined, "Title :-)");
   }
 
   configDialog.open();
 }
 
 function init() {
-  initGameData();
-
   const header = createElement({
     tag: "header",
   });
@@ -46,9 +37,7 @@ function init() {
     cssClass: "btn-container",
   });
 
-  btnContainer.append(
-    createButton({ text: "🔄", onClick: onNewGameClick, iconBtn: true }),
-  );
+  btnContainer.append(createButton({ text: "🔄", onClick: onNewGameClick, iconBtn: true }));
 
   const muteButton = createButton({
     text: initializeMuted ? "🔇" : "🔊",
@@ -61,9 +50,7 @@ function init() {
 
   btnContainer.append(muteButton);
 
-  btnContainer.append(
-    createButton({ text: "❓", onClick: openHelp, iconBtn: true }),
-  );
+  btnContainer.append(createButton({ text: "❓", onClick: openHelp, iconBtn: true }));
 
   header.append(btnContainer);
 

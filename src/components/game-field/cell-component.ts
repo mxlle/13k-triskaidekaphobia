@@ -1,12 +1,5 @@
-import { Cell, Person } from "../../types";
+import { Cell, hasPerson, isChair, isDoor, isTable, isWindow, Person } from "../../types";
 import { createElement } from "../../utils/html-utils";
-import {
-  hasPerson,
-  isChair,
-  isDoor,
-  isTable,
-  isWindow,
-} from "../../logic/game-logic";
 import { isGermanLanguage } from "../../translations";
 import { getPhobiaName } from "../../phobia";
 
@@ -17,10 +10,7 @@ export interface CellElementObject {
   smallFearElem: HTMLElement;
 }
 
-export function createCellElement(
-  cell: Cell,
-  isInMiddle: boolean = false,
-): CellElementObject {
+export function createCellElement(cell: Cell, isInMiddle: boolean = false): CellElementObject {
   const cellElem = createElement({
     cssClass: "cell",
   });
@@ -83,10 +73,7 @@ export function updateCell(cell: Cell, cellElementObject: CellElementObject) {
   cellElementObject.fearElem.textContent = person?.fear ?? null;
   cellElementObject.fearElem.classList.toggle("hidden", !person?.fear ?? false);
   cellElementObject.smallFearElem.textContent = person?.smallFear ?? null;
-  cellElementObject.smallFearElem.classList.toggle(
-    "hidden",
-    !person?.smallFear ?? false,
-  );
+  cellElementObject.smallFearElem.classList.toggle("hidden", !person?.smallFear ?? false);
   cellElementObject.elem.classList.toggle("has-person", hasPerson(cell));
   cellElementObject.elem.classList.toggle("panic", person?.hasPanic ?? false);
 
@@ -95,15 +82,10 @@ export function updateCell(cell: Cell, cellElementObject: CellElementObject) {
   }
 }
 
-function setCellFearTooltips(
-  person: Person,
-  cellElementObject: CellElementObject,
-) {
+function setCellFearTooltips(person: Person, cellElementObject: CellElementObject) {
   const isGerman = isGermanLanguage();
   const fearName = person.fear ? getPhobiaName(person.fear, isGerman) : "";
-  const smallFearName = person.smallFear
-    ? getPhobiaName(person.smallFear, isGerman)
-    : "";
+  const smallFearName = person.smallFear ? getPhobiaName(person.smallFear, isGerman) : "";
   cellElementObject.fearElem.setAttribute("title", fearName);
   cellElementObject.smallFearElem.setAttribute("title", smallFearName);
 }
