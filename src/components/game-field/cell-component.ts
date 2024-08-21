@@ -6,7 +6,7 @@ import {
   isDoor,
   isTable,
   isWindow,
-} from "../../game-logic";
+} from "../../logic/game-logic";
 import { isGermanLanguage } from "../../translations";
 import { getPhobiaName } from "../../phobia";
 

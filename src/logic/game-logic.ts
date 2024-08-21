@@ -1,7 +1,7 @@
-import { getRandomItem } from "./utils/array-utils";
-import { Cell, CellType, GameFieldData, OccupiedCell, Person } from "./types";
-import { Phobia, PHOBIAS_EMOJIS } from "./phobia";
-import { PubSubEvent, pubSubService } from "./utils/pub-sub-service";
+import { getRandomItem } from "../utils/array-utils";
+import { Cell, CellType, GameFieldData, OccupiedCell, Person } from "../types";
+import { Phobia, PHOBIAS_EMOJIS } from "../phobia";
+import { PubSubEvent, pubSubService } from "../utils/pub-sub-service";
 
 export function newGame() {
   // resetGlobals();

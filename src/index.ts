@@ -1,7 +1,7 @@
 import "./index.scss";
 
 import { createButton, createElement } from "./utils/html-utils";
-import { initGameData, newGame } from "./game-logic";
+import { initGameData, newGame } from "./logic/game-logic";
 import { getTranslation, TranslationKey } from "./translations";
 import { createDialog, Dialog } from "./components/dialog";
 import { PubSubEvent, pubSubService } from "./utils/pub-sub-service";

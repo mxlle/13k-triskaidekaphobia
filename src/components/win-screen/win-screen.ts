@@ -3,7 +3,7 @@ import "./win-screen.scss";
 import { createDialog, Dialog } from "../dialog";
 import { createElement } from "../../utils/html-utils";
 import { getTranslation, TranslationKey } from "../../translations";
-import { newGame } from "../../game-logic";
+import { newGame } from "../../logic/game-logic";
 
 let winDialog: Dialog | undefined;
 

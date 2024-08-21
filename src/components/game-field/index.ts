@@ -9,7 +9,7 @@ import {
   isSameCell,
   moveGuest,
   newGame,
-} from "../../game-logic";
+} from "../../logic/game-logic";
 import { Cell, GameFieldData } from "../../types";
 import { scoreElement } from "../../index";
 import { createWinScreen } from "../win-screen/win-screen";

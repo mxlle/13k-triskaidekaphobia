@@ -6,7 +6,10 @@ import {
   isGermanLanguage,
   TranslationKey,
 } from "../../translations";
-import { getRandomPhobia, getRandomPhobiaExcluding } from "../../game-logic";
+import {
+  getRandomPhobia,
+  getRandomPhobiaExcluding,
+} from "../../logic/game-logic";
 import { CellType, OccupiedCell } from "../../types";
 import { getPhobiaName } from "../../phobia";
 import { createDialog, Dialog } from "../dialog";
