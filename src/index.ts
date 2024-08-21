@@ -5,7 +5,10 @@ import { initGameData, newGame } from "./game-logic";
 import { getTranslation, TranslationKey } from "./translations";
 import { createDialog, Dialog } from "./components/dialog";
 import { PubSubEvent, pubSubService } from "./utils/pub-sub-service";
-import { createEmptyGameField, createGameField } from "./components/game-field";
+import {
+  initializeEmptyGameField,
+  startNewGame,
+} from "./components/game-field";
 import { initAudio, togglePlayer } from "./audio/music-control";
 import { getLocalStorageItem, LocalStorageKey } from "./utils/local-storage";
 import { openHelp } from "./components/help/help";
@@ -83,10 +86,10 @@ function init() {
 
   document.body.append(header);
 
-  createEmptyGameField();
+  initializeEmptyGameField();
 
   pubSubService.subscribe(PubSubEvent.NEW_GAME, () => {
-    createGameField();
+    startNewGame();
   });
 }
 

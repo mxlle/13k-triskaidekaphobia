@@ -20,10 +20,6 @@ export interface Cell {
   hasPanic: boolean;
   afraidOf?: Guest[];
   makesAfraid?: Guest[];
-  elem?: HTMLElement;
-  textElem?: HTMLElement;
-  fearElem?: HTMLElement;
-  smallFearElem?: HTMLElement;
 }
 
 export interface Guest extends Cell {

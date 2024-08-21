@@ -13,26 +13,35 @@ import {
 import { Cell, GameFieldData } from "../../types";
 import { scoreElement } from "../../index";
 import { createWinScreen } from "../win-screen/win-screen";
-import { createCellElement, updateCell } from "./cell-component";
+import {
+  CellElementObject,
+  createCellElement,
+  updateCell,
+} from "./cell-component";
 import { getTranslation, TranslationKey } from "../../translations";
+import { globals } from "../../globals";
 
 let gameFieldElem: HTMLElement | undefined;
 let clickedCell: Cell | undefined;
+const cellElements: CellElementObject[][] = [];
 
-export function createEmptyGameField() {
-  if (gameFieldElem) {
-    document.body.classList.remove("selecting");
-    gameFieldElem.remove();
-    gameFieldElem = undefined;
-  }
+export function initializeEmptyGameField() {
+  document.body.classList.remove("selecting");
 
   const baseData = getGameFieldData(true);
 
-  gameFieldElem = getGameFieldElement(baseData, () => {});
+  if (gameFieldElem) {
+    updateGameFieldElement(baseData);
+  } else {
+    gameFieldElem = generateGameFieldElement(baseData);
+  }
 
   const startButton = createButton({
     text: getTranslation(TranslationKey.START_GAME),
-    onClick: newGame,
+    onClick: (event: MouseEvent) => {
+      newGame();
+      (event.target as HTMLElement)?.remove();
+    },
   });
   startButton.classList.add("start-button", "primary-btn");
 
@@ -41,56 +50,68 @@ export function createEmptyGameField() {
   document.body.append(gameFieldElem);
 }
 
-export function createGameField() {
+export function startNewGame() {
+  document.body.classList.remove("selecting");
+
+  globals.gameFieldData = getGameFieldData();
+
   if (gameFieldElem) {
-    document.body.classList.remove("selecting");
-    gameFieldElem.remove();
-    gameFieldElem = undefined;
+    updateGameFieldElement(globals.gameFieldData);
+  } else {
+    gameFieldElem = generateGameFieldElement(globals.gameFieldData);
+    document.body.append(gameFieldElem);
   }
 
-  const gameFieldData = getGameFieldData();
+  updateState(globals.gameFieldData);
+}
 
-  function cellClickHandler(cell: Cell) {
-    if (clickedCell) {
-      if (isSameCell(clickedCell, cell)) {
-        resetSelection(cell);
-        updateStateForSelection(gameFieldData, clickedCell);
-        return;
-      }
+function cellClickHandler(rowIndex: number, columnIndex: number) {
+  const cell = globals.gameFieldData[rowIndex][columnIndex];
+  const cellElementObject = getCellElementObject(cell);
 
-      if (hasPerson(cell)) {
-        clickedCell.elem.classList.remove("selected");
-        clickedCell = cell;
-        updateStateForSelection(gameFieldData, clickedCell);
-        return;
-      }
+  if (clickedCell) {
+    const clickedCellElementObject = getCellElementObject(clickedCell);
 
-      moveGuest(clickedCell, cell);
-      updateCell(clickedCell);
-      updateCell(cell);
+    if (isSameCell(clickedCell, cell)) {
       resetSelection(cell);
-      updateState(gameFieldData);
-    } else {
-      clickedCell = cell;
-      updateStateForSelection(gameFieldData, clickedCell);
+      updateStateForSelection(globals.gameFieldData, clickedCell);
+      return;
     }
 
-    document.body.classList.toggle("selecting", !!clickedCell);
+    if (hasPerson(cell)) {
+      clickedCellElementObject.elem.classList.remove("selected");
+      clickedCell = cell;
+      updateStateForSelection(globals.gameFieldData, clickedCell);
+      return;
+    }
+
+    moveGuest(clickedCell, cell);
+    updateCell(clickedCell, clickedCellElementObject);
+    updateCell(cell, cellElementObject);
+    resetSelection(cell);
+    updateState(globals.gameFieldData);
+  } else {
+    clickedCell = cell;
+    updateStateForSelection(globals.gameFieldData, clickedCell);
   }
 
-  gameFieldElem = getGameFieldElement(gameFieldData, cellClickHandler);
-  document.body.append(gameFieldElem);
+  document.body.classList.toggle("selecting", !!clickedCell);
+}
 
-  updateState(gameFieldData);
+function getCellElementObject(cell: Cell): CellElementObject {
+  return cellElements[cell.row]?.[cell.column];
 }
 
 function resetSelection(cell: Cell) {
+  const cellElementObject = getCellElementObject(cell);
+  const clickedCellElementObject = getCellElementObject(clickedCell);
+
   if (clickedCell) {
-    clickedCell.elem.classList.remove("selected");
+    clickedCellElementObject.elem.classList.remove("selected");
     clickedCell = undefined;
   }
 
-  cell.elem.classList.remove("selected");
+  cellElementObject.elem.classList.remove("selected");
 
   document.body.classList.remove("selecting");
 }
@@ -107,15 +128,13 @@ function updateState(gameFieldData: Cell[][]) {
   }
 }
 
-export function getGameFieldElement(
-  gameFieldData: Cell[][],
-  cellClickHandler: (cell: Cell, row: number, column: number) => void,
-) {
+export function generateGameFieldElement(gameFieldData: GameFieldData) {
   const gameField = createElement({
     cssClass: "game-field",
   });
 
   gameFieldData.forEach((row, rowIndex) => {
+    const rowElements: CellElementObject[] = [];
     const rowElem = createElement({
       cssClass: "row",
     });
@@ -123,26 +142,29 @@ export function getGameFieldElement(
 
     row.forEach((cell, columnIndex) => {
       const isInMiddle = rowIndex === Math.ceil(gameFieldData.length / 2) - 1;
-      createCellElement(cell, isInMiddle);
+      const cellElementObject = createCellElement(cell, isInMiddle);
 
-      if (!cell.elem) {
-        console.error("Cell element is not created");
-        return;
-      }
-
-      cell.elem.addEventListener("click", () => {
-        cellClickHandler(cell, rowIndex, columnIndex);
+      cellElementObject.elem.addEventListener("click", () => {
+        cellClickHandler(rowIndex, columnIndex);
       });
 
-      rowElem.append(cell.elem!);
+      rowElem.append(cellElementObject.elem);
+      rowElements.push(cellElementObject);
     });
+
+    cellElements.push(rowElements);
   });
 
   return gameField;
 }
 
-export function updateGameField(gameFieldData: GameFieldData) {
-  gameFieldData.flat().forEach(updateCell);
+export function updateGameFieldElement(gameFieldData: GameFieldData) {
+  const flatGameFieldData = gameFieldData.flat();
+
+  for (let i = 0; i < flatGameFieldData.length; i++) {
+    const cell: Cell = flatGameFieldData[i];
+    updateCell(cell, getCellElementObject(cell));
+  }
 }
 
 export function updatePanicStates(
@@ -150,17 +172,19 @@ export function updatePanicStates(
   panickedTableCells: Cell[],
 ) {
   gameFieldData.flat().forEach((cell) => {
-    cell.elem!.classList.remove("scary");
-    cell.elem!.classList.remove("scared");
-    cell.elem!.classList.remove("triskaidekaphobia");
+    const cellElementObject = getCellElementObject(cell);
+    cellElementObject.elem.classList.remove("scary");
+    cellElementObject.elem.classList.remove("scared");
+    cellElementObject.elem.classList.remove("triskaidekaphobia");
 
     if (hasPerson(cell)) {
-      cell.elem!.classList.toggle("panic", cell.hasPanic);
+      cellElementObject.elem.classList.toggle("panic", cell.hasPanic);
     }
   });
 
   panickedTableCells.forEach((cell) => {
-    cell.elem!.classList.add("triskaidekaphobia");
+    const cellElementObject = getCellElementObject(cell);
+    cellElementObject.elem.classList.add("triskaidekaphobia");
   });
 }
 
@@ -169,21 +193,24 @@ export function updateStateForSelection(
   selectedCell: Cell | undefined,
 ) {
   gameFieldData.flat().forEach((cell) => {
-    cell.elem!.classList.remove("scary");
-    cell.elem!.classList.remove("scared");
+    const cellElementObject = getCellElementObject(cell);
+    cellElementObject.elem.classList.remove("scary");
+    cellElementObject.elem.classList.remove("scared");
   });
 
   if (!selectedCell) {
     return;
   }
 
-  selectedCell.elem!.classList.add("selected");
+  const selectedCellElementObject = getCellElementObject(selectedCell);
+
+  selectedCellElementObject.elem.classList.add("selected");
 
   selectedCell.afraidOf?.forEach((afraidOf) => {
-    afraidOf.elem?.classList.add("scary");
+    getCellElementObject(afraidOf).elem.classList.add("scary");
   });
 
   selectedCell.makesAfraid?.forEach((makesAfraid) => {
-    makesAfraid.elem?.classList.add("scared");
+    getCellElementObject(makesAfraid).elem.classList.add("scared");
   });
 }

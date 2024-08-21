@@ -1,8 +1,12 @@
+import { GameFieldData } from "./types";
+
 interface GameGlobals {
+  gameFieldData: GameFieldData;
   language: string;
 }
 
 const defaultGlobals: GameGlobals = {
+  gameFieldData: [],
   language: "en",
 };
 
