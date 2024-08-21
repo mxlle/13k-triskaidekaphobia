@@ -20,18 +20,19 @@ import {
 } from "./cell-component";
 import { getTranslation, TranslationKey } from "../../translations";
 import { globals } from "../../globals";
+import { sleep } from "../../utils/promise-utils";
 
 let gameFieldElem: HTMLElement | undefined;
 let clickedCell: Cell | undefined;
 const cellElements: CellElementObject[][] = [];
 
-export function initializeEmptyGameField() {
+export async function initializeEmptyGameField() {
   document.body.classList.remove("selecting");
 
   const baseData = getGameFieldData(true);
 
   if (gameFieldElem) {
-    updateGameFieldElement(baseData);
+    await updateGameFieldElement(baseData);
   } else {
     gameFieldElem = generateGameFieldElement(baseData);
   }
@@ -50,13 +51,19 @@ export function initializeEmptyGameField() {
   document.body.append(gameFieldElem);
 }
 
-export function startNewGame() {
+export async function startNewGame() {
   document.body.classList.remove("selecting");
+
+  if (globals.gameFieldData.length && gameFieldElem) {
+    // reset old game field
+    await updateGameFieldElement(getGameFieldData(true));
+    await sleep(300);
+  }
 
   globals.gameFieldData = getGameFieldData();
 
   if (gameFieldElem) {
-    updateGameFieldElement(globals.gameFieldData);
+    await updateGameFieldElement(globals.gameFieldData);
   } else {
     gameFieldElem = generateGameFieldElement(globals.gameFieldData);
     document.body.append(gameFieldElem);
@@ -116,14 +123,14 @@ function resetSelection(cell: Cell) {
   document.body.classList.remove("selecting");
 }
 
-function updateState(gameFieldData: Cell[][]) {
+function updateState(gameFieldData: Cell[][], skipWinCheck = false) {
   const panickedTableCells = checkTableStates(gameFieldData);
   updatePanicStates(gameFieldData, panickedTableCells);
   const { unseatedGuests, unhappyGuests, happyGuests, totalGuests } =
     getHappyStats(gameFieldData);
   scoreElement.textContent = `${unseatedGuests}🚪 + ${unhappyGuests} 😱 + ${happyGuests} 😀 / ${totalGuests}`;
 
-  if (happyGuests === totalGuests) {
+  if (happyGuests === totalGuests && !skipWinCheck) {
     createWinScreen();
   }
 }
@@ -158,12 +165,17 @@ export function generateGameFieldElement(gameFieldData: GameFieldData) {
   return gameField;
 }
 
-export function updateGameFieldElement(gameFieldData: GameFieldData) {
+export async function updateGameFieldElement(gameFieldData: GameFieldData) {
   const flatGameFieldData = gameFieldData.flat();
 
   for (let i = 0; i < flatGameFieldData.length; i++) {
     const cell: Cell = flatGameFieldData[i];
-    updateCell(cell, getCellElementObject(cell));
+    const cellElementObject = getCellElementObject(cell);
+    const hadPerson = cellElementObject.elem.classList.contains("has-person");
+    updateCell(cell, cellElementObject);
+    if (hasPerson(cell) || hadPerson) {
+      await sleep(50);
+    }
   }
 }
 

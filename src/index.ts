@@ -86,10 +86,10 @@ function init() {
 
   document.body.append(header);
 
-  initializeEmptyGameField();
+  void initializeEmptyGameField();
 
   pubSubService.subscribe(PubSubEvent.NEW_GAME, () => {
-    startNewGame();
+    void startNewGame();
   });
 }
 
