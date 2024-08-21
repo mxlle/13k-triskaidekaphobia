@@ -1,13 +1,15 @@
+import { GameFieldData } from "../types";
+
 export enum PubSubEvent {
   NEW_GAME,
   GAME_OVER,
-  STARS_CHANGED,
+  UPDATE_SCORE,
 }
 
 type EventDataTypes = {
   [PubSubEvent.NEW_GAME]: undefined;
   [PubSubEvent.GAME_OVER]: undefined;
-  [PubSubEvent.STARS_CHANGED]: undefined;
+  [PubSubEvent.UPDATE_SCORE]: GameFieldData;
 };
 
 type Callback<Event extends PubSubEvent> = (data: EventDataTypes[Event]) => void;

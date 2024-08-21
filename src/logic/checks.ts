@@ -99,12 +99,15 @@ export function getHappyStats(gameFieldData: GameFieldData) {
   const unhappyGuestList = totalGuestList.filter((g) => !happyGuestList.includes(g));
   const unseatedGuestList = totalGuestList.filter((g) => g.tableIndex === undefined);
   const happyGuests = happyGuestList.length - unseatedGuestList.length;
+  const totalGuests = totalGuestList.length;
+  const hasWon = happyGuests === totalGuests;
 
   return {
     unseatedGuests: unseatedGuestList.length,
     unhappyGuests: unhappyGuestList.length,
     happyGuests,
-    totalGuests: totalGuestList.length,
+    totalGuests,
+    hasWon,
   };
 }
 

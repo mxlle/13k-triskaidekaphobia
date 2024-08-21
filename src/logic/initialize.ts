@@ -1,6 +1,5 @@
 import { Cell, CellType, GameFieldData, isChair, isGuest, isTable, Person } from "../types";
-import { Phobia, PHOBIAS_EMOJIS } from "../phobia";
-import { getRandomItem } from "../utils/array-utils";
+import { getRandomPhobia, getRandomPhobiaExcluding, Phobia } from "../phobia";
 import { findGuestsInvolvedInDeadlock, resolveDeadlock } from "./deadlock";
 
 export const baseField = (() => {
@@ -33,8 +32,10 @@ export function getGameFieldData(skipAssignment: boolean = false) {
     gameField.push(rowArray);
   }
 
-  const { guestsInvolvedInDeadlock, fearedAtLeastOnce } = findGuestsInvolvedInDeadlock(gameField);
-  resolveDeadlock(gameField, guestsInvolvedInDeadlock, fearedAtLeastOnce);
+  if (!skipAssignment) {
+    const { guestsInvolvedInDeadlock, fearedAtLeastOnce } = findGuestsInvolvedInDeadlock(gameField);
+    resolveDeadlock(gameField, guestsInvolvedInDeadlock, fearedAtLeastOnce);
+  }
 
   return gameField;
 }
@@ -87,11 +88,4 @@ function generatePerson(): Person {
     afraidOf: [],
     makesAfraid: [],
   };
-}
-
-export const getRandomPhobia = (): Phobia => getRandomItem<Phobia>([...PHOBIAS_EMOJIS]);
-
-export function getRandomPhobiaExcluding(excluded: (Phobia | unknown)[]): Phobia {
-  const emojis = PHOBIAS_EMOJIS.filter((emoji) => !excluded.includes(emoji));
-  return getRandomItem(emojis);
 }

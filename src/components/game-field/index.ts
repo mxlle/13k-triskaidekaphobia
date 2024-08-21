@@ -3,7 +3,6 @@ import "./game-field.scss";
 import { createButton, createElement } from "../../utils/html-utils";
 import { moveGuest, newGame } from "../../logic/game-logic";
 import { Cell, GameFieldData, hasPerson, isSameCell } from "../../types";
-import { scoreElement } from "../../index";
 import { createWinScreen } from "../win-screen/win-screen";
 import { CellElementObject, createCellElement, updateCell } from "./cell-component";
 import { getTranslation, TranslationKey } from "../../translations";
@@ -11,6 +10,7 @@ import { globals } from "../../globals";
 import { sleep } from "../../utils/promise-utils";
 import { getGameFieldData } from "../../logic/initialize";
 import { checkTableStates, getHappyStats } from "../../logic/checks";
+import { PubSubEvent, pubSubService } from "../../utils/pub-sub-service";
 
 let gameFieldElem: HTMLElement | undefined;
 let clickedCell: Cell | undefined;
@@ -116,10 +116,10 @@ function resetSelection(cell: Cell) {
 function updateState(gameFieldData: Cell[][], skipWinCheck = false) {
   const panickedTableCells = checkTableStates(gameFieldData);
   updatePanicStates(gameFieldData, panickedTableCells);
-  const { unseatedGuests, unhappyGuests, happyGuests, totalGuests } = getHappyStats(gameFieldData);
-  scoreElement.textContent = `${unseatedGuests}🚪 + ${unhappyGuests} 😱 + ${happyGuests} 😀 / ${totalGuests}`;
+  pubSubService.publish(PubSubEvent.UPDATE_SCORE, gameFieldData);
+  const { hasWon } = getHappyStats(gameFieldData);
 
-  if (happyGuests === totalGuests && !skipWinCheck) {
+  if (hasWon && !skipWinCheck) {
     createWinScreen();
   }
 }

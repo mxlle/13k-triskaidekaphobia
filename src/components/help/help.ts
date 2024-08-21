@@ -3,10 +3,9 @@ import "./help.scss";
 import { createElement } from "../../utils/html-utils";
 import { getTranslation, isGermanLanguage, TranslationKey } from "../../translations";
 import { CellType, OccupiedCell } from "../../types";
-import { getPhobiaName } from "../../phobia";
+import { getPhobiaName, getRandomPhobia, getRandomPhobiaExcluding } from "../../phobia";
 import { createDialog, Dialog } from "../dialog";
 import { createCellElement } from "../game-field/cell-component";
-import { getRandomPhobia, getRandomPhobiaExcluding } from "../../logic/initialize";
 
 let helpDialog: Dialog | undefined;
 

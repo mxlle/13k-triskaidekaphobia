@@ -9,10 +9,11 @@ import { initializeEmptyGameField, startNewGame } from "./components/game-field"
 import { initAudio, togglePlayer } from "./audio/music-control";
 import { getLocalStorageItem, LocalStorageKey } from "./utils/local-storage";
 import { openHelp } from "./components/help/help";
+import { getHappyStats } from "./logic/checks";
 
 let configDialog: Dialog;
 
-export let scoreElement: HTMLElement;
+let scoreElement: HTMLElement;
 
 const initializeMuted = getLocalStorageItem(LocalStorageKey.MUTED) === "true";
 
@@ -77,6 +78,11 @@ function init() {
 
   pubSubService.subscribe(PubSubEvent.NEW_GAME, () => {
     void startNewGame();
+  });
+
+  pubSubService.subscribe(PubSubEvent.UPDATE_SCORE, (gameFieldData) => {
+    const { unseatedGuests, unhappyGuests, happyGuests, totalGuests } = getHappyStats(gameFieldData);
+    scoreElement.textContent = `${unseatedGuests}🚪 + ${unhappyGuests} 😱 + ${happyGuests} 😀 / ${totalGuests}`;
   });
 }
 

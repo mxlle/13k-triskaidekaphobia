@@ -1,3 +1,5 @@
+import { getRandomItem } from "./utils/array-utils";
+
 export const PHOBIAS_EMOJIS = [
   "🔢",
   "🟡",
@@ -46,10 +48,7 @@ const PhobiaNameMap: Record<Phobia, string> = {
   "📚": "Bibliophobia",
 };
 
-export function getPhobiaName(
-  phobia: Phobia,
-  isGerman: boolean = false,
-): string {
+export function getPhobiaName(phobia: Phobia, isGerman: boolean = false): string {
   let phobiaName = PhobiaNameMap[phobia];
 
   if (isGerman) {
@@ -57,4 +56,11 @@ export function getPhobiaName(
   }
 
   return phobiaName;
+}
+
+export const getRandomPhobia = (): Phobia => getRandomItem<Phobia>([...PHOBIAS_EMOJIS]);
+
+export function getRandomPhobiaExcluding(excluded: (Phobia | unknown)[]): Phobia {
+  const emojis = PHOBIAS_EMOJIS.filter((emoji) => !excluded.includes(emoji));
+  return getRandomItem(emojis);
 }

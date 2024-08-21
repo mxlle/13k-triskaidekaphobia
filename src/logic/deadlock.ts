@@ -1,7 +1,6 @@
 import { GameFieldData, OccupiedCell, pushCellIfNotInList } from "../types";
-import { Phobia } from "../phobia";
+import { getRandomPhobia, getRandomPhobiaExcluding, Phobia } from "../phobia";
 import { pushPrimitiveIfNotInList } from "../utils/array-utils";
-import { getRandomPhobia, getRandomPhobiaExcluding } from "./initialize";
 import { getAllGuests } from "./checks";
 
 export function findGuestsInvolvedInDeadlock(gameFieldData: GameFieldData) {
