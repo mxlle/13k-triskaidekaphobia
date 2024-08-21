@@ -190,7 +190,7 @@ export function updatePanicStates(
     cellElementObject.elem.classList.remove("triskaidekaphobia");
 
     if (hasPerson(cell)) {
-      cellElementObject.elem.classList.toggle("panic", cell.hasPanic);
+      cellElementObject.elem.classList.toggle("panic", cell.person.hasPanic);
     }
   });
 
@@ -218,11 +218,15 @@ export function updateStateForSelection(
 
   selectedCellElementObject.elem.classList.add("selected");
 
-  selectedCell.afraidOf?.forEach((afraidOf) => {
+  if (!hasPerson(selectedCell)) {
+    return;
+  }
+
+  selectedCell.person.afraidOf.forEach((afraidOf) => {
     getCellElementObject(afraidOf).elem.classList.add("scary");
   });
 
-  selectedCell.makesAfraid?.forEach((makesAfraid) => {
+  selectedCell.person.makesAfraid.forEach((makesAfraid) => {
     getCellElementObject(makesAfraid).elem.classList.add("scared");
   });
 }

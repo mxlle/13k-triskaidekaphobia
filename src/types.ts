@@ -14,17 +14,21 @@ export interface Cell {
   row: number;
   column: number;
   tableIndex?: number;
-  content: CellType | Phobia;
-  fear?: Phobia;
-  smallFear?: Phobia;
-  hasPanic: boolean;
-  afraidOf?: Guest[];
-  makesAfraid?: Guest[];
+  content: CellType;
+  person?: Person;
 }
 
-export interface Guest extends Cell {
-  type: CellType.GUEST;
-  content: Phobia;
+export interface OccupiedCell extends Cell {
+  person: Person;
+}
+
+export interface Person {
+  name: Phobia;
+  fear: Phobia | undefined;
+  smallFear: Phobia | undefined;
+  hasPanic: boolean;
+  afraidOf: OccupiedCell[];
+  makesAfraid: OccupiedCell[];
 }
 
 export type GameFieldData = Cell[][];

@@ -7,7 +7,7 @@ import {
   TranslationKey,
 } from "../../translations";
 import { getRandomPhobia, getRandomPhobiaExcluding } from "../../game-logic";
-import { Cell, CellType } from "../../types";
+import { CellType, OccupiedCell } from "../../types";
 import { getPhobiaName } from "../../phobia";
 import { createDialog, Dialog } from "../dialog";
 import { createCellElement } from "../game-field/cell-component";
@@ -26,19 +26,24 @@ export function openHelp() {
     const helpVisualization = createElement({
       cssClass: "visualization",
     });
-    const content = getRandomPhobia();
-    const fear = getRandomPhobiaExcluding([content]);
-    const smallFear = getRandomPhobiaExcluding([content, fear]);
-    const exampleCell: Cell = {
+    const name = getRandomPhobia();
+    const fear = getRandomPhobiaExcluding([name]);
+    const smallFear = getRandomPhobiaExcluding([name, fear]);
+    const exampleCell: OccupiedCell = {
       type: CellType.CHAIR,
-      content,
-      fear,
-      smallFear,
+      content: CellType.CHAIR,
       row: -1,
       column: -1,
-      hasPanic: false,
+      person: {
+        name,
+        fear,
+        smallFear,
+        afraidOf: [],
+        makesAfraid: [],
+        hasPanic: false,
+      },
     };
-    createCellElement(exampleCell);
+    const exampleCellElementObject = createCellElement(exampleCell);
 
     const isGerman = isGermanLanguage();
     const fearName = getPhobiaName(fear, isGerman);
@@ -49,11 +54,15 @@ export function openHelp() {
       text: getTranslation(TranslationKey.EXAMPLE),
     });
     const exampleText = createElement({});
-    exampleText.innerHTML = `${getTranslation(TranslationKey.EXAMPLE_EMOJI, content)}<br/>
-${getTranslation(TranslationKey.EXAMPLE_BIG_FEAR, content, fearName, fear)}<br/>
-${getTranslation(TranslationKey.EXAMPLE_SMALL_FEAR, content, smallFearName, smallFear)}`;
+    exampleText.innerHTML = `${getTranslation(TranslationKey.EXAMPLE_EMOJI, name)}<br/>
+${getTranslation(TranslationKey.EXAMPLE_BIG_FEAR, name, fearName, fear)}<br/>
+${getTranslation(TranslationKey.EXAMPLE_SMALL_FEAR, name, smallFearName, smallFear)}`;
 
-    helpVisualization.append(exampleHeading, exampleText, exampleCell.elem);
+    helpVisualization.append(
+      exampleHeading,
+      exampleText,
+      exampleCellElementObject.elem,
+    );
 
     helpContent.append(helpText, helpVisualization);
 

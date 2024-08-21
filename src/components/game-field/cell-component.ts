@@ -1,4 +1,4 @@
-import { Cell } from "../../types";
+import { Cell, Person } from "../../types";
 import { createElement } from "../../utils/html-utils";
 import {
   hasPerson,
@@ -77,21 +77,32 @@ export function createCellElement(
 }
 
 export function updateCell(cell: Cell, cellElementObject: CellElementObject) {
-  cellElementObject.textElem.textContent = cell.content;
-  cellElementObject.fearElem.textContent = cell.fear ?? null;
-  cellElementObject.fearElem.classList.toggle("hidden", !cell.fear);
-  cellElementObject.smallFearElem.textContent = cell.smallFear ?? null;
-  cellElementObject.smallFearElem.classList.toggle("hidden", !cell.smallFear);
+  const person: Person | undefined = cell.person;
+
+  cellElementObject.textElem.textContent = person?.name ?? cell.content;
+  cellElementObject.fearElem.textContent = person?.fear ?? null;
+  cellElementObject.fearElem.classList.toggle("hidden", !person?.fear ?? false);
+  cellElementObject.smallFearElem.textContent = person?.smallFear ?? null;
+  cellElementObject.smallFearElem.classList.toggle(
+    "hidden",
+    !person?.smallFear ?? false,
+  );
   cellElementObject.elem.classList.toggle("has-person", hasPerson(cell));
-  cellElementObject.elem.classList.toggle("panic", cell.hasPanic);
-  setCellFearTooltips(cell, cellElementObject);
+  cellElementObject.elem.classList.toggle("panic", person?.hasPanic ?? false);
+
+  if (hasPerson(cell)) {
+    setCellFearTooltips(cell.person, cellElementObject);
+  }
 }
 
-function setCellFearTooltips(cell: Cell, cellElementObject: CellElementObject) {
+function setCellFearTooltips(
+  person: Person,
+  cellElementObject: CellElementObject,
+) {
   const isGerman = isGermanLanguage();
-  const fearName = cell.fear ? getPhobiaName(cell.fear, isGerman) : "";
-  const smallFearName = cell.smallFear
-    ? getPhobiaName(cell.smallFear, isGerman)
+  const fearName = person.fear ? getPhobiaName(person.fear, isGerman) : "";
+  const smallFearName = person.smallFear
+    ? getPhobiaName(person.smallFear, isGerman)
     : "";
   cellElementObject.fearElem.setAttribute("title", fearName);
   cellElementObject.smallFearElem.setAttribute("title", smallFearName);

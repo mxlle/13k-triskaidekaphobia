@@ -1,5 +1,5 @@
 import { getRandomItem } from "./utils/array-utils";
-import { Cell, CellType, GameFieldData, Guest } from "./types";
+import { Cell, CellType, GameFieldData, OccupiedCell, Person } from "./types";
 import { Phobia, PHOBIAS_EMOJIS } from "./phobia";
 import { PubSubEvent, pubSubService } from "./utils/pub-sub-service";
 
@@ -27,8 +27,8 @@ export const isWindow = (typeOrObject: string | Cell) =>
 export const isChair = (typeOrObject: string | Cell) =>
   getType(typeOrObject) === CellType.CHAIR;
 
-export function hasPerson(cell: Cell): cell is Guest {
-  return !!cell.fear || !!cell.smallFear;
+export function hasPerson(cell: Cell): cell is OccupiedCell {
+  return !!cell.person;
 }
 
 export function isSameCell(cell1: Cell, cell2: Cell) {
@@ -214,36 +214,49 @@ function getGameFieldObject(
     type,
     row,
     column,
-    content: type,
-    hasPanic: false,
+    content: type === CellType.GUEST ? CellType.EMPTY : type,
   };
+
+  if (isChair(type) || isTable(type)) {
+    obj.tableIndex = column > 4 ? 1 : 0;
+  }
 
   if (skipAssignment) {
     return obj;
   }
 
   if (isChair(type) || isGuest(type)) {
-    obj.content =
-      Math.random() > 0.4 || isGuest(type) ? getRandomPhobia() : type;
-
-    if (!isChair(obj.content)) {
-      const fearTypeRandomValue = Math.random();
-
-      if (fearTypeRandomValue > 0.4) {
-        obj.fear = getRandomPhobiaExcluding([obj.content]);
-      }
-
-      if (fearTypeRandomValue < 0.6) {
-        obj.smallFear = getRandomPhobiaExcluding([obj.content, obj.fear]);
-      }
+    if (Math.random() < 0.6 || isGuest(type)) {
+      obj.person = generatePerson();
     }
   }
 
-  if (isChair(type) || isTable(type)) {
-    obj.tableIndex = column > 4 ? 1 : 0;
+  return obj;
+}
+
+function generatePerson(): Person {
+  const name = getRandomPhobia();
+  let fear: Phobia | undefined;
+  let smallFear: Phobia | undefined;
+
+  const fearTypeRandomValue = Math.random();
+
+  if (fearTypeRandomValue > 0.4) {
+    fear = getRandomPhobiaExcluding([name]);
   }
 
-  return obj;
+  if (fearTypeRandomValue < 0.6) {
+    smallFear = getRandomPhobiaExcluding([name, fear]);
+  }
+
+  return {
+    name,
+    fear,
+    smallFear,
+    hasPanic: false,
+    afraidOf: [],
+    makesAfraid: [],
+  };
 }
 
 export const getRandomPhobia = (): Phobia =>
@@ -257,17 +270,10 @@ export function getRandomPhobiaExcluding(
 }
 
 export function moveGuest(fromCell: Cell, toCell: Cell) {
-  const fromContent = fromCell.content;
-  const fromFear = fromCell.fear;
-  const fromSmallFear = fromCell.smallFear;
+  const fromPerson = fromCell.person;
   fromCell.content = isGuest(fromCell) ? CellType.EMPTY : fromCell.type;
-  fromCell.fear = undefined;
-  fromCell.smallFear = undefined;
-  fromCell.hasPanic = false;
-  toCell.content = fromContent;
-  toCell.fear = fromFear;
-  toCell.smallFear = fromSmallFear;
-  toCell.hasPanic = false;
+  fromCell.person = undefined;
+  toCell.person = fromPerson;
 }
 
 export function checkTableStates(gameFieldData: GameFieldData) {
@@ -283,13 +289,13 @@ export function checkTableStates(gameFieldData: GameFieldData) {
 
     guests.forEach((guest) => {
       const afraidOf = guests.filter(
-        (otherGuest) => otherGuest.content === guest.fear,
+        (otherGuest) => otherGuest.person.name === guest.person.fear,
       );
       const alsoAfraidOf = getScaryNeighbors(gameFieldData, guest);
       afraidOf.push(...alsoAfraidOf);
 
-      guest.hasPanic = isPanic || afraidOf.length > 0;
-      guest.afraidOf = afraidOf;
+      guest.person.hasPanic = isPanic || afraidOf.length > 0;
+      guest.person.afraidOf = afraidOf;
     });
   }
 
@@ -298,36 +304,39 @@ export function checkTableStates(gameFieldData: GameFieldData) {
   );
   otherGuestsInRoom.forEach((guest) => {
     const afraidOf = getScaryNeighbors(gameFieldData, guest);
-    guest.hasPanic = afraidOf.length > 0;
-    guest.afraidOf = afraidOf;
+    guest.person.hasPanic = afraidOf.length > 0;
+    guest.person.afraidOf = afraidOf;
   });
 
   const allGuests = getAllGuests(gameFieldData);
-  const afraidGuests = allGuests.filter((guest) => guest.hasPanic);
+  const afraidGuests = allGuests.filter((guest) => guest.person.hasPanic);
   allGuests.forEach((guest) => {
-    guest.makesAfraid = afraidGuests.filter((otherGuest) =>
-      otherGuest.afraidOf?.find((afraidOf) => isSameCell(afraidOf, guest)),
+    guest.person.makesAfraid = afraidGuests.filter((otherGuest) =>
+      otherGuest.person.afraidOf.find((afraidOf) =>
+        isSameCell(afraidOf, guest),
+      ),
     );
   });
 
   return panickedTableCells;
 }
 
-function getScaryNeighbors(gameFieldData: GameFieldData, cell: Cell) {
+function getScaryNeighbors(gameFieldData: GameFieldData, cell: OccupiedCell) {
   const neighbors = getNeighbors(gameFieldData, cell.row, cell.column);
-  return neighbors.filter(
-    (neighbor) => neighbor.content === cell.smallFear,
-  ) as Guest[];
+  const neighborsWithPerson = neighbors.filter(hasPerson);
+  return neighborsWithPerson.filter(
+    (neighbor) => neighbor.person.name === cell.person.smallFear,
+  );
 }
 
 function getGuestsOnTable(
   gameFieldData: GameFieldData,
   tableIndex: number,
-): Guest[] {
+): OccupiedCell[] {
   return gameFieldData
     .flat()
     .filter(
-      (cell): cell is Guest =>
+      (cell): cell is OccupiedCell =>
         cell.tableIndex === tableIndex && hasPerson(cell),
     );
 }
@@ -381,7 +390,7 @@ export function getAllGuests(gameFieldData: GameFieldData) {
 }
 
 export function getHappyGuests(gameFieldData: GameFieldData) {
-  return getAllGuests(gameFieldData).filter((guest) => !guest.hasPanic);
+  return getAllGuests(gameFieldData).filter((guest) => !guest.person.hasPanic);
 }
 
 export function getHappyStats(gameFieldData: GameFieldData) {
@@ -411,16 +420,19 @@ function getTableCells(gameFieldData: GameFieldData, tableIndex: number) {
 
 function findGuestsInvolvedInDeadlock(gameFieldData: GameFieldData) {
   const allGuests = getAllGuests(gameFieldData).map((guest) => ({ ...guest }));
-  const guestsWithBigFear = allGuests.filter((guest) => guest.fear);
-  const guestsPotentiallyInvolvedInDeadlock: Guest[] = [];
-  const scaryGuestsWithBigFear: Guest[] = [];
+  const guestsWithBigFear = allGuests.filter((guest) => guest.person.fear);
+  const guestsPotentiallyInvolvedInDeadlock: OccupiedCell[] = [];
+  const scaryGuestsWithBigFear: OccupiedCell[] = [];
   const fearedAtLeastOnce: Phobia[] = [];
 
   guestsWithBigFear.forEach((guest) => {
     const afraidByMany =
-      guestsWithBigFear.filter((g) => g.fear === guest.content).length > 1;
+      guestsWithBigFear.filter((g) => g.person.fear === guest.person.name)
+        .length > 1;
 
-    const afraidOf = guestsWithBigFear.filter((g) => g.content === guest.fear);
+    const afraidOf = guestsWithBigFear.filter(
+      (g) => g.person.name === guest.person.fear,
+    );
 
     if (afraidByMany && afraidOf.length > 0) {
       pushCellIfNotInList(guest, guestsPotentiallyInvolvedInDeadlock);
@@ -437,7 +449,7 @@ function findGuestsInvolvedInDeadlock(gameFieldData: GameFieldData) {
 
     if (afraidOf.length > 0) {
       for (let i = 0; i < afraidOf.length; i++) {
-        pushPrimativeIfNotInList(afraidOf[i].content, fearedAtLeastOnce);
+        pushPrimitiveIfNotInList(afraidOf[i].person.name, fearedAtLeastOnce);
       }
     }
   });
@@ -466,7 +478,7 @@ function pushCellIfNotInList(cell: Cell, list: Cell[]) {
   }
 }
 
-function pushPrimativeIfNotInList<T>(value: T, list: T[]) {
+function pushPrimitiveIfNotInList<T>(value: T, list: T[]) {
   if (!list.includes(value)) {
     list.push(value);
   }
@@ -474,21 +486,21 @@ function pushPrimativeIfNotInList<T>(value: T, list: T[]) {
 
 function resolveDeadlock(
   gameFieldData: GameFieldData,
-  guestsInvolvedInDeadlock: Guest[],
+  guestsInvolvedInDeadlock: OccupiedCell[],
   fearedAtLeastOnce: Phobia[],
 ) {
   for (let i = 0; i < guestsInvolvedInDeadlock.length; i++) {
     const copyOfGuest = guestsInvolvedInDeadlock[i];
     const guest = gameFieldData[copyOfGuest.row][copyOfGuest.column];
 
-    guest.fear = getRandomPhobiaExcluding([
+    guest.person.fear = getRandomPhobiaExcluding([
       guest.content,
       ...fearedAtLeastOnce,
     ]);
-    if (guest.fear) {
-      fearedAtLeastOnce.push(guest.fear);
+    if (guest.person.fear) {
+      fearedAtLeastOnce.push(guest.person.fear);
     } else {
-      guest.smallFear = getRandomPhobia();
+      guest.person.smallFear = getRandomPhobia();
     }
 
     console.log("updated guest to resolve deadlock", copyOfGuest, guest);
