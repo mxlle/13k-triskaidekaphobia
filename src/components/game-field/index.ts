@@ -46,7 +46,9 @@ export async function startNewGame() {
 
   if (globals.gameFieldData.length && gameFieldElem) {
     // reset old game field
-    await updateGameFieldElement(getGameFieldData(true));
+    const baseData = getGameFieldData(true);
+    pubSubService.publish(PubSubEvent.UPDATE_SCORE, baseData);
+    await updateGameFieldElement(baseData);
     await sleep(300);
   }
 
