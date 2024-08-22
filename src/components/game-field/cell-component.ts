@@ -90,12 +90,12 @@ function setCellFearTooltips(cell: OccupiedCell, cellElementObject: CellElementO
   const smallFearName = person.smallFear ? getPhobiaName(person.smallFear, isGerman) : "";
   cellElementObject.fearElem.setAttribute("title", fearName);
   cellElementObject.smallFearElem.setAttribute("title", smallFearName);
-  cellElementObject.fearElem.addEventListener("click", (event: MouseEvent) => {
-    event.stopPropagation();
+  cellElementObject.fearElem.addEventListener("click", (_event: MouseEvent) => {
+    //event.stopPropagation();
     openMiniHelp(cell);
   });
-  cellElementObject.smallFearElem.addEventListener("click", (event: MouseEvent) => {
-    event.stopPropagation();
+  cellElementObject.smallFearElem.addEventListener("click", (_event: MouseEvent) => {
+    //event.stopPropagation();
     openMiniHelp(cell);
   });
 }
