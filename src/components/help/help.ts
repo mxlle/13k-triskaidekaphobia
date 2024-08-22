@@ -8,6 +8,7 @@ import { createDialog, Dialog } from "../dialog";
 import { createCellElement } from "../game-field/cell-component";
 
 let helpDialog: Dialog | undefined;
+let miniHelpDialog: Dialog | undefined;
 
 export function openHelp() {
   if (!helpDialog) {
@@ -64,8 +65,20 @@ ${getTranslation(TranslationKey.EXAMPLE_SMALL_FEAR, name, smallFearName, smallFe
 }
 
 export function openMiniHelp(cell: OccupiedCell): Promise<boolean> {
+  if (miniHelpDialog) {
+    miniHelpDialog.changeHeader(getTranslation(TranslationKey.ABOUT, cell.person.name));
+    miniHelpDialog.recreateDialogContent(getMiniHelpContent(cell));
+
+    return miniHelpDialog.open();
+  }
+
+  miniHelpDialog = createDialog(getMiniHelpContent(cell), undefined, getTranslation(TranslationKey.ABOUT, cell.person.name), false, true);
+  return miniHelpDialog.open();
+}
+
+function getMiniHelpContent(cell: OccupiedCell): HTMLElement {
   const miniHelpContent = createElement({
-    cssClass: "rules",
+    cssClass: "rules mini-help",
   });
 
   const helpVisualization = createElement({
@@ -80,13 +93,13 @@ export function openMiniHelp(cell: OccupiedCell): Promise<boolean> {
   const smallFearName = getPhobiaName(smallFear, isGerman);
 
   const exampleText = createElement({});
-  exampleText.innerHTML = `${getTranslation(TranslationKey.EXAMPLE_EMOJI, name)}<br/>
-${fear ? getTranslation(TranslationKey.EXAMPLE_BIG_FEAR, name, fearName, fear) + "<br/>" : ""}
+  exampleText.innerHTML = `${getTranslation(TranslationKey.EXAMPLE_EMOJI, name)}
+${fear ? getTranslation(TranslationKey.EXAMPLE_BIG_FEAR, name, fearName, fear) : ""}
 ${smallFear ? getTranslation(TranslationKey.EXAMPLE_SMALL_FEAR, name, smallFearName, smallFear) : ""}`;
 
   helpVisualization.append(exampleText, exampleCellElementObject.elem);
 
   miniHelpContent.append(helpVisualization);
 
-  return createDialog(miniHelpContent, undefined, getTranslation(TranslationKey.ABOUT, name)).open();
+  return miniHelpContent;
 }

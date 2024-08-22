@@ -32,3 +32,27 @@
     }
   }
 }
+
+.rules.mini-help {
+  margin: 1rem auto;
+  max-width: 1200px;
+  padding: 0 0.5rem;
+
+  .visualization {
+    gap: 0.5rem;
+    margin: 0.25rem auto;
+    max-width: 1000px;
+
+    .cell {
+      background-color: #1b273a;
+      $example-size: 6rem;
+      width: $example-size;
+      height: $example-size;
+      font-size: 0.6 * $example-size;
+
+      :after {
+        content: none;
+      }
+    }
+  }
+}

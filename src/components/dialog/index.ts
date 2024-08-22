@@ -14,7 +14,13 @@ export interface Dialog {
   changeSubmitText: (newText: string) => void;
 }
 
-export function createDialog(innerElement: HTMLElement, submitButtonText?: string, headerText?: string, shineThrough = false): Dialog {
+export function createDialog(
+  innerElement: HTMLElement,
+  submitButtonText?: string,
+  headerText?: string,
+  shineThrough: boolean = false,
+  autoHeight: boolean = false,
+): Dialog {
   const dialog = createElement({
     cssClass: "dialog",
     onClick: (event) => event.stopPropagation(), // TODO - why?
@@ -22,6 +28,10 @@ export function createDialog(innerElement: HTMLElement, submitButtonText?: strin
 
   if (shineThrough) {
     dialog.classList.add("shine-through");
+  }
+
+  if (autoHeight) {
+    dialog.classList.add("auto-height");
   }
 
   let header;
