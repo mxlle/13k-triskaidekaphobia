@@ -170,7 +170,8 @@ body {
         @include selectable;
 
         &:not(.chair) {
-          border: 0.125rem var(--border-style) rgba(white, 0.4);
+          z-index: 1;
+          outline: 0.0625rem dashed rgba(white, 0.4);
 
           &.panic {
             border-color: $danger-color-light;
