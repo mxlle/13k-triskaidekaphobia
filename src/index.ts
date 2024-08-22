@@ -10,6 +10,7 @@ import { initAudio, togglePlayer } from "./audio/music-control";
 import { getLocalStorageItem, LocalStorageKey } from "./utils/local-storage";
 import { openHelp } from "./components/help/help";
 import { getHappyStats } from "./logic/checks";
+import { initPoki, pokiSdk } from "./poki-integration";
 
 let configDialog: Dialog;
 
@@ -18,6 +19,7 @@ let scoreElement: HTMLElement;
 const initializeMuted = getLocalStorageItem(LocalStorageKey.MUTED) === "true";
 
 function onNewGameClick() {
+  pokiSdk.gameplayStop();
   newGame();
 }
 
@@ -91,5 +93,7 @@ function init() {
 }
 
 // INIT
-void initAudio(initializeMuted);
-init();
+initPoki(async () => {
+  init();
+  await initAudio(initializeMuted);
+});

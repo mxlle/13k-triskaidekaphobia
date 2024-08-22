@@ -1,6 +1,7 @@
 import { CPlayer } from "./small-player";
 import { songWithDrums } from "./songs/chords-song-major-v3-with-drums";
 import { LocalStorageKey, setLocalStorageItem } from "../utils/local-storage";
+import { PubSubEvent, pubSubService } from "../utils/pub-sub-service";
 
 let audioElem: HTMLAudioElement;
 let isActive = false;
@@ -23,6 +24,14 @@ export async function initAudio(initializeMuted: boolean) {
 
   document.addEventListener("visibilitychange", () => {
     audioElem.muted = document.hidden;
+  });
+
+  pubSubService.subscribe(PubSubEvent.MUTE_MUSIC, () => {
+    audioElem.muted = true;
+  });
+
+  pubSubService.subscribe(PubSubEvent.UNMUTE_MUSIC, () => {
+    audioElem.muted = false;
   });
 
   document.addEventListener("click", () => {

@@ -6,7 +6,7 @@ import serve from "rollup-plugin-serve";
 import styles from "rollup-plugin-styles";
 import { terser } from "rollup-plugin-terser";
 import copy from "rollup-plugin-copy";
-import typescript from '@rollup/plugin-typescript';
+import typescript from "@rollup/plugin-typescript";
 
 const production = !process.env.ROLLUP_WATCH;
 const outputDir = production ? "dist" : "out";
@@ -19,7 +19,7 @@ export default {
     format: "iife",
   },
   plugins: [
-    typescript({target: 'es6'}),
+    typescript({ target: "es6" }),
     nodeResolve(),
     commonjs(),
     styles(),

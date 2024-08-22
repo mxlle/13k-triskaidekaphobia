@@ -11,6 +11,7 @@ import { sleep } from "../../utils/promise-utils";
 import { getGameFieldData } from "../../logic/initialize";
 import { checkTableStates, getHappyStats } from "../../logic/checks";
 import { PubSubEvent, pubSubService } from "../../utils/pub-sub-service";
+import { handlePokiCommercial, pokiSdk } from "../../poki-integration";
 
 let gameFieldElem: HTMLElement | undefined;
 let clickedCell: Cell | undefined;
@@ -49,6 +50,7 @@ export async function startNewGame() {
     const baseData = getGameFieldData(true);
     pubSubService.publish(PubSubEvent.UPDATE_SCORE, baseData);
     await updateGameFieldElement(baseData);
+    await handlePokiCommercial();
     await sleep(300);
   }
 
@@ -62,6 +64,8 @@ export async function startNewGame() {
   }
 
   updateState(globals.gameFieldData);
+
+  pokiSdk.gameplayStart();
 }
 
 function cellClickHandler(rowIndex: number, columnIndex: number) {
@@ -123,6 +127,7 @@ function updateState(gameFieldData: Cell[][], skipWinCheck = false) {
 
   if (hasWon && !skipWinCheck) {
     createWinScreen();
+    pokiSdk.gameplayStop();
   }
 }
 
