@@ -1,5 +1,12 @@
 @import "theme";
 
+:root {
+  --sat: env(safe-area-inset-top);
+  --sar: env(safe-area-inset-right);
+  --sab: env(safe-area-inset-bottom);
+  --sal: env(safe-area-inset-left);
+}
+
 html,
 body {
   height: 100%;
@@ -48,7 +55,7 @@ body {
 header {
   display: grid;
   box-sizing: border-box;
-  padding: 0.5rem 1rem;
+  padding: max(0.5rem, var(--sat)) 1rem 0.5rem;
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 0.1rem 1rem;
