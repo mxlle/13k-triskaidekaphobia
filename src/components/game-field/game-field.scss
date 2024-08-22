@@ -46,12 +46,16 @@ $border-style: outset;
   color: $main-color;
   position: relative;
   cursor: pointer;
+  width: grid-mixins.$squareSize;
+  height: grid-mixins.$squareSize;
+  box-sizing: border-box;
 
   &.table {
     color: transparent;
     background: #563232 !important;
     border: none;
     pointer-events: none;
+    $tableHeight: var(--table-height, 7);
 
     &.middle {
       z-index: 2;
@@ -61,7 +65,7 @@ $border-style: outset;
         content: "";
         position: absolute;
         width: 100%;
-        height: calc(700% + 6 * var(--gap));
+        height: calc(#{$tableHeight} * 100% + calc(#{$tableHeight} - 1) * var(--gap));
         background: #563232;
         border: 0.125rem var(--border-style) #905d5d;
         box-sizing: border-box;

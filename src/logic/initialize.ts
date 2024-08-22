@@ -1,8 +1,9 @@
 import { Cell, CellType, GameFieldData, isChair, isGuest, isTable, Person } from "../types";
 import { getRandomPhobia, getRandomPhobiaExcluding, Phobia } from "../phobia";
 import { findGuestsInvolvedInDeadlock, resolveDeadlock } from "./deadlock";
+import { getOnboardingData, OnboardingData } from "./onboarding";
 
-export const baseField = (() => {
+const baseField = (() => {
   const { GUEST, EMPTY, TABLE, CHAIR, DOOR: DOOR_, WINDOW: WINDO } = CellType;
   return [
     [DOOR_, GUEST, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, WINDO],
@@ -19,15 +20,27 @@ export const baseField = (() => {
   ];
 })();
 
-export function getGameFieldData(skipAssignment: boolean = false) {
+export function getGameFieldData(skipAssignment: boolean = false): GameFieldData {
+  let field = baseField;
+  let onboardingData: OnboardingData | undefined = getOnboardingData();
+  let tableHeight = 7;
+
+  if (onboardingData) {
+    field = onboardingData.field;
+    tableHeight = onboardingData.tableHeight;
+  }
+
+  document.body.style.setProperty("--square-count", field.length.toString());
+  document.body.style.setProperty("--table-height", tableHeight.toString());
+
   const gameField: GameFieldData = [];
-  for (let row = 0; row < baseField.length; row++) {
-    const baseRow = baseField[row];
+  for (let row = 0; row < field.length; row++) {
+    const baseRow = field[row];
     const rowArray: Cell[] = [];
     for (let column = 0; column < baseRow.length; column++) {
       const baseCell = baseRow[column];
 
-      rowArray.push(getGameFieldObject(baseCell, row, column, skipAssignment));
+      rowArray.push(getGameFieldObject(baseCell, row, column, skipAssignment, onboardingData));
     }
     gameField.push(rowArray);
   }
@@ -40,7 +53,13 @@ export function getGameFieldData(skipAssignment: boolean = false) {
   return gameField;
 }
 
-function getGameFieldObject(type: CellType, row: number, column: number, skipAssignment: boolean): Cell {
+function getGameFieldObject(
+  type: CellType,
+  row: number,
+  column: number,
+  skipAssignment: boolean,
+  onboardingData: OnboardingData | undefined,
+): Cell {
   const obj: Cell = {
     type,
     row,
@@ -50,9 +69,28 @@ function getGameFieldObject(type: CellType, row: number, column: number, skipAss
 
   if (isChair(type) || isTable(type)) {
     obj.tableIndex = column > 4 ? 1 : 0;
+
+    if (onboardingData) {
+      obj.tableIndex = onboardingData.getTableIndex(row, column);
+    }
   }
 
   if (skipAssignment) {
+    return obj;
+  }
+
+  if (onboardingData) {
+    const character = onboardingData.characters.find((c) => c.row === row && c.column === column);
+    if (character) {
+      obj.person = {
+        name: character.name,
+        fear: character.fear,
+        smallFear: character.smallFear,
+        hasPanic: false,
+        afraidOf: [],
+        makesAfraid: [],
+      };
+    }
     return obj;
   }
 

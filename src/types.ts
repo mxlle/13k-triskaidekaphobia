@@ -9,10 +9,13 @@ export enum CellType {
   WINDOW = "🪟",
 }
 
-export interface Cell {
-  type: CellType;
+interface CellPosition {
   row: number;
   column: number;
+}
+
+export interface Cell extends CellPosition {
+  type: CellType;
   tableIndex?: number;
   content: CellType;
   person?: Person;
@@ -22,14 +25,19 @@ export interface OccupiedCell extends Cell {
   person: Person;
 }
 
-export interface Person {
+interface BasePerson {
   name: Phobia;
   fear: Phobia | undefined;
   smallFear: Phobia | undefined;
+}
+
+export interface Person extends BasePerson {
   hasPanic: boolean;
   afraidOf: OccupiedCell[];
   makesAfraid: OccupiedCell[];
 }
+
+export interface PersonWithPosition extends BasePerson, CellPosition {}
 
 export type GameFieldData = Cell[][];
 

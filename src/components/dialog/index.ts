@@ -11,14 +11,10 @@ export interface Dialog {
   changeHeader: (headerText: string) => void;
   toggleSubmitDisabled: (isDisabled: boolean) => void;
   recreateDialogContent: (newInnerElement: HTMLElement) => void;
+  changeSubmitText: (newText: string) => void;
 }
 
-export function createDialog(
-  innerElement: HTMLElement,
-  submitButtonText?: string,
-  headerText?: string,
-  shineThrough = false,
-): Dialog {
+export function createDialog(innerElement: HTMLElement, submitButtonText?: string, headerText?: string, shineThrough = false): Dialog {
   const dialog = createElement({
     cssClass: "dialog",
     onClick: (event) => event.stopPropagation(), // TODO - why?
@@ -66,9 +62,7 @@ export function createDialog(
     dialog.appendChild(buttons);
   }
 
-  dialog.appendChild(
-    createButton({ text: "X", onClick: closeDialog, iconBtn: true }),
-  );
+  dialog.appendChild(createButton({ text: "X", onClick: closeDialog, iconBtn: true }));
 
   document.body.appendChild(dialog);
 
@@ -83,10 +77,7 @@ export function createDialog(
         setTimeout(() => dialog.classList.add("open"), 0);
       }
 
-      dialogContent.classList.toggle(
-        "is-overflowing",
-        dialogContent.scrollHeight > dialogContent.clientHeight,
-      );
+      dialogContent.classList.toggle("is-overflowing", dialogContent.scrollHeight > dialogContent.clientHeight);
 
       dialogContent.scrollTop = 0;
 
@@ -105,6 +96,9 @@ export function createDialog(
     recreateDialogContent: (newInnerElement) => {
       dialogContent.innerHTML = "";
       dialogContent.appendChild(newInnerElement);
+    },
+    changeSubmitText: (newText: string) => {
+      if (submitButton) submitButton.innerText = newText;
     },
   };
 }

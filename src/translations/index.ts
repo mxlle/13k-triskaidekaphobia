@@ -5,6 +5,7 @@ export const enum TranslationKey {
   START_GAME,
   WIN,
   PLAY_AGAIN,
+  CONTINUE,
   CANCEL,
   EXAMPLE,
   EXAMPLE_EMOJI,
@@ -30,6 +31,10 @@ const Translation = {
   [TranslationKey.PLAY_AGAIN]: {
     en: "Play again",
     de: "Nochmal spielen",
+  },
+  [TranslationKey.CONTINUE]: {
+    en: "Continue",
+    de: "Weiter",
   },
   [TranslationKey.CANCEL]: {
     en: "Cancel",

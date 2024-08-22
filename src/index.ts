@@ -11,6 +11,7 @@ import { getLocalStorageItem, LocalStorageKey } from "./utils/local-storage";
 import { openHelp } from "./components/help/help";
 import { getHappyStats } from "./logic/checks";
 import { initPoki, pokiSdk } from "./poki-integration";
+import { isOnboarding } from "./logic/onboarding";
 
 let configDialog: Dialog;
 
@@ -78,7 +79,11 @@ function init() {
 
   document.body.append(header);
 
-  void initializeEmptyGameField();
+  if (isOnboarding()) {
+    void startNewGame();
+  } else {
+    void initializeEmptyGameField();
+  }
 
   pubSubService.subscribe(PubSubEvent.NEW_GAME, () => {
     void startNewGame();

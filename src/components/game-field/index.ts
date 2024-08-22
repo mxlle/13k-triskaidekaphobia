@@ -12,6 +12,7 @@ import { getGameFieldData } from "../../logic/initialize";
 import { checkTableStates, getHappyStats } from "../../logic/checks";
 import { PubSubEvent, pubSubService } from "../../utils/pub-sub-service";
 import { handlePokiCommercial, pokiSdk } from "../../poki-integration";
+import { getOnboardingData, isOnboarding, wasOnboarding } from "../../logic/onboarding";
 
 let gameFieldElem: HTMLElement | undefined;
 let clickedCell: Cell | undefined;
@@ -47,21 +48,30 @@ export async function startNewGame() {
 
   if (globals.gameFieldData.length && gameFieldElem) {
     // reset old game field
-    const baseData = getGameFieldData(true);
-    pubSubService.publish(PubSubEvent.UPDATE_SCORE, baseData);
-    await updateGameFieldElement(baseData);
+    pubSubService.publish(PubSubEvent.UPDATE_SCORE, globals.baseFieldData);
+    await updateGameFieldElement(globals.baseFieldData);
     await handlePokiCommercial();
+    await sleep(300);
+
+    if (wasOnboarding()) {
+      console.debug("Was onboarding, removing game field");
+      gameFieldElem.remove();
+      gameFieldElem = undefined;
+    }
+  }
+
+  console.debug("Starting new game, onboarding step", globals.onboardingStep);
+
+  globals.baseFieldData = getGameFieldData(true);
+  globals.gameFieldData = getGameFieldData();
+
+  if (!gameFieldElem) {
+    gameFieldElem = generateGameFieldElement(globals.baseFieldData);
+    document.body.append(gameFieldElem);
     await sleep(300);
   }
 
-  globals.gameFieldData = getGameFieldData();
-
-  if (gameFieldElem) {
-    await updateGameFieldElement(globals.gameFieldData);
-  } else {
-    gameFieldElem = generateGameFieldElement(globals.gameFieldData);
-    document.body.append(gameFieldElem);
-  }
+  await updateGameFieldElement(globals.gameFieldData);
 
   updateState(globals.gameFieldData);
 
@@ -126,7 +136,9 @@ function updateState(gameFieldData: Cell[][], skipWinCheck = false) {
   const { hasWon } = getHappyStats(gameFieldData);
 
   if (hasWon && !skipWinCheck) {
-    createWinScreen();
+    const submitKey = isOnboarding() ? TranslationKey.CONTINUE : TranslationKey.PLAY_AGAIN;
+    createWinScreen(submitKey);
+
     pokiSdk.gameplayStop();
   }
 }
@@ -135,6 +147,12 @@ export function generateGameFieldElement(gameFieldData: GameFieldData) {
   const gameField = createElement({
     cssClass: "game-field",
   });
+  cellElements.length = 0;
+
+  const onboardingData = getOnboardingData();
+  const isTableMiddle = onboardingData
+    ? onboardingData.isTableMiddle
+    : (rowIndex: number) => rowIndex === Math.ceil(gameFieldData.length / 2) - 1;
 
   gameFieldData.forEach((row, rowIndex) => {
     const rowElements: CellElementObject[] = [];
@@ -144,7 +162,7 @@ export function generateGameFieldElement(gameFieldData: GameFieldData) {
     gameField.append(rowElem);
 
     row.forEach((cell, columnIndex) => {
-      const isInMiddle = rowIndex === Math.ceil(gameFieldData.length / 2) - 1;
+      const isInMiddle = isTableMiddle(rowIndex);
       const cellElementObject = createCellElement(cell, isInMiddle);
 
       cellElementObject.elem.addEventListener("click", () => {

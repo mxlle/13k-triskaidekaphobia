@@ -1,13 +1,10 @@
-$squareCount: 11;
+$squareCount: var(--square-count, 11);
 $gap: 1px;
-$totalGap: ($squareCount - 1) * $gap;
+$totalGap: calc(calc($squareCount - 1) * $gap);
 $buffer: 2rem; // = 2 * margin
 $headerHeight: 100px;
 // $maxWidth: 40rem + $buffer + $totalGap;
-$squareSize: calc(
-  calc(min(100vw, calc(100vh - $headerHeight)) - $buffer - $totalGap) /
-    $squareCount
-);
+$squareSize: calc(calc(min(100vw, calc(100vh - $headerHeight)) - $buffer - $totalGap) / $squareCount);
 $font-size: calc(0.6 * $squareSize);
 
 @mixin board-tile-grid {

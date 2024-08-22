@@ -2,12 +2,10 @@ const LOCAL_STORAGE_PREFIX = "mxlle-13th";
 
 export const enum LocalStorageKey {
   MUTED = "muted",
+  ONBOARDING_STEP = "onboardingStep",
 }
 
-export function setLocalStorageItem(
-  key: LocalStorageKey,
-  value: string | false,
-) {
+export function setLocalStorageItem(key: LocalStorageKey, value: string | false) {
   if (value === false) {
     removeLocalStorageItem(key);
     return;
