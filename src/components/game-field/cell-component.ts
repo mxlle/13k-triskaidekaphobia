@@ -1,7 +1,8 @@
-import { Cell, hasPerson, isChair, isDoor, isTable, isWindow, Person } from "../../types";
+import { Cell, hasPerson, isChair, isDoor, isTable, isWindow, OccupiedCell, Person } from "../../types";
 import { createElement } from "../../utils/html-utils";
 import { isGermanLanguage } from "../../translations";
 import { getPhobiaName } from "../../phobia";
+import { openMiniHelp } from "../help/help";
 
 export interface CellElementObject {
   elem: HTMLElement;
@@ -78,14 +79,23 @@ export function updateCell(cell: Cell, cellElementObject: CellElementObject) {
   cellElementObject.elem.classList.toggle("panic", person?.hasPanic ?? false);
 
   if (hasPerson(cell)) {
-    setCellFearTooltips(cell.person, cellElementObject);
+    setCellFearTooltips(cell, cellElementObject);
   }
 }
 
-function setCellFearTooltips(person: Person, cellElementObject: CellElementObject) {
+function setCellFearTooltips(cell: OccupiedCell, cellElementObject: CellElementObject) {
   const isGerman = isGermanLanguage();
+  const person = cell.person;
   const fearName = person.fear ? getPhobiaName(person.fear, isGerman) : "";
   const smallFearName = person.smallFear ? getPhobiaName(person.smallFear, isGerman) : "";
   cellElementObject.fearElem.setAttribute("title", fearName);
   cellElementObject.smallFearElem.setAttribute("title", smallFearName);
+  cellElementObject.fearElem.addEventListener("click", (event: MouseEvent) => {
+    event.stopPropagation();
+    openMiniHelp(cell);
+  });
+  cellElementObject.smallFearElem.addEventListener("click", (event: MouseEvent) => {
+    event.stopPropagation();
+    openMiniHelp(cell);
+  });
 }

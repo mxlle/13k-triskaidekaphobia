@@ -13,6 +13,7 @@ export const enum TranslationKey {
   EXAMPLE_SMALL_FEAR,
   RULES,
   RULES_CONTENT,
+  ABOUT,
 }
 
 const Translation = {
@@ -49,12 +50,12 @@ const Translation = {
     de: "{0} möchte am Tisch sitzen.",
   },
   [TranslationKey.EXAMPLE_BIG_FEAR]: {
-    en: "But {0} has <em>{1}</em> and is afraid if {2} sits at the same table.",
-    de: "Aber {0} hat <em>{1}</em> und fürchtet sich, wenn {2} am selben Tisch sitzt.",
+    en: "{0} has <em>{1}</em> and is afraid if {2} sits at the same table.",
+    de: "{0} hat <em>{1}</em> und fürchtet sich, wenn {2} am selben Tisch sitzt.",
   },
   [TranslationKey.EXAMPLE_SMALL_FEAR]: {
-    en: "Also, {0} has <em>{1}</em> and is afraid if {2} sits next to or across from them.",
-    de: "{0} hat auch <em>{1}</em> und fürchtet sich, wenn {2} daneben oder gegenüber sitzt.",
+    en: "{0} has a bit of <em>{1}</em> and is afraid if {2} sits next to or across from them.",
+    de: "{0} hat ein bisschen <em>{1}</em> und fürchtet sich, wenn {2} daneben oder gegenüber sitzt.",
   },
   [TranslationKey.RULES]: {
     en: "Rules",
@@ -83,6 +84,10 @@ const Translation = {
 1️⃣3️⃣🙀 Außerdem haben alle Emojis <em>Triskaidekaphobie</em>!
 
 😀 Wenn alle glücklich sind, gewinnst du!`,
+  },
+  [TranslationKey.ABOUT]: {
+    en: "About {0}",
+    de: "Über {0}",
   },
 };
 

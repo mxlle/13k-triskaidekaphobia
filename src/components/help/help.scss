@@ -23,10 +23,12 @@
     text-align: center;
 
     .cell {
+      background-color: #1b273a;
       $example-size: 8rem;
       width: $example-size;
       height: $example-size;
       font-size: 0.6 * $example-size;
+      pointer-events: none;
     }
   }
 }

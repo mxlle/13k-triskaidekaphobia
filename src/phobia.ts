@@ -48,7 +48,11 @@ const PhobiaNameMap: Record<Phobia, string> = {
   "📚": "Bibliophobia",
 };
 
-export function getPhobiaName(phobia: Phobia, isGerman: boolean = false): string {
+export function getPhobiaName(phobia: Phobia | undefined, isGerman: boolean = false): string {
+  if (!phobia) {
+    return "";
+  }
+
   let phobiaName = PhobiaNameMap[phobia];
 
   if (isGerman) {

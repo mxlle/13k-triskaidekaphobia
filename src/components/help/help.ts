@@ -62,3 +62,31 @@ ${getTranslation(TranslationKey.EXAMPLE_SMALL_FEAR, name, smallFearName, smallFe
 
   helpDialog.open();
 }
+
+export function openMiniHelp(cell: OccupiedCell): Promise<boolean> {
+  const miniHelpContent = createElement({
+    cssClass: "rules",
+  });
+
+  const helpVisualization = createElement({
+    cssClass: "visualization",
+  });
+
+  const exampleCellElementObject = createCellElement(cell);
+  const { name, fear, smallFear } = cell.person;
+
+  const isGerman = isGermanLanguage();
+  const fearName = getPhobiaName(fear, isGerman);
+  const smallFearName = getPhobiaName(smallFear, isGerman);
+
+  const exampleText = createElement({});
+  exampleText.innerHTML = `${getTranslation(TranslationKey.EXAMPLE_EMOJI, name)}<br/>
+${fear ? getTranslation(TranslationKey.EXAMPLE_BIG_FEAR, name, fearName, fear) + "<br/>" : ""}
+${smallFear ? getTranslation(TranslationKey.EXAMPLE_SMALL_FEAR, name, smallFearName, smallFear) : ""}`;
+
+  helpVisualization.append(exampleText, exampleCellElementObject.elem);
+
+  miniHelpContent.append(helpVisualization);
+
+  return createDialog(miniHelpContent, undefined, getTranslation(TranslationKey.ABOUT, name)).open();
+}
