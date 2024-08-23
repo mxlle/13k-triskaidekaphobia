@@ -53,6 +53,7 @@ export function getMiniHelpContent(occupiedCell?: OccupiedCell, cell?: Cell): HT
       isChair(occupiedCell.type) ? "" : getTranslation(TranslationKey.EXAMPLE_EMOJI, name),
       fear ? getTranslation(TranslationKey.EXAMPLE_BIG_FEAR, name, fearName, fear) : "",
       smallFear ? getTranslation(TranslationKey.EXAMPLE_SMALL_FEAR, name, smallFearName, smallFear) : "",
+      getTranslation(TranslationKey.TARGET_CLICK),
     ];
 
     exampleText.innerHTML = exampleTexts

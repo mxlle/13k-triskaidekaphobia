@@ -19,6 +19,7 @@ export const enum TranslationKey {
   INFO_TABLE,
   INFO_DECOR,
   INFO_EMPTY,
+  TARGET_CLICK,
 }
 
 const Translation = {
@@ -109,6 +110,10 @@ const Translation = {
   [TranslationKey.INFO_EMPTY]: {
     en: "I'm an empty field. Someone can wait here.",
     de: "Ich bin ein leeres Feld. Jemand kann hier warten.",
+  },
+  [TranslationKey.TARGET_CLICK]: {
+    en: "You can move me by clicking on any empty field or 🪑",
+    de: "Du kannst mich bewegen, indem du auf ein leeres Feld oder 🪑 klickst",
   },
 };
 
