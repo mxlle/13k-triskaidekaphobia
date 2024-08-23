@@ -50,6 +50,7 @@ export const isGuest = (typeOrObject: string | Cell) => getType(typeOrObject) ==
 export const isDoor = (typeOrObject: string | Cell) => getType(typeOrObject) === CellType.DOOR;
 export const isWindow = (typeOrObject: string | Cell) => getType(typeOrObject) === CellType.WINDOW;
 export const isChair = (typeOrObject: string | Cell) => getType(typeOrObject) === CellType.CHAIR;
+export const isEmpty = (typeOrObject: string | Cell) => getType(typeOrObject) === CellType.EMPTY;
 
 export function hasPerson(cell: Cell): cell is OccupiedCell {
   return !!cell.person;

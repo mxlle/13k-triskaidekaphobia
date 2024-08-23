@@ -53,7 +53,7 @@ $border-style: outset;
     color: transparent;
     background: #563232 !important;
     border: none;
-    pointer-events: none;
+    cursor: default;
     $tableHeight: var(--table-height, 7);
 
     &.middle {
@@ -73,7 +73,7 @@ $border-style: outset;
   }
 
   &.door {
-    pointer-events: none;
+    cursor: default;
   }
 
   &.selected {
@@ -179,7 +179,7 @@ body {
       }
 
       &:not(.has-person) {
-        pointer-events: none;
+        cursor: default;
       }
     }
   }

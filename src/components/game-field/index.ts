@@ -2,7 +2,7 @@ import "./game-field.scss";
 
 import { createButton, createElement } from "../../utils/html-utils";
 import { moveGuest, newGame } from "../../logic/game-logic";
-import { Cell, GameFieldData, hasPerson, isSameCell } from "../../types";
+import { Cell, GameFieldData, hasPerson, isDoor, isSameCell, isTable, isWindow } from "../../types";
 import { createWinScreen } from "../win-screen/win-screen";
 import { CellElementObject, createCellElement, updateCell } from "./cell-component";
 import { getTranslation, TranslationKey } from "../../translations";
@@ -109,8 +109,18 @@ function cellClickHandler(rowIndex: number, columnIndex: number) {
 
   if (miniHelp) {
     miniHelp.remove();
-    miniHelp = getMiniHelpContent();
+    miniHelp = getMiniHelpContent(undefined, clickedCell ? undefined : cell);
     mainContainer?.append(miniHelp);
+  }
+
+  if (!hasPerson(cell)) {
+    if (!clickedCell) {
+      return;
+    }
+
+    if (isDoor(cell) || isWindow(cell) || isTable(cell)) {
+      return;
+    }
   }
 
   if (clickedCell) {

@@ -14,6 +14,10 @@ export const enum TranslationKey {
   RULES,
   RULES_CONTENT,
   ABOUT,
+  INFO_PLACEHOLDER,
+  INFO_CHAIR,
+  INFO_TABLE,
+  INFO_DECOR,
   INFO_EMPTY,
 }
 
@@ -86,9 +90,25 @@ const Translation = {
     en: "About {0}",
     de: "Infos zu {0}",
   },
-  [TranslationKey.INFO_EMPTY]: {
+  [TranslationKey.INFO_PLACEHOLDER]: {
     en: "Select an emoji to learn more about it.",
     de: "Wähle ein Emoji aus, um mehr darüber zu erfahren.",
+  },
+  [TranslationKey.INFO_CHAIR]: {
+    en: "I'm a chair. Someone can sit on me.",
+    de: "Ich bin ein Stuhl. Jemand kann auf mir sitzen.",
+  },
+  [TranslationKey.INFO_TABLE]: {
+    en: "I'm table {0}",
+    de: "Ich bin Tisch {0}",
+  },
+  [TranslationKey.INFO_DECOR]: {
+    en: "I'm a decoration",
+    de: "Ich bin nur die Deko",
+  },
+  [TranslationKey.INFO_EMPTY]: {
+    en: "I'm an empty field. Someone can wait here.",
+    de: "Ich bin ein leeres Feld. Jemand kann hier warten.",
   },
 };
 

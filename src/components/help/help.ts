@@ -2,7 +2,7 @@ import "./help.scss";
 
 import { createElement } from "../../utils/html-utils";
 import { getTranslation, isGermanLanguage, TranslationKey } from "../../translations";
-import { isChair, OccupiedCell } from "../../types";
+import { Cell, isChair, isEmpty, isTable, OccupiedCell } from "../../types";
 import { getPhobiaName } from "../../phobia";
 import { createDialog, Dialog } from "../dialog";
 import { CellElementObject, createCellElement } from "../game-field/cell-component";
@@ -26,8 +26,8 @@ export function openHelp() {
   helpDialog.open();
 }
 
-export function getMiniHelpContent(occupiedCell?: OccupiedCell): HTMLElement {
-  const name = occupiedCell?.person.name ?? "<?>";
+export function getMiniHelpContent(occupiedCell?: OccupiedCell, cell?: Cell): HTMLElement {
+  const name = (occupiedCell?.person.name ?? cell?.type ?? "<?>") || "[ ]";
 
   const miniHelpContent = createElement({
     cssClass: "mini-help",
@@ -59,8 +59,18 @@ export function getMiniHelpContent(occupiedCell?: OccupiedCell): HTMLElement {
       .filter(Boolean)
       .map((text) => `<p>${text}</p>`)
       .join("");
+  } else if (cell) {
+    exampleCellElementObject = createCellElement(cell);
+
+    if (isTable(cell)) {
+      exampleText.innerHTML = getTranslation(TranslationKey.INFO_TABLE, (cell.tableIndex ?? 0) + 1);
+    } else {
+      exampleText.innerHTML = getTranslation(
+        isChair(cell.type) ? TranslationKey.INFO_CHAIR : isEmpty(cell) ? TranslationKey.INFO_EMPTY : TranslationKey.INFO_DECOR,
+      );
+    }
   } else {
-    exampleText.innerHTML = getTranslation(TranslationKey.INFO_EMPTY);
+    exampleText.innerHTML = getTranslation(TranslationKey.INFO_PLACEHOLDER);
   }
 
   miniHelpContent.append(exampleHeading, exampleText);
