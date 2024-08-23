@@ -65,24 +65,20 @@ const Translation = {
   [TranslationKey.RULES_CONTENT]: {
     en: `🏁 The goal is to seat all emojis at the tables without anybody being frightened.
 
-🚪 Most emojis are already seated at the tables. But there might also be some waiting at the door.
-
-😱 Emojis are afraid of certain other emojis. There are two kinds of fears: big and small.
-🍽️ The big fear triggers already if the emoji is seated on the same table as the emoji they are afraid of.
-🪑 The small fear triggers only if the emoji is seated next to or across (also diagonally) from the emoji they are afraid of.
+😱 Emojis are afraid of certain other emojis. Click on an emoji to see who they are afraid of.
 
 1️⃣3️⃣🙀 Also all emojis suffer from <em>Triskaidekaphobia</em>.
+
+🚪 Most emojis are already seated at the tables. But there might also be some waiting at the door.
 
 😀 If all emojis are happy, you win! 🎉`,
     de: `🏁 Das Ziel ist es, alle Emojis an den Tischen zu platzieren, ohne dass jemand Angst hat.
 
+😱 Die Emojis haben Angst vor bestimmten anderen Emojis. Klicke auf ein Emoji, um zu sehen, vor wem es Angst hat.
+
+1️⃣3️⃣🙀 Außerdem leiden alle Emojis unter <em>Triskaidekaphobie</em>!
+
 🚪 Die meisten Emojis sitzen bereits an den Tischen. Aber es kann auch sein, dass einige noch an der Tür warten.
-
-😱 Die Emojis haben Angst vor bestimmten anderen Emojis. Dabei wird zwischen zwei Fällen unterschieden: große und kleine Angst.
-🍽️ Die große Angst wird bereits ausgelöst, wenn das Emoji am selben Tisch wie das Emoji sitzt, vor dem es Angst hat.
-🪑 Die kleine Angst wird nur ausgelöst, wenn das Emoji neben oder gegenüber dem Emoji sitzt, vor dem es Angst hat (auch schräg gegenüber).
-
-1️⃣3️⃣🙀 Außerdem haben alle Emojis <em>Triskaidekaphobie</em>!
 
 😀 Wenn alle glücklich sind, gewinnst du!`,
   },
