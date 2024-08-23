@@ -1,3 +1,5 @@
+@use "../../grid-mixins";
+
 @import "../../theme";
 
 .rules {
@@ -6,13 +8,6 @@
   text-align: left;
   max-width: 800px;
   padding: 0 1rem;
-
-  em {
-    font-style: normal;
-    font-weight: bold;
-    font-family: cursive;
-    color: $danger-color-light;
-  }
 
   .visualization {
     display: grid;
@@ -33,8 +28,18 @@
   }
 }
 
+.rules,
 .mini-help {
-  font-size: 0.75em;
+  em {
+    font-style: normal;
+    font-weight: bold;
+    font-family: cursive;
+    color: $danger-color-light;
+  }
+}
+
+.mini-help {
+  font-size: 0.75rem;
   margin: 0;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 0.5rem;
@@ -45,7 +50,7 @@
 
   .cell {
     background: rgba(255, 255, 255, 0.1);
-    $example-size: 6rem;
+    $example-size: 5rem;
     width: $example-size;
     height: $example-size;
     font-size: 0.6 * $example-size;
@@ -55,9 +60,13 @@
     :after {
       content: none;
     }
+  }
 
-    @media (max-height: 600px) {
-      $example-size: 4rem;
+  @media (max-height: 600px) {
+    font-size: 0.66rem;
+
+    .cell {
+      $example-size: 3rem;
       width: $example-size;
       height: $example-size;
       font-size: 0.6 * $example-size;

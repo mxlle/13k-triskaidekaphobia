@@ -56,11 +56,11 @@
   display: grid;
   gap: 1rem;
   padding: 1rem;
-  grid-template-columns: repeat(2, minmax(0, 360px));
+  grid-template-columns: repeat(2, minmax(0, 15rem));
   align-items: center;
   justify-content: center;
-  width: calc(100% - 2rem);
   justify-self: center;
+  width: 100%;
 
   button {
     white-space: nowrap;

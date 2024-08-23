@@ -1,5 +1,3 @@
-@use "grid-mixins";
-
 @import "theme";
 
 :root {
@@ -56,7 +54,7 @@ body {
   display: grid;
   padding: 1rem;
   gap: 1rem;
-  grid-template-columns: 1fr grid-mixins.$mini-help-width;
+  grid-template-columns: minmax(min-content, 1fr) minmax(min-content, 600px);
 
   @media (orientation: portrait) {
     grid-template-columns: 1fr;
@@ -83,6 +81,9 @@ header {
   h1 {
     font-size: 1.2rem;
     margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .score {
@@ -115,34 +116,12 @@ header {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 6;
-  font-size: 2rem;
-}
-
-input {
-  box-sizing: border-box;
-  font-size: 2rem;
-  width: 100%;
-  background: #152134;
-  border: 1px solid #213345;
-  color: white;
-  text-align: center;
-  border-radius: 4px;
-
-  &::placeholder {
-    font-size: 0.7em;
-    color: #96a6b6;
-    font-style: italic;
-  }
-
-  &:focus-within {
-    outline: none;
-    border-color: cyan;
-  }
 }
 
 button,
 label {
   font-family: $font-family;
+  font-size: 1em;
   cursor: pointer;
   color: white;
   border: 1px solid rgba(white, 0.1);
