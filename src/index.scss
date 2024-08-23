@@ -33,6 +33,10 @@ html {
   }
 }
 
+* {
+  box-sizing: border-box;
+}
+
 body {
   background: #09162a;
   color: white;
@@ -50,9 +54,11 @@ body {
   width: 100%;
   overflow: auto;
   display: grid;
+  padding: 1rem;
+  gap: 1rem;
   grid-template-columns: 1fr grid-mixins.$mini-help-width;
 
-  @media (max-width: 1000px) {
+  @media (orientation: portrait) {
     grid-template-columns: 1fr;
     grid-template-rows: min-content auto auto;
   }
