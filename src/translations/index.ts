@@ -19,8 +19,8 @@ export const enum TranslationKey {
 
 const Translation = {
   [TranslationKey.WELCOME]: {
-    en: "Society of Multiphobics",
-    de: "Gesellschaft der Multiphobiker",
+    en: "The Society of Multiphobics",
+    de: "Die Gesellschaft der Multiphobiker",
   },
   [TranslationKey.START_GAME]: {
     en: "Start game",
