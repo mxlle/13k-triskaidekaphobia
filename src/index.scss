@@ -50,7 +50,7 @@ body {
   width: 100%;
   overflow: auto;
   display: grid;
-  grid-template-columns: 1fr grid-mixins.$mini-help-width; // todo
+  grid-template-columns: 1fr grid-mixins.$mini-help-width;
 
   @media (max-width: 1000px) {
     grid-template-columns: 1fr;
@@ -181,7 +181,6 @@ button.icon-btn {
   }
 }
 
-h2,
 h3 {
   margin-top: 0;
   margin-bottom: 0.75rem;
