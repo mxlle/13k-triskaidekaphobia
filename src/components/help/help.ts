@@ -2,13 +2,12 @@ import "./help.scss";
 
 import { createElement } from "../../utils/html-utils";
 import { getTranslation, isGermanLanguage, TranslationKey } from "../../translations";
-import { CellType, OccupiedCell } from "../../types";
+import { CellType, isChair, OccupiedCell } from "../../types";
 import { getPhobiaName, getRandomPhobia, getRandomPhobiaExcluding } from "../../phobia";
 import { createDialog, Dialog } from "../dialog";
-import { createCellElement } from "../game-field/cell-component";
+import { CellElementObject, createCellElement } from "../game-field/cell-component";
 
 let helpDialog: Dialog | undefined;
-let miniHelpDialog: Dialog | undefined;
 
 export function openHelp() {
   if (!helpDialog) {
@@ -64,42 +63,54 @@ ${getTranslation(TranslationKey.EXAMPLE_SMALL_FEAR, name, smallFearName, smallFe
   helpDialog.open();
 }
 
-export function openMiniHelp(cell: OccupiedCell): Promise<boolean> {
-  if (miniHelpDialog) {
-    miniHelpDialog.changeHeader(getTranslation(TranslationKey.ABOUT, cell.person.name));
-    miniHelpDialog.recreateDialogContent(getMiniHelpContent(cell));
+export function getMiniHelpContent(occupiedCell?: OccupiedCell): HTMLElement {
+  const name = occupiedCell?.person.name ?? "<?>";
 
-    return miniHelpDialog.open();
-  }
-
-  miniHelpDialog = createDialog(getMiniHelpContent(cell), undefined, getTranslation(TranslationKey.ABOUT, cell.person.name), false, true);
-  return miniHelpDialog.open();
-}
-
-function getMiniHelpContent(cell: OccupiedCell): HTMLElement {
   const miniHelpContent = createElement({
-    cssClass: "rules mini-help",
+    cssClass: "mini-help",
   });
 
-  const helpVisualization = createElement({
-    cssClass: "visualization",
+  const exampleHeading = createElement({
+    tag: "h3",
+    text: getTranslation(TranslationKey.ABOUT, name),
   });
-
-  const exampleCellElementObject = createCellElement(cell);
-  const { name, fear, smallFear } = cell.person;
-
-  const isGerman = isGermanLanguage();
-  const fearName = getPhobiaName(fear, isGerman);
-  const smallFearName = getPhobiaName(smallFear, isGerman);
 
   const exampleText = createElement({});
-  exampleText.innerHTML = `${getTranslation(TranslationKey.EXAMPLE_EMOJI, name)}
-${fear ? getTranslation(TranslationKey.EXAMPLE_BIG_FEAR, name, fearName, fear) : ""}
-${smallFear ? getTranslation(TranslationKey.EXAMPLE_SMALL_FEAR, name, smallFearName, smallFear) : ""}`;
+  let exampleCellElementObject: CellElementObject | undefined;
 
-  helpVisualization.append(exampleText, exampleCellElementObject.elem);
+  if (occupiedCell) {
+    exampleCellElementObject = createCellElement(occupiedCell);
+    const { name, fear, smallFear } = occupiedCell.person;
 
-  miniHelpContent.append(helpVisualization);
+    const isGerman = isGermanLanguage();
+    const fearName = getPhobiaName(fear, isGerman);
+    const smallFearName = getPhobiaName(smallFear, isGerman);
+
+    const exampleTexts = [
+      isChair(occupiedCell.type) ? "" : getTranslation(TranslationKey.EXAMPLE_EMOJI, name),
+      fear ? getTranslation(TranslationKey.EXAMPLE_BIG_FEAR, name, fearName, fear) : "",
+      smallFear ? getTranslation(TranslationKey.EXAMPLE_SMALL_FEAR, name, smallFearName, smallFear) : "",
+    ];
+
+    exampleText.innerHTML = exampleTexts
+      .filter(Boolean)
+      .map((text) => `<p>${text}</p>`)
+      .join("");
+  } else {
+    exampleText.innerHTML = getTranslation(TranslationKey.INFO_EMPTY);
+  }
+
+  miniHelpContent.append(exampleHeading, exampleText);
+
+  if (exampleCellElementObject) {
+    miniHelpContent.append(exampleCellElementObject.elem);
+  } else {
+    const placeholder = createElement({
+      cssClass: "cell",
+      text: "?",
+    });
+    miniHelpContent.append(placeholder);
+  }
 
   return miniHelpContent;
 }

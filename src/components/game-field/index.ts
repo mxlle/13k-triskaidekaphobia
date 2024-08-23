@@ -13,8 +13,11 @@ import { checkTableStates, getHappyStats } from "../../logic/checks";
 import { PubSubEvent, pubSubService } from "../../utils/pub-sub-service";
 import { handlePokiCommercial, pokiSdk } from "../../poki-integration";
 import { getOnboardingData, isOnboarding, wasOnboarding } from "../../logic/onboarding";
+import { getMiniHelpContent } from "../help/help";
 
+let mainContainer: HTMLElement | undefined;
 let gameFieldElem: HTMLElement | undefined;
+let miniHelp: HTMLElement | undefined;
 let clickedCell: Cell | undefined;
 const cellElements: CellElementObject[][] = [];
 
@@ -40,7 +43,7 @@ export async function initializeEmptyGameField() {
 
   gameFieldElem.append(startButton);
 
-  document.body.append(gameFieldElem);
+  appendGameField();
 }
 
 export async function startNewGame() {
@@ -67,7 +70,7 @@ export async function startNewGame() {
 
   if (!gameFieldElem) {
     gameFieldElem = generateGameFieldElement(globals.baseFieldData);
-    document.body.append(gameFieldElem);
+    appendGameField();
     await sleep(300);
   }
 
@@ -78,9 +81,37 @@ export async function startNewGame() {
   pokiSdk.gameplayStart();
 }
 
+function appendGameField() {
+  if (!gameFieldElem) {
+    console.warn("No game field element to append");
+    return;
+  }
+
+  if (!mainContainer) {
+    mainContainer = createElement({
+      cssClass: "main-container",
+    });
+    document.body.append(mainContainer);
+  }
+
+  mainContainer.append(gameFieldElem);
+
+  if (!miniHelp) {
+    miniHelp = getMiniHelpContent();
+  }
+
+  mainContainer.append(miniHelp);
+}
+
 function cellClickHandler(rowIndex: number, columnIndex: number) {
   const cell = globals.gameFieldData[rowIndex][columnIndex];
   const cellElementObject = getCellElementObject(cell);
+
+  if (miniHelp) {
+    miniHelp.remove();
+    miniHelp = getMiniHelpContent();
+    mainContainer?.append(miniHelp);
+  }
 
   if (clickedCell) {
     const clickedCellElementObject = getCellElementObject(clickedCell);
@@ -237,4 +268,11 @@ export function updateStateForSelection(gameFieldData: GameFieldData, selectedCe
   selectedCell.person.makesAfraid.forEach((makesAfraid) => {
     getCellElementObject(makesAfraid).elem.classList.add("scared");
   });
+
+  if (miniHelp) {
+    miniHelp.remove();
+  }
+
+  miniHelp = getMiniHelpContent(selectedCell);
+  mainContainer?.append(miniHelp);
 }

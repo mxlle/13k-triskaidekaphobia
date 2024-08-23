@@ -4,16 +4,10 @@ $danger-color: #992244;
 $danger-color-light: #cc6677;
 $success-color: #227744;
 $success-color-light: #44aa77;
-$rainbow: linear-gradient(
-  to bottom right,
-  red 15%,
-  orange 30%,
-  yellow 50%,
-  cyan 70%,
-  blue 85%
-);
+$rainbow: linear-gradient(to bottom right, red 15%, orange 30%, yellow 50%, cyan 70%, blue 85%);
 $font-family: sans-serif;
 $border-radius: 0.4rem;
+$secondary-text: #96a6b6;
 
 @mixin hover {
   @media (hover: hover) and (pointer: fine) {
@@ -41,11 +35,7 @@ $border-radius: 0.4rem;
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(
-      to bottom right,
-      rgba($bg-base, $alpha1),
-      rgba($bg-base, $alpha2)
-    );
+    background: linear-gradient(to bottom right, rgba($bg-base, $alpha1), rgba($bg-base, $alpha2));
     pointer-events: none;
     animation: opacityBlink 3s infinite linear;
   }

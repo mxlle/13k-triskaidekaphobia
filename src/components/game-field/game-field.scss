@@ -43,11 +43,10 @@ $border-style: outset;
   border: 0.0625rem var(--border-style) var(--tile-color-2);
   display: grid;
   place-items: center;
-  color: $main-color;
   position: relative;
   cursor: pointer;
-  width: grid-mixins.$squareSize;
-  height: grid-mixins.$squareSize;
+  width: 100%;
+  height: 100%;
   box-sizing: border-box;
 
   &.table {

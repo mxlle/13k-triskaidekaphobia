@@ -2,23 +2,31 @@ $squareCount: var(--square-count, 11);
 $gap: 1px;
 $totalGap: calc(calc($squareCount - 1) * $gap);
 $buffer: 2rem; // = 2 * margin
-$headerHeight: 100px;
+$headerHeight: 72px;
+$mini-help-width: 400px;
 // $maxWidth: 40rem + $buffer + $totalGap;
-$squareSize: calc(calc(min(100vw, calc(100vh - $headerHeight)) - $buffer - $totalGap) / $squareCount);
-$font-size: calc(0.6 * $squareSize);
+$totalSizeLandscape: calc(min(calc(100vw - $mini-help-width), calc(100vh - $headerHeight)) - $buffer - $totalGap);
+$totalSizePortrait: calc(min(100vw, calc(100vh - $headerHeight)) - $buffer - $totalGap);
+$squareSizeLandscape: calc(#{$totalSizeLandscape} / $squareCount);
+$squareSizePortrait: calc(#{$totalSizePortrait} / $squareCount);
+$font-size: calc(0.6 * var(--square-size));
 
 @mixin board-tile-grid {
   display: grid;
-  grid-template-columns: repeat(var(--columns, $squareCount), $squareSize);
-  grid-template-rows: repeat(var(--rows, $squareCount + 1), $squareSize);
+  grid-template-columns: repeat(var(--columns, $squareCount), var(--square-size));
+  grid-template-rows: repeat(var(--rows, $squareCount), var(--square-size));
   gap: $gap;
   font-size: $font-size;
   line-height: 1;
 }
 
 @mixin board-tile-grid-variables {
-  --square-size: #{$squareSize};
+  --square-size: #{$squareSizeLandscape};
   --gap: #{$gap};
+
+  @media (max-width: 1000px) {
+    --square-size: #{$squareSizePortrait};
+  }
 }
 
 @mixin neighbors {

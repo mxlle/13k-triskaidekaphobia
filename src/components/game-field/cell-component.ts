@@ -2,7 +2,6 @@ import { Cell, hasPerson, isChair, isDoor, isTable, isWindow, OccupiedCell, Pers
 import { createElement } from "../../utils/html-utils";
 import { isGermanLanguage } from "../../translations";
 import { getPhobiaName } from "../../phobia";
-import { openMiniHelp } from "../help/help";
 
 export interface CellElementObject {
   elem: HTMLElement;
@@ -90,12 +89,4 @@ function setCellFearTooltips(cell: OccupiedCell, cellElementObject: CellElementO
   const smallFearName = person.smallFear ? getPhobiaName(person.smallFear, isGerman) : "";
   cellElementObject.fearElem.setAttribute("title", fearName);
   cellElementObject.smallFearElem.setAttribute("title", smallFearName);
-  cellElementObject.fearElem.addEventListener("click", (_event: MouseEvent) => {
-    //event.stopPropagation();
-    openMiniHelp(cell);
-  });
-  cellElementObject.smallFearElem.addEventListener("click", (_event: MouseEvent) => {
-    //event.stopPropagation();
-    openMiniHelp(cell);
-  });
 }

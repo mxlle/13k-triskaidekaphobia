@@ -14,6 +14,7 @@ export const enum TranslationKey {
   RULES,
   RULES_CONTENT,
   ABOUT,
+  INFO_EMPTY,
 }
 
 const Translation = {
@@ -87,7 +88,11 @@ const Translation = {
   },
   [TranslationKey.ABOUT]: {
     en: "About {0}",
-    de: "Über {0}",
+    de: "Infos zu {0}",
+  },
+  [TranslationKey.INFO_EMPTY]: {
+    en: "Select an emoji to learn more about it.",
+    de: "Wähle ein Emoji aus, um mehr darüber zu erfahren.",
   },
 };
 

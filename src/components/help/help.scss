@@ -33,26 +33,26 @@
   }
 }
 
-.rules.mini-help {
-  margin: 1rem auto;
-  max-width: 1200px;
-  padding: 0 0.5rem;
+.mini-help {
+  margin: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  gap: 0.5rem;
+  text-align: left;
+  color: $secondary-text;
 
-  .visualization {
-    gap: 0.5rem;
-    margin: 0.25rem auto;
-    max-width: 1000px;
+  .cell {
+    background: rgba(255, 255, 255, 0.1);
+    $example-size: 6rem;
+    width: $example-size;
+    height: $example-size;
+    font-size: 0.6 * $example-size;
+    pointer-events: none;
+    margin: 1rem auto;
 
-    .cell {
-      background-color: #1b273a;
-      $example-size: 6rem;
-      width: $example-size;
-      height: $example-size;
-      font-size: 0.6 * $example-size;
-
-      :after {
-        content: none;
-      }
+    :after {
+      content: none;
     }
   }
 }
