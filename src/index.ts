@@ -2,7 +2,6 @@ import "./index.scss";
 
 import { createButton, createElement } from "./utils/html-utils";
 import { newGame } from "./logic/game-logic";
-import { getTranslation, TranslationKey } from "./translations";
 import { createDialog, Dialog } from "./components/dialog";
 import { PubSubEvent, pubSubService } from "./utils/pub-sub-service";
 import { initializeEmptyGameField, startNewGame } from "./components/game-field";
@@ -58,12 +57,12 @@ function init() {
 
   header.append(btnContainer);
 
-  header.append(
-    createElement({
-      tag: "h1",
-      text: `${getTranslation(TranslationKey.WELCOME)}`,
-    }),
-  );
+  // header.append(
+  //   createElement({
+  //     tag: "h1",
+  //     text: `${getTranslation(TranslationKey.WELCOME)}`,
+  //   }),
+  // );
   // header.append(
   //   createButton({ text: "⚙️", onClick: openConfig, iconBtn: true }),
   // );

@@ -28,6 +28,7 @@ export function openHelp() {
 
 export function getMiniHelpContent(occupiedCell?: OccupiedCell, cell?: Cell): HTMLElement {
   const name = (occupiedCell?.person.name ?? cell?.type ?? "<?>") || "[ ]";
+  const isEmptyState = !occupiedCell && !cell;
 
   const miniHelpContent = createElement({
     cssClass: "mini-help",
@@ -35,49 +36,52 @@ export function getMiniHelpContent(occupiedCell?: OccupiedCell, cell?: Cell): HT
 
   const exampleHeading = createElement({
     tag: "h3",
-    text: getTranslation(TranslationKey.ABOUT, name),
+    text: isEmptyState ? getTranslation(TranslationKey.WELCOME) : getTranslation(TranslationKey.ABOUT, name),
+    cssClass: isEmptyState ? "welcome" : "",
   });
 
-  const exampleText = createElement({});
-  let exampleCellElementObject: CellElementObject | undefined;
+  const helpText = createElement({});
+  let helpCellElementObject: CellElementObject | undefined;
 
   if (occupiedCell) {
-    exampleCellElementObject = createCellElement(occupiedCell);
+    helpCellElementObject = createCellElement(occupiedCell);
     const { name, fear, smallFear } = occupiedCell.person;
 
     const isGerman = isGermanLanguage();
     const fearName = getPhobiaName(fear, isGerman);
     const smallFearName = getPhobiaName(smallFear, isGerman);
 
-    const exampleTexts = [
+    const helpTexts = [
       isChair(occupiedCell.type) ? "" : getTranslation(TranslationKey.EXAMPLE_EMOJI, name),
       fear ? getTranslation(TranslationKey.EXAMPLE_BIG_FEAR, name, fearName, fear) : "",
       smallFear ? getTranslation(TranslationKey.EXAMPLE_SMALL_FEAR, name, smallFearName, smallFear) : "",
       getTranslation(TranslationKey.TARGET_CLICK),
     ];
 
-    exampleText.innerHTML = exampleTexts
+    helpText.innerHTML = helpTexts
       .filter(Boolean)
       .map((text) => `<p>${text}</p>`)
       .join("");
   } else if (cell) {
-    exampleCellElementObject = createCellElement(cell);
+    helpCellElementObject = createCellElement(cell);
 
     if (isTable(cell)) {
-      exampleText.innerHTML = getTranslation(TranslationKey.INFO_TABLE, (cell.tableIndex ?? 0) + 1);
+      helpText.innerHTML = getTranslation(TranslationKey.INFO_TABLE, (cell.tableIndex ?? 0) + 1);
     } else {
-      exampleText.innerHTML = getTranslation(
+      helpText.innerHTML = getTranslation(
         isChair(cell.type) ? TranslationKey.INFO_CHAIR : isEmpty(cell) ? TranslationKey.INFO_EMPTY : TranslationKey.INFO_DECOR,
       );
     }
   } else {
-    exampleText.innerHTML = getTranslation(TranslationKey.INFO_PLACEHOLDER);
+    const helpTexts = [getTranslation(TranslationKey.GOAL), getTranslation(TranslationKey.INFO_PLACEHOLDER)];
+
+    helpText.innerHTML = helpTexts.map((text) => `<p>${text}</p>`).join("");
   }
 
-  miniHelpContent.append(exampleHeading, exampleText);
+  miniHelpContent.append(exampleHeading, helpText);
 
-  if (exampleCellElementObject) {
-    miniHelpContent.append(exampleCellElementObject.elem);
+  if (helpCellElementObject) {
+    miniHelpContent.append(helpCellElementObject.elem);
   } else {
     const placeholder = createElement({
       cssClass: "cell",

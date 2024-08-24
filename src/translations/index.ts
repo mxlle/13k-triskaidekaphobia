@@ -2,6 +2,7 @@ import { getShortLanguageName } from "../utils/language-util";
 
 export const enum TranslationKey {
   WELCOME,
+  GOAL,
   START_GAME,
   WIN,
   PLAY_AGAIN,
@@ -24,8 +25,12 @@ export const enum TranslationKey {
 
 const Translation = {
   [TranslationKey.WELCOME]: {
-    en: "The Society of Multiphobics",
-    de: "Die Gesellschaft der Multiphobiker",
+    en: "Welcome to the Society of Multiphobics",
+    de: "Willkommen zur Gesellschaft der Multiphobiker",
+  },
+  [TranslationKey.GOAL]: {
+    en: "🏁 The goal is to seat all emojis at the tables without anybody being frightened.",
+    de: "🏁 Das Ziel ist es, alle Emojis an den Tischen zu platzieren, ohne dass jemand Angst hat.",
   },
   [TranslationKey.START_GAME]: {
     en: "Start game",
@@ -112,8 +117,8 @@ const Translation = {
     de: "Ich bin ein leeres Feld. Jemand kann hier warten.",
   },
   [TranslationKey.TARGET_CLICK]: {
-    en: "You can move me by clicking on any empty field or 🪑",
-    de: "Du kannst mich bewegen, indem du auf ein leeres Feld oder 🪑 klickst",
+    en: "Click on a 🪑 to move me there",
+    de: "Klicke auf einen 🪑, um mich dorthin zu bewegen",
   },
 };
 

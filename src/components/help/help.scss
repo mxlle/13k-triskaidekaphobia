@@ -48,6 +48,14 @@
   text-align: left;
   color: $secondary-text;
 
+  h3 {
+    &.welcome {
+      font-family: cursive;
+      font-size: 1.4em;
+      color: white;
+    }
+  }
+
   .cell {
     background: rgba(255, 255, 255, 0.1);
     $example-size: 5rem;

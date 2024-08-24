@@ -3,7 +3,7 @@ $gap: 1px;
 $totalGap: calc(calc($squareCount - 1) * $gap);
 $buffer: 2rem; // = 2 * margin
 $bufferLandscape: 3rem; // = 2 * margin
-$headerHeight: var(--header-height, 3rem);
+$headerHeight: 3rem;
 $mini-help-width: min(20rem, 33vw);
 // $maxWidth: 40rem + $buffer + $totalGap;
 $totalSizeLandscape: calc(min(calc(100vw - $mini-help-width - $bufferLandscape), calc(100vh - $headerHeight)) - $buffer - $totalGap);
@@ -27,9 +27,5 @@ $font-size: calc(0.6 * var(--square-size));
 
   @media (orientation: portrait) {
     --square-size: #{$squareSizePortrait};
-  }
-
-  @media (max-width: 860px) {
-    --header-height: 5rem;
   }
 }
