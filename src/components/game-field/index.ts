@@ -109,9 +109,11 @@ function cellClickHandler(rowIndex: number, columnIndex: number) {
 
   if (miniHelp) {
     miniHelp.remove();
-    miniHelp = getMiniHelpContent(undefined, clickedCell ? undefined : cell);
-    mainContainer?.append(miniHelp);
+    miniHelp = undefined;
   }
+
+  miniHelp = getMiniHelpContent(cell);
+  mainContainer?.append(miniHelp);
 
   if (!hasPerson(cell)) {
     if (!clickedCell) {
@@ -168,6 +170,14 @@ function resetSelection(cell: Cell) {
   cellElementObject.elem.classList.remove("selected");
 
   document.body.classList.remove("selecting");
+
+  if (miniHelp) {
+    miniHelp.remove();
+    miniHelp = undefined;
+  }
+
+  miniHelp = getMiniHelpContent();
+  mainContainer?.append(miniHelp);
 }
 
 function updateState(gameFieldData: Cell[][], skipWinCheck = false) {
@@ -278,11 +288,4 @@ export function updateStateForSelection(gameFieldData: GameFieldData, selectedCe
   selectedCell.person.makesAfraid.forEach((makesAfraid) => {
     getCellElementObject(makesAfraid).elem.classList.add("scared");
   });
-
-  if (miniHelp) {
-    miniHelp.remove();
-  }
-
-  miniHelp = getMiniHelpContent(selectedCell);
-  mainContainer?.append(miniHelp);
 }

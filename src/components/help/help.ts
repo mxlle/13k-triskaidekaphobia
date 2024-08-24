@@ -2,7 +2,7 @@ import "./help.scss";
 
 import { createElement } from "../../utils/html-utils";
 import { getTranslation, isGermanLanguage, TranslationKey } from "../../translations";
-import { Cell, isChair, isEmpty, isTable, OccupiedCell } from "../../types";
+import { Cell, hasPerson, isChair, isEmpty, isTable } from "../../types";
 import { getPhobiaName } from "../../phobia";
 import { createDialog, Dialog } from "../dialog";
 import { CellElementObject, createCellElement } from "../game-field/cell-component";
@@ -26,9 +26,9 @@ export function openHelp() {
   helpDialog.open();
 }
 
-export function getMiniHelpContent(occupiedCell?: OccupiedCell, cell?: Cell): HTMLElement {
-  const name = (occupiedCell?.person.name ?? cell?.type ?? "<?>") || "[ ]";
-  const isEmptyState = !occupiedCell && !cell;
+export function getMiniHelpContent(cell?: Cell): HTMLElement {
+  const name = (cell?.person?.name ?? cell?.type ?? "<?>") || "[ ]";
+  const isEmptyState = !cell;
 
   const miniHelpContent = createElement({
     cssClass: "mini-help",
@@ -43,16 +43,16 @@ export function getMiniHelpContent(occupiedCell?: OccupiedCell, cell?: Cell): HT
   const helpText = createElement({});
   let helpCellElementObject: CellElementObject | undefined;
 
-  if (occupiedCell) {
-    helpCellElementObject = createCellElement(occupiedCell);
-    const { name, fear, smallFear } = occupiedCell.person;
+  if (cell && hasPerson(cell)) {
+    helpCellElementObject = createCellElement(cell);
+    const { name, fear, smallFear } = cell.person;
 
     const isGerman = isGermanLanguage();
     const fearName = getPhobiaName(fear, isGerman);
     const smallFearName = getPhobiaName(smallFear, isGerman);
 
     const helpTexts = [
-      isChair(occupiedCell.type) ? "" : getTranslation(TranslationKey.EXAMPLE_EMOJI, name),
+      isChair(cell.type) ? "" : getTranslation(TranslationKey.EXAMPLE_EMOJI, name),
       fear ? getTranslation(TranslationKey.EXAMPLE_BIG_FEAR, name, fearName, fear) : "",
       smallFear ? getTranslation(TranslationKey.EXAMPLE_SMALL_FEAR, name, smallFearName, smallFear) : "",
       getTranslation(TranslationKey.TARGET_CLICK),
