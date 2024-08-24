@@ -84,7 +84,11 @@ $border-style: outset;
   }
 
   &.panic {
-    border: 0.2rem var(--border-style) $danger-color-light;
+    border: 0.2rem var(--border-style) $danger-color;
+
+    &:not(.chair) {
+      border: 0.1rem var(--border-style) $warning-color;
+    }
 
     span {
       animation: tremble 0.5s infinite;
@@ -190,15 +194,6 @@ body {
     .cell {
       &.has-person {
         @include selectable;
-
-        &:not(.chair) {
-          z-index: 1;
-          outline: 0.0625rem dashed rgba(white, 0.4);
-
-          &.panic {
-            border-color: $danger-color-light;
-          }
-        }
       }
 
       &:not(.has-person) {

@@ -2,7 +2,7 @@ import "./game-field.scss";
 
 import { createButton, createElement } from "../../utils/html-utils";
 import { moveGuest, newGame } from "../../logic/game-logic";
-import { Cell, GameFieldData, hasPerson, isDoor, isSameCell, isTable, isWindow } from "../../types";
+import { Cell, GameFieldData, hasPerson, isChair, isDoor, isSameCell, isTable, isWindow } from "../../types";
 import { createWinScreen } from "../win-screen/win-screen";
 import { CellElementObject, createCellElement, updateCell } from "./cell-component";
 import { getTranslation, TranslationKey } from "../../translations";
@@ -242,7 +242,7 @@ export function updatePanicStates(gameFieldData: GameFieldData, panickedTableCel
     cellElementObject.elem.classList.remove("triskaidekaphobia");
 
     if (hasPerson(cell)) {
-      cellElementObject.elem.classList.toggle("panic", cell.person.hasPanic);
+      cellElementObject.elem.classList.toggle("panic", cell.person.hasPanic || !isChair(cell));
     }
   });
 
