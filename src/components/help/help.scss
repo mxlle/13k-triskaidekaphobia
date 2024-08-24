@@ -57,7 +57,7 @@
     pointer-events: none;
     margin: 1rem auto;
 
-    :after {
+    &:after {
       content: none;
     }
   }

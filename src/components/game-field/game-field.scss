@@ -144,7 +144,7 @@ $border-style: outset;
     place-items: center;
     font-size: 0.5em;
     line-height: 1;
-    background: rgba($danger-color, 0.6);
+    background: rgba(0, 0, 0, 0.3);
     width: 45%;
     height: 45%;
 
@@ -158,6 +158,29 @@ $border-style: outset;
       font-size: 0.4em;
       right: 0;
       left: auto;
+
+      &::before,
+      &::after {
+        width: 0.0625rem;
+      }
+    }
+
+    // overlay a cross over the fear icon
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      width: 0.125rem;
+      height: 100%;
+      background: $danger-color;
+    }
+
+    &::before {
+      transform: rotate(45deg);
+    }
+
+    &::after {
+      transform: rotate(-45deg);
     }
   }
 }
