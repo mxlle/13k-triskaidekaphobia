@@ -42,6 +42,7 @@ typings/
 .nuxt
 dist
 out
+dist.zip
 
 # Gatsby files
 .cache/

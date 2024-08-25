@@ -4,7 +4,8 @@
   "main": "index",
   "type": "module",
   "scripts": {
-    "build": "npm rum clean && rollup -c && zip -jX9 dist/dist.zip dist/*",
+    "build": "npm rum clean && rollup -c",
+    "package": "node scripts/package.js",
     "clean": "rimraf dist && mkdirp dist",
     "start": "mkdirp out && rollup -c -w"
   },
@@ -12,6 +13,7 @@
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^11.1.6",
+    "archiver": "^7.0.1",
     "mkdirp": "^3.0.1",
     "prettier": "^3.3.3",
     "rimraf": "^6.0.1",
