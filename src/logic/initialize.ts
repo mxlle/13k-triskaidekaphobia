@@ -87,6 +87,7 @@ function getGameFieldObject(
         fear: character.fear,
         smallFear: character.smallFear,
         hasPanic: false,
+        triskaidekaphobia: false,
         afraidOf: [],
         makesAfraid: [],
       };
@@ -123,6 +124,7 @@ function generatePerson(): Person {
     fear,
     smallFear,
     hasPanic: false,
+    triskaidekaphobia: false,
     afraidOf: [],
     makesAfraid: [],
   };

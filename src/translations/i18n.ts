@@ -3,6 +3,8 @@ import { enTranslations } from "./en";
 import { deTranslations } from "./de";
 
 export const enum TranslationKey {
+  INFO_TRISKAIDEKAPHOBIA,
+  EXAMPLE_TRISKAIDEKAPHOBIA,
   WELCOME,
   GOAL,
   START_GAME,

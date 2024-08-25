@@ -1,6 +1,8 @@
 import { TranslationKey } from "./i18n";
 
 export const deTranslations: Record<TranslationKey, string> = {
+  [TranslationKey.INFO_TRISKAIDEKAPHOBIA]: "niemals <em>13</em> an einem Tisch",
+  [TranslationKey.EXAMPLE_TRISKAIDEKAPHOBIA]: "<em class='t13a'>Triskaidekaphobie</em>: 13 dürfen nicht an einem Tisch sitzen.",
   [TranslationKey.WELCOME]: "Willkommen bei der Gesellschaft der Multiphobiker",
   [TranslationKey.GOAL]: "🏁 Platziere alle Emojis an den Tischen ohne ihre Phobien auszulösen.",
   [TranslationKey.START_GAME]: "Spiel starten",

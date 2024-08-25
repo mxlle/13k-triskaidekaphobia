@@ -17,6 +17,7 @@ export function checkTableStates(gameFieldData: GameFieldData) {
       afraidOf.push(...alsoAfraidOf);
 
       guest.person.hasPanic = isPanic || afraidOf.length > 0;
+      guest.person.triskaidekaphobia = isPanic;
       guest.person.afraidOf = afraidOf;
     });
   }

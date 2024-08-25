@@ -12,7 +12,7 @@ import { globals } from "../../globals";
 let helpDialog: Dialog | undefined;
 
 interface HappyStat {
-  phobia: Phobia | CellType.CHAIR;
+  phobia: Phobia | CellType.CHAIR | "😱";
   satisfied: boolean;
   explainText: string;
 }
@@ -80,6 +80,7 @@ export function getMiniHelpContent(cell?: Cell): HTMLElement {
     const smallFearName = getPhobiaName(smallFear, isGerman);
 
     const helpTexts = [
+      cell.person.triskaidekaphobia ? getTranslation(TranslationKey.EXAMPLE_TRISKAIDEKAPHOBIA) : "",
       fear ? getTranslation(TranslationKey.EXAMPLE_BIG_FEAR, fearName, fear) : "",
       smallFear ? getTranslation(TranslationKey.EXAMPLE_SMALL_FEAR, smallFearName, smallFear) : "",
     ];
@@ -128,6 +129,7 @@ export function getMiniHelpContent(cell?: Cell): HTMLElement {
 }
 
 function getSatisfactionStats(cell: OccupiedCell): HTMLElement {
+  const isTriskaidekaphobia = cell.person.triskaidekaphobia;
   const hasChair = isChair(cell.type);
   const noBigFear = cell.person.afraidOf.filter((otherCell) => cell.person.fear === otherCell.person.name).length === 0;
   const noSmallFear = cell.person.afraidOf.filter((otherCell) => cell.person.smallFear === otherCell.person.name).length === 0;
@@ -141,6 +143,11 @@ function getSatisfactionStats(cell: OccupiedCell): HTMLElement {
   });
 
   const stats: HappyStat[] = [
+    {
+      phobia: isTriskaidekaphobia ? "😱" : undefined,
+      satisfied: !isTriskaidekaphobia,
+      explainText: getTranslation(TranslationKey.INFO_TRISKAIDEKAPHOBIA),
+    },
     { phobia: cell.person.fear, satisfied: noBigFear, explainText: getTranslation(TranslationKey.INFO_BIG_FEAR) },
     { phobia: cell.person.smallFear, satisfied: noSmallFear, explainText: getTranslation(TranslationKey.INFO_SMALL_FEAR) },
     { phobia: CellType.CHAIR, satisfied: hasChair, explainText: getTranslation(TranslationKey.INFO_FOMO) },

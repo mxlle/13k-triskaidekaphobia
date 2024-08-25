@@ -33,6 +33,7 @@ interface BasePerson {
 
 export interface Person extends BasePerson {
   hasPanic: boolean;
+  triskaidekaphobia: boolean;
   afraidOf: OccupiedCell[];
   makesAfraid: OccupiedCell[];
 }

@@ -18,6 +18,10 @@
     font-size: 1.2em;
     font-family: theme.$font-family-special;
     color: theme.$danger-color-contrast;
+
+    &.t13a {
+      font-size: 1.8em;
+    }
   }
 }
 
@@ -43,10 +47,10 @@
 
   .cell {
     background: theme.$bg-alpha-10;
-    $example-size: 7rem;
+    $example-size: var(--c-size, 7rem);
     width: $example-size;
     height: $example-size;
-    font-size: 0.6 * $example-size;
+    font-size: calc(0.6 * #{$example-size});
     pointer-events: none;
     border-radius: theme.$border-radius;
 
@@ -69,12 +73,19 @@
     }
   }
 
-  @media (max-height: 600px) {
+  @media (max-height: 800px) {
+    font-size: 0.8rem;
+
     .cell {
-      $example-size: 4.5rem;
-      width: $example-size;
-      height: $example-size;
-      font-size: 0.6 * $example-size;
+      --c-size: 5.5rem;
+    }
+  }
+
+  @media (max-height: 600px) {
+    font-size: 0.7rem;
+
+    .cell {
+      --c-size: 4.5rem;
     }
   }
 }
@@ -84,7 +95,6 @@
   padding: 0.5rem 0.75rem;
   border-radius: theme.$border-radius;
   width: fit-content;
-  font-size: 0.9rem;
 
   .stats-grid {
     display: grid;
@@ -97,14 +107,14 @@
   .stat {
     display: contents;
 
-    :first-child {
-      font-size: 1.4rem;
+    > :first-child {
+      font-size: 1.4em;
       font-family: monospace;
       font-weight: bold;
     }
 
-    :nth-child(2) {
-      font-size: 1.2rem;
+    > :nth-child(2) {
+      font-size: 1.3em;
     }
 
     &.satisfied {
@@ -114,18 +124,11 @@
     &.unsatisfied {
       color: theme.$danger-color-contrast;
     }
-  }
 
-  .fear {
-    position: relative;
-    display: inline-grid;
-    width: 1.5em;
-    height: 1.5em;
-    font-size: 0.9rem;
-
-    &::before,
-    &::after {
-      width: 0.125rem;
+    em {
+      font-family: theme.$font-family;
+      font-size: 1.3em;
+      color: theme.$danger-color;
     }
   }
 }
