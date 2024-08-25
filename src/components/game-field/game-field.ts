@@ -7,7 +7,7 @@ import { createWinScreen } from "../win-screen/win-screen";
 import { CellElementObject, createCellElement, updateCell } from "./cell-component";
 import { getTranslation, TranslationKey } from "../../translations/i18n";
 import { globals } from "../../globals";
-import { sleep } from "../../utils/promise-utils";
+import { requestAnimationFrameWithTimeout } from "../../utils/promise-utils";
 import { getGameFieldData } from "../../logic/initialize";
 import { checkTableStates, getAllGuests, getHappyStats } from "../../logic/checks";
 import { PubSubEvent, pubSubService } from "../../utils/pub-sub-service";
@@ -21,6 +21,9 @@ let gameFieldElem: HTMLElement | undefined;
 let miniHelp: HTMLElement | undefined;
 let clickedCell: Cell | undefined;
 const cellElements: CellElementObject[][] = [];
+
+const TIMEOUT_BETWEEN_GAMES = 300;
+const TIMEOUT_CELL_APPEAR = 30;
 
 export async function initializeEmptyGameField() {
   document.body.classList.remove("selecting");
@@ -55,7 +58,7 @@ export async function startNewGame() {
     pubSubService.publish(PubSubEvent.UPDATE_SCORE, globals.baseFieldData);
     await updateGameFieldElement(globals.baseFieldData);
     await handlePokiCommercial();
-    await sleep(300);
+    await requestAnimationFrameWithTimeout(TIMEOUT_BETWEEN_GAMES);
 
     if (wasOnboarding()) {
       console.debug("Was onboarding, removing game field");
@@ -72,7 +75,7 @@ export async function startNewGame() {
   if (!gameFieldElem) {
     gameFieldElem = generateGameFieldElement(globals.baseFieldData);
     appendGameField();
-    await sleep(300);
+    await requestAnimationFrameWithTimeout(TIMEOUT_BETWEEN_GAMES);
   }
 
   await updateGameFieldElement(globals.gameFieldData);
@@ -251,7 +254,7 @@ export async function updateGameFieldElement(gameFieldData: GameFieldData) {
     const hadPerson = cellElementObject.elem.classList.contains("has-person");
     updateCell(cell, cellElementObject);
     if (hasPerson(cell) || hadPerson) {
-      await sleep(50);
+      await requestAnimationFrameWithTimeout(TIMEOUT_CELL_APPEAR);
     }
   }
 }
@@ -265,7 +268,7 @@ export async function updatePanicStates(gameFieldData: GameFieldData, panickedTa
     cellElementObject.elem.classList.remove("panic");
   });
 
-  await sleep(0); // to trigger restart of tremble animation
+  await requestAnimationFrameWithTimeout(0); // to trigger restart of tremble animation
 
   getAllGuests(gameFieldData).forEach((cell) => {
     const cellElementObject = getCellElementObject(cell);
