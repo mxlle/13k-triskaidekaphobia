@@ -95,7 +95,7 @@ $table-border: var(--table-border, $table-border-dark);
     bottom: 0;
     background: linear-gradient(to bottom right, rgba($bg-base, $alpha1), rgba($bg-base, $alpha2));
     pointer-events: none;
-    animation: opacityBlink 3s infinite linear;
+    animation: opacityBlink 1s infinite;
   }
 
   @if not $skip-hover {

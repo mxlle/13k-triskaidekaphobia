@@ -56,7 +56,7 @@ export function getOnboardingData(): OnboardingData | undefined {
     case OnboardingStep.INTRO:
       return getOnboardingDataForIntro();
     case OnboardingStep.BIG_FEAR:
-      return getOnboardingDataForBigFear();
+      return getOnboardingDataForBothPhobias();
     default:
       return undefined;
   }
@@ -86,24 +86,24 @@ function getOnboardingDataForIntro(): OnboardingData {
   const onboardingCharacters: PersonWithPosition[] = [
     {
       name: ob1,
-      fear: undefined,
-      smallFear: ob2,
+      fear: ob2,
+      smallFear: undefined,
       row: 0,
       column: 1,
     },
     {
       name: ob2,
       fear: undefined,
-      smallFear: ob3,
+      smallFear: undefined,
       row: 1,
       column: 4,
     },
     {
       name: ob3,
       fear: undefined,
-      smallFear: ob2,
+      smallFear: undefined,
       row: 3,
-      column: 2,
+      column: 4,
     },
   ];
 
@@ -118,7 +118,7 @@ function getOnboardingDataForIntro(): OnboardingData {
   };
 }
 
-function getOnboardingDataForBigFear(): OnboardingData {
+function getOnboardingDataForBothPhobias(): OnboardingData {
   const ob1 = getRandomPhobia();
   const ob2 = getRandomPhobiaExcluding([ob1]);
   const ob3 = getRandomPhobiaExcluding([ob1, ob2]);
@@ -135,30 +135,30 @@ function getOnboardingDataForBigFear(): OnboardingData {
     {
       name: ob2,
       fear: undefined,
-      smallFear: ob1,
-      row: 2,
-      column: 4,
-    },
-    {
-      name: ob4,
-      fear: undefined,
-      smallFear: ob2,
-      row: 3,
-      column: 2,
-    },
-    {
-      name: ob3,
-      fear: ob5,
-      smallFear: ob1,
+      smallFear: undefined,
       row: 2,
       column: 0,
     },
     {
-      name: ob5,
+      name: ob4,
       fear: undefined,
-      smallFear: ob4,
+      smallFear: undefined,
       row: 4,
       column: 6,
+    },
+    {
+      name: ob3,
+      fear: ob2,
+      smallFear: undefined,
+      row: 2,
+      column: 4,
+    },
+    {
+      name: ob5,
+      fear: undefined,
+      smallFear: undefined,
+      row: 3,
+      column: 2,
     },
   ];
 

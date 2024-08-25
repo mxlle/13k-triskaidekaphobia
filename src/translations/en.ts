@@ -2,7 +2,7 @@ import { TranslationKey } from "./index";
 
 export const enTranslations: Record<TranslationKey, string> = {
   [TranslationKey.WELCOME]: "Welcome to the Society of Multiphobics",
-  [TranslationKey.GOAL]: "🏁 The goal is to seat all emojis at the tables without anybody being frightened.",
+  [TranslationKey.GOAL]: "🏁 Seat all emojis at the tables without triggering any phobias.",
   [TranslationKey.START_GAME]: "Start game",
   [TranslationKey.WIN]: "You win 🎉",
   [TranslationKey.PLAY_AGAIN]: "Play again",

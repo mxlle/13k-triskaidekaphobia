@@ -72,10 +72,20 @@ $border-style: outset;
   }
 
   &.selected {
-    // @include selectable($main-color, 0.1, 0.3, true);
-
     z-index: 4;
-    outline: 0.125rem dashed $main-color;
+
+    &:after {
+      content: "";
+      position: absolute;
+      $x: -0.375rem;
+      top: $x;
+      left: $x;
+      right: $x;
+      bottom: $x;
+      border: 0.125rem dashed $main-color;
+      animation: scale-pulse 1.5s infinite;
+      pointer-events: none;
+    }
   }
 
   &.has-person {
@@ -190,7 +200,7 @@ body {
       &.chair:not(.has-person) {
         cursor: pointer;
 
-        @include selectable($success-color-light);
+        @include selectable($success-color-light, 0.3, 0.5);
       }
     }
   }
@@ -259,5 +269,17 @@ body {
   }
   100% {
     transform: translate(0.5px, 0.5px) rotate(0deg);
+  }
+}
+
+@keyframes scale-pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
   }
 }

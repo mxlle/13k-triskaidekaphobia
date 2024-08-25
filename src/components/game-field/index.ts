@@ -12,7 +12,7 @@ import { getGameFieldData } from "../../logic/initialize";
 import { checkTableStates, getAllGuests, getHappyStats } from "../../logic/checks";
 import { PubSubEvent, pubSubService } from "../../utils/pub-sub-service";
 import { handlePokiCommercial, pokiSdk } from "../../poki-integration";
-import { getOnboardingData, isOnboarding, wasOnboarding } from "../../logic/onboarding";
+import { getOnboardingData, isOnboarding, OnboardingData, wasOnboarding } from "../../logic/onboarding";
 import { getMiniHelpContent } from "../help/help";
 
 let mainContainer: HTMLElement | undefined;
@@ -200,7 +200,7 @@ export function generateGameFieldElement(gameFieldData: GameFieldData) {
   });
   cellElements.length = 0;
 
-  const onboardingData = getOnboardingData();
+  const onboardingData: OnboardingData | undefined = getOnboardingData();
   const isTableMiddle = onboardingData
     ? onboardingData.isTableMiddle
     : (rowIndex: number) => rowIndex === Math.ceil(gameFieldData.length / 2) - 1;
@@ -219,6 +219,11 @@ export function generateGameFieldElement(gameFieldData: GameFieldData) {
       cellElementObject.elem.addEventListener("click", () => {
         cellClickHandler(rowIndex, columnIndex);
       });
+
+      // if (onboardingData?.arrow && onboardingData.arrow.row === rowIndex && onboardingData.arrow.column === columnIndex) {
+      //   const arrow = getOnboardingArrow(onboardingData.arrow.direction);
+      //   cellElementObject.elem.append(arrow);
+      // }
 
       rowElem.append(cellElementObject.elem);
       rowElements.push(cellElementObject);

@@ -2,7 +2,7 @@ import { TranslationKey } from "./index";
 
 export const deTranslations: Record<TranslationKey, string> = {
   [TranslationKey.WELCOME]: "Willkommen bei der Gesellschaft der Multiphobiker",
-  [TranslationKey.GOAL]: "🏁 Das Ziel ist es, alle Emojis an den Tischen zu platzieren, ohne dass sich jemand fürchtet.",
+  [TranslationKey.GOAL]: "🏁 Platziere alle Emojis an den Tischen ohne ihre Phobien auszulösen.",
   [TranslationKey.START_GAME]: "Spiel starten",
   [TranslationKey.WIN]: "Du hast gewonnen 🎉",
   [TranslationKey.PLAY_AGAIN]: "Nochmal spielen",

@@ -45,10 +45,6 @@ export function getScaryNeighbors(gameFieldData: GameFieldData, cell: OccupiedCe
   return neighborsWithPerson.filter((neighbor) => neighbor.person.name === cell.person.smallFear);
 }
 
-export function getGuestsOnTable(gameFieldData: GameFieldData, tableIndex: number): OccupiedCell[] {
-  return gameFieldData.flat().filter((cell): cell is OccupiedCell => cell.tableIndex === tableIndex && hasPerson(cell));
-}
-
 // get all 8 neighbors of a cell, plus the three cells on the other side of the table
 export function getNeighbors(gameFieldData: GameFieldData, row: number, column: number): Cell[] {
   const neighbors: Cell[] = [];
@@ -66,19 +62,11 @@ export function getNeighbors(gameFieldData: GameFieldData, row: number, column: 
     }
   }
 
-  // add the three cells on the other side of the table
+  // add the cell on the other side of the table
   const tableIndex = gameFieldData[row][column].tableIndex;
-  const additionalNeighbors = gameFieldData
-    .flat()
-    .filter(
-      (cell) =>
-        cell.tableIndex === tableIndex &&
-        hasPerson(cell) &&
-        cell.column !== column &&
-        cell.row <= row + 1 &&
-        cell.row >= row - 1 &&
-        neighbors.indexOf(cell) === -1,
-    );
+  const additionalNeighbors = getGuestsOnTable(gameFieldData, tableIndex).filter(
+    (cell) => cell.column !== column && cell.row === row && neighbors.indexOf(cell) === -1,
+  );
 
   neighbors.push(...additionalNeighbors);
 
@@ -115,8 +103,8 @@ export function getTableCells(gameFieldData: GameFieldData, tableIndex: number) 
   return gameFieldData.flat().filter((cell) => isTable(cell) && cell.tableIndex === tableIndex);
 }
 
-export function getGuestsAtTable(gameFieldData: GameFieldData, tableIndex: number) {
-  return gameFieldData.flat().filter((cell) => cell.tableIndex === tableIndex && hasPerson(cell));
+export function getGuestsOnTable(gameFieldData: GameFieldData, tableIndex: number): OccupiedCell[] {
+  return gameFieldData.flat().filter((cell): cell is OccupiedCell => cell.tableIndex === tableIndex && hasPerson(cell));
 }
 
 export function getChairsAtTable(gameFieldData: GameFieldData, tableIndex: number) {
