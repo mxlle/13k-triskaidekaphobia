@@ -20,6 +20,7 @@ let mainContainer: HTMLElement | undefined;
 let gameFieldElem: HTMLElement | undefined;
 let miniHelp: HTMLElement | undefined;
 let clickedCell: Cell | undefined;
+let hasMadeFirstMove = false;
 const cellElements: CellElementObject[][] = [];
 
 const TIMEOUT_BETWEEN_GAMES = 300;
@@ -52,6 +53,7 @@ export async function initializeEmptyGameField() {
 
 export async function startNewGame() {
   document.body.classList.remove("selecting");
+  hasMadeFirstMove = false;
 
   if (globals.gameFieldData.length && gameFieldElem) {
     // reset old game field
@@ -81,8 +83,6 @@ export async function startNewGame() {
   await updateGameFieldElement(globals.gameFieldData);
 
   updateState(globals.gameFieldData);
-
-  pokiSdk.gameplayStart();
 }
 
 function appendGameField() {
@@ -108,6 +108,11 @@ function appendGameField() {
 }
 
 function cellClickHandler(rowIndex: number, columnIndex: number, onboardingArrow?: HTMLElement) {
+  if (!hasMadeFirstMove) {
+    hasMadeFirstMove = true;
+    pokiSdk.gameplayStart();
+  }
+
   const cell = globals.gameFieldData[rowIndex][columnIndex];
   const cellElementObject = getCellElementObject(cell);
 
