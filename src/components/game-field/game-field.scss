@@ -2,11 +2,7 @@
 
 @import "../../theme";
 
-$tile-color-1: #152134;
-$tile-color-2: #1b273a;
 $border-style: outset;
-$table-color: #563232;
-$table-color-light: #905d5d;
 
 .game-field {
   @include grid-mixins.board-tile-grid;
@@ -60,7 +56,7 @@ $table-color-light: #905d5d;
 
   &.table {
     color: transparent;
-    background: $table-color;
+    background: $table-bg;
     border: none;
     cursor: default;
     $tableHeight: var(--table-height, 7);
@@ -74,8 +70,8 @@ $table-color-light: #905d5d;
         position: absolute;
         width: 100%;
         height: calc(#{$tableHeight} * 100% + calc(#{$tableHeight} - 1) * var(--gap));
-        background: $table-color;
-        border: 0.125rem $border-style $table-color-light;
+        background: $table-bg;
+        border: 0.125rem $border-style $table-border;
         box-sizing: border-box;
       }
     }
@@ -86,10 +82,10 @@ $table-color-light: #905d5d;
   }
 
   &.selected {
-    @include selectable($secondary-color, 0.3, 0.5);
+    // @include selectable($main-color, 0.1, 0.3, true);
 
     z-index: 4;
-    outline: 0.125rem dashed $secondary-color;
+    outline: 0.125rem dashed $main-color;
   }
 
   &.panic {
@@ -203,6 +199,10 @@ body {
     .cell {
       &.has-person {
         @include selectable;
+
+        @media (prefers-color-scheme: light) {
+          @include selectable($alpha-base-dark, 0.2, 0.4);
+        }
       }
 
       &:not(.has-person) {

@@ -37,6 +37,10 @@ body {
   overflow: hidden;
   display: grid;
   grid-template-rows: min-content 1fr;
+
+  @media (prefers-color-scheme: light) {
+    @include light-theme;
+  }
 }
 
 main {
