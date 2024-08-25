@@ -14,6 +14,7 @@ import { PubSubEvent, pubSubService } from "../../utils/pub-sub-service";
 import { handlePokiCommercial, pokiSdk } from "../../poki-integration";
 import { getOnboardingData, isOnboarding, OnboardingData, wasOnboarding } from "../../logic/onboarding";
 import { getMiniHelpContent } from "../help/help";
+import { getOnboardingArrow } from "../onboarding/onboarding-components";
 
 let mainContainer: HTMLElement | undefined;
 let gameFieldElem: HTMLElement | undefined;
@@ -103,9 +104,13 @@ function appendGameField() {
   mainContainer.append(miniHelp);
 }
 
-function cellClickHandler(rowIndex: number, columnIndex: number) {
+function cellClickHandler(rowIndex: number, columnIndex: number, onboardingArrow?: HTMLElement) {
   const cell = globals.gameFieldData[rowIndex][columnIndex];
   const cellElementObject = getCellElementObject(cell);
+
+  if (onboardingArrow) {
+    onboardingArrow.remove();
+  }
 
   if (miniHelp) {
     miniHelp.remove();
@@ -216,14 +221,16 @@ export function generateGameFieldElement(gameFieldData: GameFieldData) {
       const isInMiddle = isTableMiddle(rowIndex);
       const cellElementObject = createCellElement(cell, isInMiddle);
 
-      cellElementObject.elem.addEventListener("click", () => {
-        cellClickHandler(rowIndex, columnIndex);
-      });
+      let arrow: HTMLElement | undefined;
 
-      // if (onboardingData?.arrow && onboardingData.arrow.row === rowIndex && onboardingData.arrow.column === columnIndex) {
-      //   const arrow = getOnboardingArrow(onboardingData.arrow.direction);
-      //   cellElementObject.elem.append(arrow);
-      // }
+      if (onboardingData?.arrow && onboardingData.arrow.row === rowIndex && onboardingData.arrow.column === columnIndex) {
+        arrow = getOnboardingArrow(onboardingData.arrow.direction);
+        cellElementObject.elem.append(arrow);
+      }
+
+      cellElementObject.elem.addEventListener("click", () => {
+        cellClickHandler(rowIndex, columnIndex, arrow);
+      });
 
       rowElem.append(cellElementObject.elem);
       rowElements.push(cellElementObject);

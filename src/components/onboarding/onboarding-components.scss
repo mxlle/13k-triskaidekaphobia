@@ -1,0 +1,46 @@
+.arrow {
+  position: absolute;
+  z-index: 50;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+
+  &.left {
+    transform: translate(100%, 0) rotate(180deg);
+  }
+
+  &.right {
+    transform: translate(-100%, 0);
+  }
+
+  &.up {
+    transform: translate(0, 100%) rotate(270deg);
+  }
+
+  &.down {
+    transform: translate(0, -100%) rotate(90deg);
+  }
+}
+
+.arrow-inner {
+  // $main-color
+  background-image: url('data:image/svg+xml,<svg fill="rgb(51, 153, 255)" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><path d="M132.93848,231.39062A8,8,0,0,1,128,224V184H48a16.01833,16.01833,0,0,1-16-16V88A16.01833,16.01833,0,0,1,48,72h80V32a8.00065,8.00065,0,0,1,13.65723-5.65723l96,96a8.003,8.003,0,0,1,0,11.31446l-96,96A8.002,8.002,0,0,1,132.93848,231.39062Z"/></svg>');
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 75%;
+  height: 75%;
+  animation: arrow-point 1.2s infinite;
+}
+
+@keyframes arrow-point {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(10%); /* Adjust this value for the desired distance */
+  }
+  100% {
+    transform: translateX(0);
+  }
+}

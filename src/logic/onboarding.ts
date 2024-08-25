@@ -2,6 +2,7 @@ import { getRandomPhobia, getRandomPhobiaExcluding } from "../phobia";
 import { CellType, getCellTypesWithoutPrefix, PersonWithPosition } from "../types";
 import { globals } from "../globals";
 import { LocalStorageKey, setLocalStorageItem } from "../utils/local-storage";
+import { Direction } from "../components/onboarding/onboarding-components";
 
 export const enum OnboardingStep {
   INTRO = 0,
@@ -22,6 +23,11 @@ export interface OnboardingData {
   tableHeight: number;
   isTableMiddle: (rowIndex: number) => boolean;
   getTableIndex: (row: number, column: number) => number;
+  arrow?: {
+    row: number;
+    column: number;
+    direction: Direction;
+  };
 }
 // a 5 by 5 grid
 const onboardingField = (() => {
@@ -115,6 +121,11 @@ function getOnboardingDataForIntro(): OnboardingData {
     getTableIndex: (row, _column) => {
       return row < 2 ? 0 : 1;
     },
+    arrow: {
+      row: 0,
+      column: 1,
+      direction: Direction.UP,
+    },
   };
 }
 
@@ -169,6 +180,11 @@ function getOnboardingDataForBothPhobias(): OnboardingData {
     isTableMiddle: (rowIndex) => rowIndex === 3,
     getTableIndex: (_row, column) => {
       return column < 3 ? 0 : 1;
+    },
+    arrow: {
+      row: 0,
+      column: 1,
+      direction: Direction.LEFT,
     },
   };
 }

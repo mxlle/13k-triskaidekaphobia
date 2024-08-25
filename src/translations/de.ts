@@ -4,7 +4,7 @@ export const deTranslations: Record<TranslationKey, string> = {
   [TranslationKey.WELCOME]: "Willkommen bei der Gesellschaft der Multiphobiker",
   [TranslationKey.GOAL]: "🏁 Platziere alle Emojis an den Tischen ohne ihre Phobien auszulösen.",
   [TranslationKey.START_GAME]: "Spiel starten",
-  [TranslationKey.WIN]: "Du hast gewonnen 🎉",
+  [TranslationKey.WIN]: "Gewonnen 🎉",
   [TranslationKey.PLAY_AGAIN]: "Nochmal spielen",
   [TranslationKey.CONTINUE]: "Weiter",
   [TranslationKey.CANCEL]: "Abbrechen",
