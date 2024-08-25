@@ -10,8 +10,8 @@ export const enTranslations: Record<TranslationKey, string> = {
   [TranslationKey.CANCEL]: "Cancel",
   [TranslationKey.EXAMPLE_BIG_FEAR]: "Big <em>{0}</em>: {1} must not sit at the same table.",
   [TranslationKey.EXAMPLE_SMALL_FEAR]: "Small <em>{0}</em>: {1} must not sit next to or opposite.",
-  [TranslationKey.INFO_BIG_FEAR]: "at the same table",
-  [TranslationKey.INFO_SMALL_FEAR]: "next to or opposite",
+  [TranslationKey.INFO_BIG_FEAR]: "NOT at the same table",
+  [TranslationKey.INFO_SMALL_FEAR]: "NOT next to or opposite",
   [TranslationKey.INFO_FOMO]: "seated at a table",
   [TranslationKey.RULES]: "Rules",
   [TranslationKey.RULES_CONTENT]: `🏁 The goal is to seat all emojis at the tables without anybody being frightened.
@@ -23,7 +23,6 @@ export const enTranslations: Record<TranslationKey, string> = {
 🚪 Most emojis are already seated at the tables. But there might also be some waiting at the door.
 
 😀 If all emojis are happy, you win! 🎉`,
-  [TranslationKey.ABOUT]: "About {0}",
   [TranslationKey.INFO_PLACEHOLDER]: "Select an emoji to learn more about it.",
   [TranslationKey.INFO_CHAIR]: "A chair. Someone can sit here.",
   [TranslationKey.INFO_TABLE]: "Table {0}",

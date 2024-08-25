@@ -17,7 +17,6 @@ export const enum TranslationKey {
   INFO_FOMO,
   RULES,
   RULES_CONTENT,
-  ABOUT,
   INFO_PLACEHOLDER,
   INFO_CHAIR,
   INFO_TABLE,

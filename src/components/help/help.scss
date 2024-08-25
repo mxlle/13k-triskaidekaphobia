@@ -1,6 +1,6 @@
 @use "../../grid-mixins";
 
-@import "../../theme";
+@use "../../theme";
 
 .rules {
   margin: 1rem auto;
@@ -8,24 +8,6 @@
   text-align: left;
   max-width: 800px;
   padding: 0 1rem;
-
-  .visualization {
-    display: grid;
-    gap: 1rem;
-    justify-items: center;
-    margin: 1rem auto;
-    max-width: 600px;
-    text-align: center;
-
-    .cell {
-      background-color: #1b273a;
-      $example-size: 8rem;
-      width: $example-size;
-      height: $example-size;
-      font-size: 0.6 * $example-size;
-      pointer-events: none;
-    }
-  }
 }
 
 .rules,
@@ -34,37 +16,43 @@
     font-style: normal;
     font-weight: bold;
     font-size: 1.2em;
-    font-family: $font-family-special;
-    color: $danger-color-contrast;
+    font-family: theme.$font-family-special;
+    color: theme.$danger-color-contrast;
   }
 }
 
 .mini-help {
-  font-size: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin: 0;
-  background: $bg-alpha-05;
-  border-radius: 0.5rem;
-  padding: 1rem;
-  gap: 0.5rem;
+  background: theme.$bg-alpha-05;
+  border-radius: theme.$border-radius;
+  padding: 1.5rem;
+  gap: 1.5rem;
   text-align: left;
-  color: $text-tertiary;
+  color: theme.$text-tertiary;
 
   h3 {
     &.welcome {
-      font-family: $font-family-special;
+      font-family: theme.$font-family-special;
       font-size: 1.6em;
-      color: $text-primary;
+      color: theme.$text-primary;
     }
   }
 
   .cell {
-    background: $bg-alpha-05;
-    $example-size: 5rem;
+    background: theme.$bg-alpha-10;
+    $example-size: 7rem;
     width: $example-size;
     height: $example-size;
     font-size: 0.6 * $example-size;
     pointer-events: none;
-    margin: 1rem auto;
+    border-radius: theme.$border-radius;
+
+    &.has-person {
+      border: 0.125rem solid rgba(theme.$main-color, 0.5);
+    }
 
     &.table {
       --table-height: 1;
@@ -82,10 +70,8 @@
   }
 
   @media (max-height: 600px) {
-    font-size: 0.66rem;
-
     .cell {
-      $example-size: 3rem;
+      $example-size: 4.5rem;
       width: $example-size;
       height: $example-size;
       font-size: 0.6 * $example-size;
@@ -94,11 +80,11 @@
 }
 
 .satisfaction-stats {
-  background: var(--bg-alpha-05);
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.4rem;
+  background: theme.$bg-alpha-05;
+  padding: 0.5rem 0.75rem;
+  border-radius: theme.$border-radius;
   width: fit-content;
-  font-size: 0.66rem;
+  font-size: 0.9rem;
 
   .stats-grid {
     display: grid;
@@ -113,17 +99,20 @@
 
     :first-child {
       font-size: 1.4rem;
-      color: var(--clr);
       font-family: monospace;
       font-weight: bold;
     }
 
+    :nth-child(2) {
+      font-size: 1.2rem;
+    }
+
     &.satisfied {
-      --clr: #{$success-color};
+      color: theme.$success-color;
     }
 
     &.unsatisfied {
-      --clr: #{$danger-color};
+      color: theme.$danger-color-contrast;
     }
   }
 

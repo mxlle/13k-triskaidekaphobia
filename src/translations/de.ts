@@ -10,9 +10,9 @@ export const deTranslations: Record<TranslationKey, string> = {
   [TranslationKey.CANCEL]: "Abbrechen",
   [TranslationKey.EXAMPLE_BIG_FEAR]: "Große <em>{0}</em>: {1} darf nicht am selben Tisch sitzen.",
   [TranslationKey.EXAMPLE_SMALL_FEAR]: "Kleine <em>{0}</em>: {1} darf nicht daneben oder gegenüber sitzen.",
-  [TranslationKey.INFO_BIG_FEAR]: "am selben Tisch",
-  [TranslationKey.INFO_SMALL_FEAR]: "daneben oder gegenüber",
-  [TranslationKey.INFO_FOMO]: "am Tisch platziert",
+  [TranslationKey.INFO_BIG_FEAR]: "NICHT am selben Tisch",
+  [TranslationKey.INFO_SMALL_FEAR]: "NICHT daneben oder gegenüber",
+  [TranslationKey.INFO_FOMO]: "an einem Tisch platziert",
   [TranslationKey.RULES]: "Regeln",
   [TranslationKey.RULES_CONTENT]: `🏁 Das Ziel ist es, alle Emojis an den Tischen zu platzieren, ohne dass sich jemand fürchtet.
 
@@ -23,7 +23,6 @@ export const deTranslations: Record<TranslationKey, string> = {
 🚪 Die meisten Emojis sitzen bereits an den Tischen. Aber es könnte auch einige geben, die an der Tür warten.
 
 😀 Wenn alle Emojis glücklich sind, hast du gewonnen! 🎉`,
-  [TranslationKey.ABOUT]: "Über {0}",
   [TranslationKey.INFO_PLACEHOLDER]: "Wähle ein Emoji aus, um mehr darüber zu erfahren.",
   [TranslationKey.INFO_CHAIR]: "Ein Stuhl. Jemand kann hier sitzen.",
   [TranslationKey.INFO_TABLE]: "Tisch {0}",

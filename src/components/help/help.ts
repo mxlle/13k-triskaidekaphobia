@@ -11,6 +11,12 @@ import { globals } from "../../globals";
 
 let helpDialog: Dialog | undefined;
 
+interface HappyStat {
+  phobia: Phobia | CellType.CHAIR;
+  satisfied: boolean;
+  explainText: string;
+}
+
 export function openHelp() {
   if (!helpDialog) {
     const helpContent = createElement({
@@ -36,22 +42,38 @@ export function getMiniHelpContent(cell?: Cell): HTMLElement {
     cssClass: "mini-help",
   });
 
-  const exampleHeading = createElement({
-    tag: "h3",
-    text: isEmptyState ? getTranslation(TranslationKey.WELCOME) : getTranslation(TranslationKey.ABOUT, name),
-    cssClass: isEmptyState ? "welcome" : "",
-  });
-
-  miniHelpContent.append(exampleHeading);
-
   const helpText = createElement({});
-  let helpCellElementObject: CellElementObject | undefined;
 
-  if (cell && hasPerson(cell)) {
-    miniHelpContent.append(getSatisfactionStats(cell));
+  if (isEmptyState) {
+    const exampleHeading = createElement({
+      tag: "h3",
+      text: getTranslation(TranslationKey.WELCOME),
+      cssClass: "welcome",
+    });
+
+    const helpTexts = [getTranslation(TranslationKey.GOAL), getTranslation(TranslationKey.INFO_PLACEHOLDER)];
+
+    helpText.innerHTML = helpTexts.map((text) => `<p>${text}</p>`).join("");
+
+    miniHelpContent.append(exampleHeading, helpText);
+
+    const placeholder = createElement({
+      cssClass: "cell",
+      text: "?",
+    });
+
+    miniHelpContent.append(placeholder);
+
+    return miniHelpContent;
+  }
+  let helpCellElementObject: CellElementObject | undefined;
+  let statsElem: HTMLElement | undefined;
+
+  if (hasPerson(cell)) {
+    statsElem = getSatisfactionStats(cell);
 
     helpCellElementObject = createCellElement(cell);
-    const { name, fear, smallFear } = cell.person;
+    const { fear, smallFear } = cell.person;
 
     const isGerman = isGermanLanguage();
     const fearName = getPhobiaName(fear, isGerman);
@@ -66,7 +88,7 @@ export function getMiniHelpContent(cell?: Cell): HTMLElement {
       .filter(Boolean)
       .map((text) => `<p>${text}</p>`)
       .join("");
-  } else if (cell) {
+  } else {
     helpCellElementObject = createCellElement(cell, true);
 
     if (isTable(cell)) {
@@ -90,23 +112,17 @@ export function getMiniHelpContent(cell?: Cell): HTMLElement {
         isChair(cell.type) ? TranslationKey.INFO_CHAIR : isEmpty(cell) ? TranslationKey.INFO_EMPTY : TranslationKey.INFO_DECOR,
       );
     }
-  } else {
-    const helpTexts = [getTranslation(TranslationKey.GOAL), getTranslation(TranslationKey.INFO_PLACEHOLDER)];
-
-    helpText.innerHTML = helpTexts.map((text) => `<p>${text}</p>`).join("");
   }
-
-  miniHelpContent.append(helpText);
 
   if (helpCellElementObject) {
     miniHelpContent.append(helpCellElementObject.elem);
-  } else {
-    const placeholder = createElement({
-      cssClass: "cell",
-      text: "?",
-    });
-    miniHelpContent.append(placeholder);
   }
+
+  if (statsElem) {
+    miniHelpContent.append(statsElem);
+  }
+
+  miniHelpContent.append(helpText);
 
   return miniHelpContent;
 }
@@ -124,27 +140,25 @@ function getSatisfactionStats(cell: OccupiedCell): HTMLElement {
     cssClass: "stats-grid",
   });
 
-  const stats: { phobia: Phobia | CellType.CHAIR; satisfied: boolean; noFear?: boolean; explainText: string }[] = [
+  const stats: HappyStat[] = [
     { phobia: cell.person.fear, satisfied: noBigFear, explainText: getTranslation(TranslationKey.INFO_BIG_FEAR) },
     { phobia: cell.person.smallFear, satisfied: noSmallFear, explainText: getTranslation(TranslationKey.INFO_SMALL_FEAR) },
-    { phobia: CellType.CHAIR, satisfied: hasChair, noFear: true, explainText: getTranslation(TranslationKey.INFO_FOMO) },
+    { phobia: CellType.CHAIR, satisfied: hasChair, explainText: getTranslation(TranslationKey.INFO_FOMO) },
   ];
 
-  stats.forEach(({ phobia, satisfied, noFear, explainText }) => {
-    const stat = createElement({
-      cssClass: `stat ${satisfied ? "satisfied" : "unsatisfied"}`,
+  stats
+    .filter(({ phobia }) => !!phobia)
+    .forEach(({ phobia, satisfied, explainText }) => {
+      const stat = createElement({
+        cssClass: `stat ${satisfied ? "satisfied" : "unsatisfied"}`,
+      });
+
+      const elems = [satisfied ? "✔" : "X", phobia, explainText];
+
+      stat.innerHTML = elems.map((content) => `<span>${content}</span>`).join("");
+
+      statsGrid.append(stat);
     });
-
-    const elems = [
-      phobia ? `<span>${satisfied ? "✔" : "X"}</span>` : "",
-      phobia ? `<span class="${noFear ? "" : "fear"}">${phobia}</span>` : "",
-      phobia ? `<span>${explainText}</span>` : "",
-    ];
-
-    stat.innerHTML = elems.join(" ");
-
-    statsGrid.append(stat);
-  });
 
   satisfactionStats.append(statsGrid);
 
