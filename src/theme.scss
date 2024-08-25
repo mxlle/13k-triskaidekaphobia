@@ -1,11 +1,11 @@
 $main-color: #3399ff;
 $danger-color: #dd3666;
-$danger-color-light: #cc6677;
+$danger-color-contrast: var(--d-clr, #cc6677);
 $success-color: #227744;
 $success-color-light: #44aa77;
 $warning-color: #ffaa00;
 $font-family: sans-serif;
-$font-family-special: cursive;
+$font-family-special: "Brush Script MT", cursive;
 $border-radius: 0.4rem;
 
 // dark theme colors
@@ -70,6 +70,7 @@ $table-border: var(--table-border, $table-border-dark);
   --tile-2: #{$tile-color-2-light};
   --table-bg: #{$table-bg-light};
   --table-border: #{$table-border-light};
+  --d-clr: #97012c;
 }
 
 @mixin hover {

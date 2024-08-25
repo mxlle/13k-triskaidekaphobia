@@ -33,8 +33,9 @@
   em {
     font-style: normal;
     font-weight: bold;
+    font-size: 1.2em;
     font-family: $font-family-special;
-    color: $danger-color-light;
+    color: $danger-color-contrast;
   }
 }
 
@@ -51,7 +52,7 @@
   h3 {
     &.welcome {
       font-family: $font-family-special;
-      font-size: 1.4em;
+      font-size: 1.6em;
       color: $text-primary;
     }
   }
@@ -64,6 +65,10 @@
     font-size: 0.6 * $example-size;
     pointer-events: none;
     margin: 1rem auto;
+
+    &.table {
+      --table-height: 1;
+    }
 
     &:after {
       content: none;

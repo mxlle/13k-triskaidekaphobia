@@ -63,7 +63,7 @@ export function getMiniHelpContent(cell?: Cell): HTMLElement {
       .map((text) => `<p>${text}</p>`)
       .join("");
   } else if (cell) {
-    helpCellElementObject = createCellElement(cell);
+    helpCellElementObject = createCellElement(cell, true);
 
     if (isTable(cell)) {
       helpText.innerHTML = getTranslation(TranslationKey.INFO_TABLE, (cell.tableIndex ?? 0) + 1);

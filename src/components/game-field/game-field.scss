@@ -49,16 +49,11 @@ $border-style: outset;
   display: grid;
   place-items: center;
   position: relative;
-  cursor: pointer;
   width: 100%;
   height: 100%;
-  box-sizing: border-box;
 
   &.table {
-    color: transparent;
-    background: $table-bg;
     border: none;
-    cursor: default;
     $tableHeight: var(--table-height, 7);
 
     &.middle {
@@ -69,16 +64,11 @@ $border-style: outset;
         content: "";
         position: absolute;
         width: 100%;
-        height: calc(#{$tableHeight} * 100% + calc(#{$tableHeight} - 1) * var(--gap));
+        height: calc(#{$tableHeight} * 100%);
         background: $table-bg;
         border: 0.125rem $border-style $table-border;
-        box-sizing: border-box;
       }
     }
-  }
-
-  &.door {
-    cursor: default;
   }
 
   &.selected {
@@ -88,24 +78,29 @@ $border-style: outset;
     outline: 0.125rem dashed $main-color;
   }
 
+  &.has-person {
+    cursor: pointer;
+    border-width: 0.125rem;
+  }
+
   &.panic {
-    border: 0.2rem $border-style $danger-color;
+    border-color: $danger-color;
 
     &:not(.chair) {
-      border: 0.1rem $border-style $warning-color;
+      border-color: $warning-color;
     }
 
     span {
-      animation: tremble 0.5s infinite;
-      animation-iteration-count: 3;
+      animation: tremble 0.2s infinite;
+      animation-iteration-count: 5;
       transform-origin: 50% 50%;
     }
   }
 
-  $scary-scale-props: 2.5s infinite step-end;
+  $scary-scale-props: 3s infinite step-end;
 
   &.scary {
-    z-index: 2;
+    z-index: 3;
     outline: 0.25rem dashed $danger-color;
 
     span {
@@ -115,7 +110,7 @@ $border-style: outset;
   }
 
   &.scared:not(.scary) {
-    z-index: 2;
+    z-index: 3;
     outline: 0.125rem dotted $danger-color;
 
     span {
@@ -130,7 +125,7 @@ $border-style: outset;
     &.table {
       &.middle {
         z-index: 5;
-        color: $danger-color-light;
+        color: $danger-color-contrast;
         animation: scary-pulse-table $scary-scale-props;
 
         span {
@@ -167,11 +162,6 @@ $border-style: outset;
       font-size: 0.4em;
       right: 0;
       left: auto;
-
-      &::before,
-      &::after {
-        width: 0.0625rem;
-      }
     }
 
     // overlay a cross over the fear icon
@@ -179,7 +169,7 @@ $border-style: outset;
     &::after {
       content: "";
       position: absolute;
-      width: 0.125rem;
+      width: 0.0625rem;
       height: 100%;
       background: $danger-color;
     }
@@ -189,38 +179,18 @@ $border-style: outset;
     }
 
     &::after {
-      transform: rotate(-45deg);
+      transform: rotate(45deg);
     }
   }
 }
 
 body {
-  &:not(.selecting) {
-    .cell {
-      &.has-person {
-        @include selectable;
-
-        @media (prefers-color-scheme: light) {
-          @include selectable($alpha-base-dark, 0.2, 0.4);
-        }
-      }
-
-      &:not(.has-person) {
-        cursor: default;
-      }
-    }
-  }
-
   &.selecting {
     .cell {
       &.chair:not(.has-person) {
-        @include selectable($success-color-light);
-      }
+        cursor: pointer;
 
-      &.panic:not(.selected):not(.scary):not(.scared) {
-        span {
-          animation: none;
-        }
+        @include selectable($success-color-light);
       }
     }
   }
@@ -230,11 +200,8 @@ body {
   0% {
     transform: scale(1);
   }
-  15% {
-    transform: scale(1.1);
-  }
-  30% {
-    transform: scale(1.25);
+  25% {
+    transform: scale(1.2);
   }
   50% {
     transform: scale(1.6);
@@ -248,11 +215,8 @@ body {
   0% {
     transform: scale(1, 1);
   }
-  15% {
-    transform: scale(1.02, 1.01);
-  }
-  30% {
-    transform: scale(1.07, 1.02);
+  25% {
+    transform: scale(1.05, 1.015);
   }
   50% {
     transform: scale(1.15, 1.05);
@@ -266,11 +230,8 @@ body {
   0% {
     transform: scale(1);
   }
-  15% {
-    transform: scale(0.9);
-  }
-  30% {
-    transform: scale(0.75);
+  25% {
+    transform: scale(0.8);
   }
   50% {
     transform: scale(0.4);
@@ -282,36 +243,21 @@ body {
 
 @keyframes tremble {
   0% {
-    transform: translate(2px, 1px) rotate(0deg);
-  }
-  10% {
-    transform: translate(-1px, -2px) rotate(-1deg);
+    transform: translate(0.5px, 0.5px) rotate(0deg);
   }
   20% {
-    transform: translate(-3px, 0px) rotate(1deg);
-  }
-  30% {
-    transform: translate(0px, 2px) rotate(0deg);
+    transform: translate(-0.5px, 1px) rotate(-0.5deg);
   }
   40% {
-    transform: translate(1px, -1px) rotate(1deg);
-  }
-  50% {
-    transform: translate(-1px, 2px) rotate(-1deg);
+    transform: translate(1px, -0.5px) rotate(0.5deg);
   }
   60% {
-    transform: translate(-3px, 1px) rotate(0deg);
-  }
-  70% {
-    transform: translate(2px, 1px) rotate(-1deg);
+    transform: translate(-1px, 0px) rotate(0deg);
   }
   80% {
-    transform: translate(-1px, -1px) rotate(1deg);
-  }
-  90% {
-    transform: translate(2px, 2px) rotate(0deg);
+    transform: translate(0.5px, -1px) rotate(-0.5deg);
   }
   100% {
-    transform: translate(1px, -2px) rotate(-1deg);
+    transform: translate(0.5px, 0.5px) rotate(0deg);
   }
 }

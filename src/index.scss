@@ -23,7 +23,9 @@ html {
   }
 }
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -64,7 +66,6 @@ header {
   padding: max(0.5rem, var(--sat)) 1rem 0.5rem;
   align-items: center;
   gap: 1rem;
-  font-family: $font-family-special;
 
   .h-btns {
     display: flex;
