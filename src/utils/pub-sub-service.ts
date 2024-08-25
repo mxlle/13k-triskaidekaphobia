@@ -1,6 +1,6 @@
 import { GameFieldData } from "../types";
 
-export enum PubSubEvent {
+export const enum PubSubEvent {
   NEW_GAME,
   GAME_OVER,
   UPDATE_SCORE,

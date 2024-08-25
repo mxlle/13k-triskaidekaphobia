@@ -1,10 +1,10 @@
-import { Cell, CellType, GameFieldData, isChair, isGuest, isTable, Person } from "../types";
+import { Cell, CellType, GameFieldData, getCellTypesWithoutPrefix, isChair, isGuest, isTable, Person } from "../types";
 import { getRandomPhobia, getRandomPhobiaExcluding, Phobia } from "../phobia";
 import { findGuestsInvolvedInDeadlock, resolveDeadlock } from "./deadlock";
 import { getOnboardingData, OnboardingData } from "./onboarding";
 
 const baseField = (() => {
-  const { GUEST, EMPTY, TABLE, CHAIR, DOOR: DOOR_, WINDOW: WINDO } = CellType;
+  const { GUEST, EMPTY, TABLE, CHAIR, DOOR_, WINDO } = getCellTypesWithoutPrefix();
   return [
     [DOOR_, GUEST, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, WINDO],
     [GUEST, EMPTY, EMPTY, CHAIR, EMPTY, EMPTY, EMPTY, CHAIR, EMPTY, EMPTY, EMPTY],

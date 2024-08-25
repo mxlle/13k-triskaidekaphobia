@@ -1,9 +1,9 @@
 import { getRandomPhobia, getRandomPhobiaExcluding } from "../phobia";
-import { CellType, PersonWithPosition } from "../types";
+import { CellType, getCellTypesWithoutPrefix, PersonWithPosition } from "../types";
 import { globals } from "../globals";
 import { LocalStorageKey, setLocalStorageItem } from "../utils/local-storage";
 
-export enum OnboardingStep {
+export const enum OnboardingStep {
   INTRO = 0,
   BIG_FEAR = 1,
 }
@@ -23,10 +23,9 @@ export interface OnboardingData {
   isTableMiddle: (rowIndex: number) => boolean;
   getTableIndex: (row: number, column: number) => number;
 }
-
 // a 5 by 5 grid
 const onboardingField = (() => {
-  const { GUEST, EMPTY, TABLE, CHAIR, DOOR: DOOR_, WINDOW: WINDO } = CellType;
+  const { GUEST, EMPTY, TABLE, CHAIR, DOOR_, WINDO } = getCellTypesWithoutPrefix();
   return [
     [DOOR_, GUEST, EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, CHAIR, TABLE, CHAIR],
@@ -38,7 +37,7 @@ const onboardingField = (() => {
 
 // a 7 by 7 grid
 const mediumField = (() => {
-  const { GUEST, EMPTY, TABLE, CHAIR, DOOR: DOOR_, WINDOW: WINDO } = CellType;
+  const { GUEST, EMPTY, TABLE, CHAIR, DOOR_, WINDO } = getCellTypesWithoutPrefix();
   return [
     [DOOR_, GUEST, EMPTY, EMPTY, EMPTY, EMPTY, WINDO],
     [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],

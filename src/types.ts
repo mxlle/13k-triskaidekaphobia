@@ -1,6 +1,6 @@
 import { Phobia } from "./phobia";
 
-export enum CellType {
+export const enum CellType {
   GUEST = "👤",
   EMPTY = "",
   TABLE = "🟫",
@@ -64,4 +64,15 @@ export function pushCellIfNotInList(cell: Cell, list: Cell[]) {
   if (!list.find((c) => isSameCell(c, cell))) {
     list.push(cell);
   }
+}
+
+export function getCellTypesWithoutPrefix() {
+  return {
+    GUEST: CellType.GUEST,
+    EMPTY: CellType.EMPTY,
+    TABLE: CellType.TABLE,
+    CHAIR: CellType.CHAIR,
+    DOOR_: CellType.DOOR,
+    WINDO: CellType.WINDOW,
+  };
 }
