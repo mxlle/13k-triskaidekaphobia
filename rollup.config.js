@@ -6,6 +6,7 @@ import styles from "rollup-styles";
 import terser from "@rollup/plugin-terser";
 import copy from "rollup-plugin-copy";
 import typescript from "@rollup/plugin-typescript";
+import svg from "rollup-plugin-svg-import";
 
 const production = !process.env.ROLLUP_WATCH;
 const outputDir = production ? "dist" : "out";
@@ -18,6 +19,7 @@ export default {
     format: "iife",
   },
   plugins: [
+    svg(),
     typescript(),
     nodeResolve(),
     styles(),

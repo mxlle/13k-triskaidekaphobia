@@ -20,6 +20,7 @@
     "rollup-plugin-html-bundle": "^0.0.3",
     "rollup-plugin-livereload": "^2.0.5",
     "rollup-plugin-serve": "^2.0.2",
+    "rollup-plugin-svg-import": "^3.0.0",
     "rollup-styles": "^1.5.0",
     "sass": "^1.77.8",
     "type-fest": "^4.25.0"

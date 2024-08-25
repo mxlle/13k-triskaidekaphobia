@@ -2,6 +2,8 @@ import { createElement } from "../../utils/html-utils";
 
 import "./onboarding-components.scss";
 
+import arrowIcon from "./arrow-fat.svg";
+
 export const enum Direction {
   UP = "up",
   DOWN = "down",
@@ -14,11 +16,7 @@ export function getOnboardingArrow(direction: Direction): HTMLElement {
     cssClass: `arrow ${direction}`,
   });
 
-  const arrowInner = createElement({
-    cssClass: "arrow-inner",
-  });
-
-  arrow.append(arrowInner);
+  arrow.append(arrowIcon());
 
   return arrow;
 }
