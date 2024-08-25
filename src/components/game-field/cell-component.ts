@@ -75,7 +75,6 @@ export function updateCell(cell: Cell, cellElementObject: CellElementObject) {
   cellElementObject.smallFearElem.textContent = person?.smallFear ?? null;
   cellElementObject.smallFearElem.classList.toggle("hidden", !person?.smallFear ?? false);
   cellElementObject.elem.classList.toggle("has-person", hasPerson(cell));
-  cellElementObject.elem.classList.toggle("panic", person?.hasPanic ?? false);
 
   if (hasPerson(cell)) {
     setCellFearTooltips(cell, cellElementObject);

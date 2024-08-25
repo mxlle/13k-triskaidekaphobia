@@ -9,7 +9,7 @@ import { getTranslation, TranslationKey } from "../../translations";
 import { globals } from "../../globals";
 import { sleep } from "../../utils/promise-utils";
 import { getGameFieldData } from "../../logic/initialize";
-import { checkTableStates, getHappyStats } from "../../logic/checks";
+import { checkTableStates, getAllGuests, getHappyStats } from "../../logic/checks";
 import { PubSubEvent, pubSubService } from "../../utils/pub-sub-service";
 import { handlePokiCommercial, pokiSdk } from "../../poki-integration";
 import { getOnboardingData, isOnboarding, wasOnboarding } from "../../logic/onboarding";
@@ -182,7 +182,7 @@ function resetSelection(cell: Cell) {
 
 function updateState(gameFieldData: Cell[][], skipWinCheck = false) {
   const panickedTableCells = checkTableStates(gameFieldData);
-  updatePanicStates(gameFieldData, panickedTableCells);
+  void updatePanicStates(gameFieldData, panickedTableCells);
   pubSubService.publish(PubSubEvent.UPDATE_SCORE, gameFieldData);
   const { hasWon } = getHappyStats(gameFieldData);
 
@@ -244,16 +244,21 @@ export async function updateGameFieldElement(gameFieldData: GameFieldData) {
   }
 }
 
-export function updatePanicStates(gameFieldData: GameFieldData, panickedTableCells: Cell[]) {
+export async function updatePanicStates(gameFieldData: GameFieldData, panickedTableCells: Cell[]) {
   gameFieldData.flat().forEach((cell) => {
     const cellElementObject = getCellElementObject(cell);
     cellElementObject.elem.classList.remove("scary");
     cellElementObject.elem.classList.remove("scared");
     cellElementObject.elem.classList.remove("t13a");
+    cellElementObject.elem.classList.remove("panic");
+  });
 
-    if (hasPerson(cell)) {
-      cellElementObject.elem.classList.toggle("panic", cell.person.hasPanic || !isChair(cell));
-    }
+  await sleep(0); // to trigger restart of tremble animation
+
+  getAllGuests(gameFieldData).forEach((cell) => {
+    const cellElementObject = getCellElementObject(cell);
+    const hasPanic = cell.person.hasPanic || !isChair(cell);
+    cellElementObject.elem.classList.toggle("panic", hasPanic);
   });
 
   panickedTableCells.forEach((cell) => {
