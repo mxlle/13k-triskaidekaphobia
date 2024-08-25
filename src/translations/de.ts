@@ -8,10 +8,11 @@ export const deTranslations: Record<TranslationKey, string> = {
   [TranslationKey.PLAY_AGAIN]: "Nochmal spielen",
   [TranslationKey.CONTINUE]: "Weiter",
   [TranslationKey.CANCEL]: "Abbrechen",
-  [TranslationKey.EXAMPLE_EMOJI]: "{0} möchte an den Tisch gesetzt werden.",
-  [TranslationKey.EXAMPLE_BIG_FEAR]: "{0} hat <em>{1}</em> und fürchtet sich, wenn {2} am selben Tisch sitzt.",
-  [TranslationKey.EXAMPLE_SMALL_FEAR]:
-    "{0} hat ein bisschen <em>{1}</em> und fürchtet sich, wenn {2} neben oder gegenüber von ihnen sitzt.",
+  [TranslationKey.EXAMPLE_BIG_FEAR]: "Große <em>{0}</em>: {1} darf nicht am selben Tisch sitzen.",
+  [TranslationKey.EXAMPLE_SMALL_FEAR]: "Kleine <em>{0}</em>: {1} darf nicht daneben oder gegenüber sitzen.",
+  [TranslationKey.INFO_BIG_FEAR]: "am selben Tisch",
+  [TranslationKey.INFO_SMALL_FEAR]: "daneben oder gegenüber",
+  [TranslationKey.INFO_FOMO]: "am Tisch platziert",
   [TranslationKey.RULES]: "Regeln",
   [TranslationKey.RULES_CONTENT]: `🏁 Das Ziel ist es, alle Emojis an den Tischen zu platzieren, ohne dass sich jemand fürchtet.
 
@@ -29,5 +30,4 @@ export const deTranslations: Record<TranslationKey, string> = {
   [TranslationKey.INFO_TABLE_OCCUPANCY]: "Belegung: {0}/{1} 🪑",
   [TranslationKey.INFO_DECOR]: "Dekoration",
   [TranslationKey.INFO_EMPTY]: "Leeres Feld. Jemand kann hier warten.",
-  [TranslationKey.TARGET_CLICK]: "Zum Bewegen, auf den Ziel-🪑 klicken",
 };

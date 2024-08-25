@@ -97,15 +97,6 @@ $table-border: var(--table-border, $table-border-dark);
     pointer-events: none;
     animation: opacityBlink 1s infinite;
   }
-
-  @if not $skip-hover {
-    @include hover {
-      &:after {
-        animation: none;
-        background: rgba($bg-base, 0.3);
-      }
-    }
-  }
 }
 
 @keyframes opacityBlink {

@@ -8,9 +8,11 @@ export const enTranslations: Record<TranslationKey, string> = {
   [TranslationKey.PLAY_AGAIN]: "Play again",
   [TranslationKey.CONTINUE]: "Continue",
   [TranslationKey.CANCEL]: "Cancel",
-  [TranslationKey.EXAMPLE_EMOJI]: "{0} wants to be seated at the table.",
-  [TranslationKey.EXAMPLE_BIG_FEAR]: "{0} has <em>{1}</em> and is afraid if {2} sits at the same table.",
-  [TranslationKey.EXAMPLE_SMALL_FEAR]: "{0} has a bit of <em>{1}</em> and is afraid if {2} sits next to or across from them.",
+  [TranslationKey.EXAMPLE_BIG_FEAR]: "Big <em>{0}</em>: {1} must not sit at the same table.",
+  [TranslationKey.EXAMPLE_SMALL_FEAR]: "Small <em>{0}</em>: {1} must not sit next to or opposite.",
+  [TranslationKey.INFO_BIG_FEAR]: "at the same table",
+  [TranslationKey.INFO_SMALL_FEAR]: "next to or opposite",
+  [TranslationKey.INFO_FOMO]: "seated at a table",
   [TranslationKey.RULES]: "Rules",
   [TranslationKey.RULES_CONTENT]: `🏁 The goal is to seat all emojis at the tables without anybody being frightened.
 
@@ -28,5 +30,4 @@ export const enTranslations: Record<TranslationKey, string> = {
   [TranslationKey.INFO_TABLE_OCCUPANCY]: "Occupancy: {0}/{1} 🪑",
   [TranslationKey.INFO_DECOR]: "Decoration",
   [TranslationKey.INFO_EMPTY]: "Empty field. Someone can wait here.",
-  [TranslationKey.TARGET_CLICK]: "To move, click on the target-🪑",
 };

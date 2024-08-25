@@ -10,9 +10,11 @@ export const enum TranslationKey {
   PLAY_AGAIN,
   CONTINUE,
   CANCEL,
-  EXAMPLE_EMOJI,
   EXAMPLE_BIG_FEAR,
   EXAMPLE_SMALL_FEAR,
+  INFO_BIG_FEAR,
+  INFO_SMALL_FEAR,
+  INFO_FOMO,
   RULES,
   RULES_CONTENT,
   ABOUT,
@@ -22,7 +24,6 @@ export const enum TranslationKey {
   INFO_TABLE_OCCUPANCY,
   INFO_DECOR,
   INFO_EMPTY,
-  TARGET_CLICK,
 }
 
 function getTranslationRecords(): Record<TranslationKey, string> {

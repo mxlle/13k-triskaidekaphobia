@@ -1,4 +1,5 @@
 import { getRandomItem } from "./utils/array-utils";
+import { CellType, isChair } from "./types";
 
 export const PHOBIAS_EMOJIS = [
   "🔢",
@@ -48,9 +49,13 @@ const PhobiaNameMap: Record<Phobia, string> = {
   "📚": "Bibliophobia",
 };
 
-export function getPhobiaName(phobia: Phobia | undefined, isGerman: boolean = false): string {
+export function getPhobiaName(phobia: Phobia | CellType.CHAIR | undefined, isGerman: boolean = false): string {
   if (!phobia) {
     return "";
+  }
+
+  if (isChair(phobia)) {
+    return "FOMO";
   }
 
   let phobiaName = PhobiaNameMap[phobia];

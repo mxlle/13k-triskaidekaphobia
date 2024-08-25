@@ -149,48 +149,48 @@ $border-style: outset;
   span {
     pointer-events: none;
   }
+}
 
-  .fear {
+.fear {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  display: grid;
+  place-items: center;
+  font-size: 0.5em;
+  line-height: 1;
+  background: $overlay-bg;
+  width: 45%;
+  height: 45%;
+
+  &.hidden {
+    display: none;
+  }
+
+  &.small {
+    width: 35%;
+    height: 35%;
+    font-size: 0.4em;
+    right: 0;
+    left: auto;
+  }
+
+  // overlay a cross over the fear icon
+  &::before,
+  &::after {
+    content: "";
     position: absolute;
-    left: 0;
-    bottom: 0;
-    display: grid;
-    place-items: center;
-    font-size: 0.5em;
-    line-height: 1;
-    background: $overlay-bg;
-    width: 45%;
-    height: 45%;
+    width: 0.0625rem;
+    height: 100%;
+    background: $danger-color;
+  }
 
-    &.hidden {
-      display: none;
-    }
+  &::before {
+    transform: rotate(45deg);
+  }
 
-    &.small {
-      width: 35%;
-      height: 35%;
-      font-size: 0.4em;
-      right: 0;
-      left: auto;
-    }
-
-    // overlay a cross over the fear icon
-    &::before,
-    &::after {
-      content: "";
-      position: absolute;
-      width: 0.0625rem;
-      height: 100%;
-      background: $danger-color;
-    }
-
-    &::before {
-      transform: rotate(45deg);
-    }
-
-    &::after {
-      transform: rotate(45deg);
-    }
+  &::after {
+    transform: rotate(45deg);
   }
 }
 
