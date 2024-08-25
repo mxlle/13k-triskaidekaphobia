@@ -1,10 +1,9 @@
-import commonjs from "rollup-plugin-commonjs";
 import htmlBundle from "rollup-plugin-html-bundle";
 import livereload from "rollup-plugin-livereload";
-import nodeResolve from "rollup-plugin-node-resolve";
+import nodeResolve from "@rollup/plugin-node-resolve";
 import serve from "rollup-plugin-serve";
-import styles from "rollup-plugin-styles";
-import { terser } from "rollup-plugin-terser";
+import styles from "rollup-styles";
+import terser from "@rollup/plugin-terser";
 import copy from "rollup-plugin-copy";
 import typescript from "@rollup/plugin-typescript";
 
@@ -19,9 +18,8 @@ export default {
     format: "iife",
   },
   plugins: [
-    typescript({ target: "es6" }),
+    typescript(),
     nodeResolve(),
-    commonjs(),
     styles(),
     production &&
       terser({
