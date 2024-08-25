@@ -1,7 +1,7 @@
 import { createButton, createElement } from "../../utils/html-utils";
 
 import "./index.scss";
-import { getTranslation, TranslationKey } from "../../translations";
+import { getTranslation, TranslationKey } from "../../translations/i18n";
 
 let zIndexCounter = 10; // start at 5 to be above regular content
 

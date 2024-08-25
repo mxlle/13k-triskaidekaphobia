@@ -1,4 +1,4 @@
-import { TranslationKey } from "./index";
+import { TranslationKey } from "./i18n";
 
 export const enTranslations: Record<TranslationKey, string> = {
   [TranslationKey.WELCOME]: "Welcome to the Society of Multiphobics",

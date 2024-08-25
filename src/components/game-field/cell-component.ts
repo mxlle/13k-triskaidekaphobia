@@ -1,6 +1,6 @@
 import { Cell, hasPerson, isChair, isDoor, isTable, isWindow, OccupiedCell, Person } from "../../types";
 import { createElement } from "../../utils/html-utils";
-import { isGermanLanguage } from "../../translations";
+import { isGermanLanguage } from "../../translations/i18n";
 import { getPhobiaName } from "../../phobia";
 
 export interface CellElementObject {

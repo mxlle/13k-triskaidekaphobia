@@ -1,8 +1,8 @@
 import "./win-screen.scss";
 
-import { createDialog, Dialog } from "../dialog";
+import { createDialog, Dialog } from "../dialog/dialog";
 import { createElement } from "../../utils/html-utils";
-import { getTranslation, TranslationKey } from "../../translations";
+import { getTranslation, TranslationKey } from "../../translations/i18n";
 import { newGame } from "../../logic/game-logic";
 import { increaseOnboardingStepIfApplicable } from "../../logic/onboarding";
 

@@ -2,9 +2,9 @@ import "./index.scss";
 
 import { createButton, createElement } from "./utils/html-utils";
 import { newGame } from "./logic/game-logic";
-import { createDialog, Dialog } from "./components/dialog";
+import { createDialog, Dialog } from "./components/dialog/dialog";
 import { PubSubEvent, pubSubService } from "./utils/pub-sub-service";
-import { initializeEmptyGameField, startNewGame } from "./components/game-field";
+import { initializeEmptyGameField, startNewGame } from "./components/game-field/game-field";
 import { initAudio, togglePlayer } from "./audio/music-control";
 import { getLocalStorageItem, LocalStorageKey } from "./utils/local-storage";
 import { openHelp } from "./components/help/help";

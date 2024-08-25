@@ -1,10 +1,10 @@
 import "./help.scss";
 
 import { createElement } from "../../utils/html-utils";
-import { getTranslation, isGermanLanguage, TranslationKey } from "../../translations";
+import { getTranslation, isGermanLanguage, TranslationKey } from "../../translations/i18n";
 import { Cell, CellType, hasPerson, isChair, isEmpty, isTable, OccupiedCell } from "../../types";
 import { getPhobiaName, Phobia } from "../../phobia";
-import { createDialog, Dialog } from "../dialog";
+import { createDialog, Dialog } from "../dialog/dialog";
 import { CellElementObject, createCellElement } from "../game-field/cell-component";
 import { getChairsAtTable, getGuestsOnTable } from "../../logic/checks";
 import { globals } from "../../globals";

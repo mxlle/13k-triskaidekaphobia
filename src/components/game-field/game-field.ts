@@ -5,7 +5,7 @@ import { moveGuest, newGame } from "../../logic/game-logic";
 import { Cell, GameFieldData, hasPerson, isChair, isDoor, isSameCell, isTable, isWindow } from "../../types";
 import { createWinScreen } from "../win-screen/win-screen";
 import { CellElementObject, createCellElement, updateCell } from "./cell-component";
-import { getTranslation, TranslationKey } from "../../translations";
+import { getTranslation, TranslationKey } from "../../translations/i18n";
 import { globals } from "../../globals";
 import { sleep } from "../../utils/promise-utils";
 import { getGameFieldData } from "../../logic/initialize";
