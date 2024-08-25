@@ -19,6 +19,7 @@ export const enum TranslationKey {
   INFO_PLACEHOLDER,
   INFO_CHAIR,
   INFO_TABLE,
+  INFO_TABLE_OCCUPANCY,
   INFO_DECOR,
   INFO_EMPTY,
   TARGET_CLICK,

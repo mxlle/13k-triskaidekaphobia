@@ -6,6 +6,8 @@ import { Cell, hasPerson, isChair, isEmpty, isTable } from "../../types";
 import { getPhobiaName } from "../../phobia";
 import { createDialog, Dialog } from "../dialog";
 import { CellElementObject, createCellElement } from "../game-field/cell-component";
+import { getChairsAtTable, getGuestsOnTable } from "../../logic/checks";
+import { globals } from "../../globals";
 
 let helpDialog: Dialog | undefined;
 
@@ -66,7 +68,21 @@ export function getMiniHelpContent(cell?: Cell): HTMLElement {
     helpCellElementObject = createCellElement(cell, true);
 
     if (isTable(cell)) {
-      helpText.innerHTML = getTranslation(TranslationKey.INFO_TABLE, (cell.tableIndex ?? 0) + 1);
+      const tableIndex = cell.tableIndex ?? 0;
+      const numChairs = getChairsAtTable(globals.gameFieldData, tableIndex).length;
+      const occupancy = getGuestsOnTable(globals.gameFieldData, tableIndex).length;
+
+      const helpTexts = [
+        getTranslation(TranslationKey.INFO_TABLE, tableIndex + 1),
+        getTranslation(TranslationKey.INFO_TABLE_OCCUPANCY, occupancy, numChairs),
+      ];
+
+      if (occupancy === 13) {
+        helpTexts.push("😱😱😱");
+        helpCellElementObject.elem.classList.add("t13a");
+      }
+
+      helpText.innerHTML = helpTexts.map((text) => `<p>${text}</p>`).join("");
     } else {
       helpText.innerHTML = getTranslation(
         isChair(cell.type) ? TranslationKey.INFO_CHAIR : isEmpty(cell) ? TranslationKey.INFO_EMPTY : TranslationKey.INFO_DECOR,

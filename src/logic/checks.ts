@@ -1,4 +1,4 @@
-import { Cell, GameFieldData, hasPerson, isSameCell, isTable, OccupiedCell } from "../types";
+import { Cell, GameFieldData, hasPerson, isChair, isSameCell, isTable, OccupiedCell } from "../types";
 
 export function checkTableStates(gameFieldData: GameFieldData) {
   const panickedTableCells: Cell[] = [];
@@ -113,4 +113,12 @@ export function getHappyStats(gameFieldData: GameFieldData) {
 
 export function getTableCells(gameFieldData: GameFieldData, tableIndex: number) {
   return gameFieldData.flat().filter((cell) => isTable(cell) && cell.tableIndex === tableIndex);
+}
+
+export function getGuestsAtTable(gameFieldData: GameFieldData, tableIndex: number) {
+  return gameFieldData.flat().filter((cell) => cell.tableIndex === tableIndex && hasPerson(cell));
+}
+
+export function getChairsAtTable(gameFieldData: GameFieldData, tableIndex: number) {
+  return gameFieldData.flat().filter((cell) => cell.tableIndex === tableIndex && isChair(cell));
 }

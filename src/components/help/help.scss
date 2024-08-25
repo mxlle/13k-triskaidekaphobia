@@ -68,6 +68,12 @@
 
     &.table {
       --table-height: 1;
+
+      animation: none !important;
+
+      span {
+        animation: none !important;
+      }
     }
 
     &:after {

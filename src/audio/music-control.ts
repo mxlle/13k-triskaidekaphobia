@@ -27,10 +27,12 @@ export async function initAudio(initializeMuted: boolean) {
   });
 
   pubSubService.subscribe(PubSubEvent.MUTE_MUSIC, () => {
+    console.log("Muting music");
     audioElem.muted = true;
   });
 
   pubSubService.subscribe(PubSubEvent.UNMUTE_MUSIC, () => {
+    console.log("Unmuting music");
     audioElem.muted = false;
   });
 
