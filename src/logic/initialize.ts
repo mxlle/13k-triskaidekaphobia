@@ -30,7 +30,7 @@ export function getGameFieldData(skipAssignment: boolean = false): GameFieldData
     tableHeight = onboardingData.tableHeight;
   }
 
-  document.body.style.setProperty("--square-count", field.length.toString());
+  document.body.style.setProperty("--s-cnt", field.length.toString());
   document.body.style.setProperty("--table-height", tableHeight.toString());
 
   const gameField: GameFieldData = [];

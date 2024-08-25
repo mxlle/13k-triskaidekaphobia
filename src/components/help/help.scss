@@ -33,7 +33,7 @@
   em {
     font-style: normal;
     font-weight: bold;
-    font-family: cursive;
+    font-family: $font-family-special;
     color: $danger-color-light;
   }
 }
@@ -41,23 +41,23 @@
 .mini-help {
   font-size: 0.75rem;
   margin: 0;
-  background: rgba(255, 255, 255, 0.05);
+  background: $bg-alpha-05;
   border-radius: 0.5rem;
   padding: 1rem;
   gap: 0.5rem;
   text-align: left;
-  color: $secondary-text;
+  color: $text-tertiary;
 
   h3 {
     &.welcome {
-      font-family: cursive;
+      font-family: $font-family-special;
       font-size: 1.4em;
-      color: white;
+      color: $text-primary;
     }
   }
 
   .cell {
-    background: rgba(255, 255, 255, 0.1);
+    background: $bg-alpha-05;
     $example-size: 5rem;
     width: $example-size;
     height: $example-size;

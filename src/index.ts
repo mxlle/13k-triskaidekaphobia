@@ -37,7 +37,7 @@ function init() {
   });
 
   const btnContainer = createElement({
-    cssClass: "btn-container",
+    cssClass: "h-btns",
   });
 
   btnContainer.append(createButton({ text: "🔄", onClick: onNewGameClick, iconBtn: true }));

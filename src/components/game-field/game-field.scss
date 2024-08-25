@@ -5,6 +5,8 @@
 $tile-color-1: #152134;
 $tile-color-2: #1b273a;
 $border-style: outset;
+$table-color: #563232;
+$table-color-light: #905d5d;
 
 .game-field {
   @include grid-mixins.board-tile-grid;
@@ -13,9 +15,8 @@ $border-style: outset;
   position: relative;
   margin: 0 auto;
   justify-content: center;
-  --tile-color-1: #{$tile-color-1};
-  --tile-color-2: #{$tile-color-2};
-  --border-style: #{$border-style};
+  --t-1: #{$tile-color-1};
+  --t-2: #{$tile-color-2};
 
   .row {
     display: contents;
@@ -23,24 +24,32 @@ $border-style: outset;
     &:nth-child(even) {
       .cell {
         &:nth-child(odd) {
-          --tile-color-1: #{$tile-color-2};
-          --tile-color-2: #{$tile-color-1};
+          --t-1: #{$tile-color-2};
+          --t-2: #{$tile-color-1};
         }
       }
     }
 
     &:nth-child(odd) {
       .cell:not(:nth-child(odd)) {
-        --tile-color-1: #{$tile-color-2};
-        --tile-color-2: #{$tile-color-1};
+        --t-1: #{$tile-color-2};
+        --t-2: #{$tile-color-1};
       }
     }
+  }
+
+  .start-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 6;
   }
 }
 
 .cell {
-  background-color: var(--tile-color-2);
-  border: 0.0625rem var(--border-style) var(--tile-color-2);
+  background-color: var(--t-2);
+  border: 0.0625rem $border-style var(--t-1);
   display: grid;
   place-items: center;
   position: relative;
@@ -51,22 +60,22 @@ $border-style: outset;
 
   &.table {
     color: transparent;
-    background: #563232 !important;
+    background: $table-color;
     border: none;
     cursor: default;
     $tableHeight: var(--table-height, 7);
 
     &.middle {
       z-index: 2;
-      font-family: cursive;
+      font-family: $font-family-special;
 
       &::after {
         content: "";
         position: absolute;
         width: 100%;
         height: calc(#{$tableHeight} * 100% + calc(#{$tableHeight} - 1) * var(--gap));
-        background: #563232;
-        border: 0.125rem var(--border-style) #905d5d;
+        background: $table-color;
+        border: 0.125rem $border-style $table-color-light;
         box-sizing: border-box;
       }
     }
@@ -84,10 +93,10 @@ $border-style: outset;
   }
 
   &.panic {
-    border: 0.2rem var(--border-style) $danger-color;
+    border: 0.2rem $border-style $danger-color;
 
     &:not(.chair) {
-      border: 0.1rem var(--border-style) $warning-color;
+      border: 0.1rem $border-style $warning-color;
     }
 
     span {
@@ -119,7 +128,7 @@ $border-style: outset;
     }
   }
 
-  &.triskaidekaphobia {
+  &.t13a {
     z-index: 2;
 
     &.table {
@@ -148,7 +157,7 @@ $border-style: outset;
     place-items: center;
     font-size: 0.5em;
     line-height: 1;
-    background: rgba(0, 0, 0, 0.3);
+    background: $overlay-bg;
     width: 45%;
     height: 45%;
 
@@ -214,31 +223,6 @@ body {
         }
       }
     }
-  }
-}
-
-@keyframes scale-pulse-small {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-@keyframes scale-pulse-big {
-  0% {
-    transform: scale(1);
-  }
-
-  50% {
-    transform: scale(1.5);
-  }
-  100% {
-    transform: scale(1);
   }
 }
 

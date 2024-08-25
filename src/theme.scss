@@ -5,10 +5,19 @@ $danger-color-light: #cc6677;
 $success-color: #227744;
 $success-color-light: #44aa77;
 $warning-color: #ffaa00;
-$rainbow: linear-gradient(to bottom right, red 15%, orange 30%, yellow 50%, cyan 70%, blue 85%);
 $font-family: sans-serif;
+$font-family-special: cursive;
 $border-radius: 0.4rem;
-$secondary-text: #96a6b6;
+$text-primary: #f0f0f0;
+$text-secondary: #ccc;
+$text-tertiary: #96a6b6;
+$dialog-bg: rgba(0, 0, 0, 0.9);
+$dialog-bg-shine-through: rgba(0, 0, 0, 0.5);
+$overlay-bg: rgba(0, 0, 0, 0.3);
+$bg-primary: #09162a;
+$alpha-base: white;
+$bg-alpha-05: rgba(255, 255, 255, 0.05);
+$bg-alpha-10: rgba(255, 255, 255, 0.1);
 
 @mixin hover {
   @media (hover: hover) and (pointer: fine) {
@@ -22,13 +31,7 @@ $secondary-text: #96a6b6;
   }
 }
 
-%rainbow-text {
-  background: $rainbow;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-@mixin selectable($bg-base: white, $alpha1: 0.2, $alpha2: 0.4) {
+@mixin selectable($bg-base: $alpha-base, $alpha1: 0.2, $alpha2: 0.4) {
   &:after {
     content: "";
     position: absolute;

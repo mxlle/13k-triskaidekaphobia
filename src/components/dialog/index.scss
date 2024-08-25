@@ -1,11 +1,13 @@
+@use "../../theme";
+
 .dialog {
   position: absolute;
   bottom: 0;
   left: 0;
   height: 100%;
   width: 100%;
-  background: rgba(0, 0, 0, 0.9);
-  color: white;
+  background: theme.$dialog-bg;
+  color: theme.$text-primary;
   display: grid;
   grid-template-rows: 1fr min-content;
   text-align: center;
@@ -20,7 +22,7 @@
   }
 
   &.shine-through {
-    background: rgba(0, 0, 0, 0.5);
+    background: theme.$dialog-bg-shine-through;
   }
 
   &:not(.open) {
@@ -52,7 +54,7 @@
 }
 
 .btns {
-  background: black;
+  background: theme.$dialog-bg;
   display: grid;
   gap: 1rem;
   padding: 1rem;

@@ -16,15 +16,7 @@ body {
 }
 
 html {
-  font-size: 12px;
-
-  @media (min-width: 375px) {
-    font-size: 16px;
-  }
-
-  @media (min-width: 480px) {
-    font-size: 20px;
-  }
+  font-size: 16px;
 
   @media (min-width: 600px) {
     font-size: 24px;
@@ -36,8 +28,8 @@ html {
 }
 
 body {
-  background: #09162a;
-  color: white;
+  background: $bg-primary;
+  color: $text-primary;
   font-family: $font-family;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
@@ -47,7 +39,7 @@ body {
   grid-template-rows: min-content 1fr;
 }
 
-.main-container {
+main {
   height: 100%;
   width: 100%;
   overflow: auto;
@@ -68,41 +60,26 @@ header {
   padding: max(0.5rem, var(--sat)) 1rem 0.5rem;
   align-items: center;
   gap: 1rem;
-  width: 100%;
-  font-family: cursive;
+  font-family: $font-family-special;
 
-  .btn-container {
-    display: grid;
+  .h-btns {
+    display: flex;
     gap: 0.5rem;
-    grid-auto-flow: column;
-  }
-
-  .score {
-    white-space: nowrap;
   }
 }
 
-.start-button {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 6;
-}
-
-button,
-label {
+button {
   font-family: $font-family;
   font-size: 1em;
   cursor: pointer;
-  color: white;
-  border: 1px solid rgba(white, 0.1);
-  background-color: rgba(white, 0.06);
+  color: $text-primary;
+  border: 1px solid $bg-alpha-10;
+  background-color: $bg-alpha-05;
   padding: 1rem 2rem;
   border-radius: $border-radius;
 
   @include hover {
-    background-color: rgba(white, 0.1);
+    background-color: $bg-alpha-10;
   }
 
   &.primary-btn {
@@ -130,7 +107,7 @@ button.icon-btn {
   padding: 0.5rem;
   font-size: 0.9em;
   line-height: 1;
-  color: #ccc;
+  color: $text-secondary;
   transform: scale(1);
   transition: transform 0.3s;
 

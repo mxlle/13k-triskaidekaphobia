@@ -89,7 +89,7 @@ function appendGameField() {
 
   if (!mainContainer) {
     mainContainer = createElement({
-      cssClass: "main-container",
+      tag: "main",
     });
     document.body.append(mainContainer);
   }
@@ -249,7 +249,7 @@ export function updatePanicStates(gameFieldData: GameFieldData, panickedTableCel
     const cellElementObject = getCellElementObject(cell);
     cellElementObject.elem.classList.remove("scary");
     cellElementObject.elem.classList.remove("scared");
-    cellElementObject.elem.classList.remove("triskaidekaphobia");
+    cellElementObject.elem.classList.remove("t13a");
 
     if (hasPerson(cell)) {
       cellElementObject.elem.classList.toggle("panic", cell.person.hasPanic || !isChair(cell));
@@ -258,7 +258,7 @@ export function updatePanicStates(gameFieldData: GameFieldData, panickedTableCel
 
   panickedTableCells.forEach((cell) => {
     const cellElementObject = getCellElementObject(cell);
-    cellElementObject.elem.classList.add("triskaidekaphobia");
+    cellElementObject.elem.classList.add("t13a");
   });
 }
 
