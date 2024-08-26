@@ -2,6 +2,9 @@ import { Cell, hasPerson, isChair, isDoor, isTable, OccupiedCell, Person } from 
 import { createElement } from "../../utils/html-utils";
 import { isGermanLanguage } from "../../translations/i18n";
 import { getPhobiaName } from "../../phobia";
+import { getNearestTableCell } from "../../logic/checks";
+import { globals } from "../../globals";
+import { getCellElementObject } from "./game-field";
 
 export interface CellElementObject {
   elem: HTMLElement;
@@ -99,6 +102,16 @@ export function updateCell(cell: Cell, cellElementObject: CellElementObject) {
   cellElementObject.smallFearElem.classList.toggle("hidden", !person?.smallFear ?? false);
   cellElementObject.elem.classList.toggle("has-person", hasPerson(cell));
   cellElementObject.elem.classList.toggle("panic", person?.hasPanic ?? false);
+
+  const nearestTableCell = getNearestTableCell(globals.gameFieldData, cell);
+  console.log(nearestTableCell);
+
+  if (nearestTableCell && isChair(cell)) {
+    const classToToggle = nearestTableCell.column < cell.column ? "has-right" : "has-left";
+    const tableCellElementObject = getCellElementObject(nearestTableCell);
+    console.log(classToToggle, !!person);
+    tableCellElementObject.elem.classList.toggle(classToToggle, !!person);
+  }
 
   if (hasPerson(cell)) {
     setCellFearTooltips(cell, cellElementObject);

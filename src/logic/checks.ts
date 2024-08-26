@@ -74,6 +74,12 @@ export function getNeighbors(gameFieldData: GameFieldData, row: number, column: 
   return neighbors;
 }
 
+export function getNearestTableCell(gameFieldData: GameFieldData, cell: Cell) {
+  const tableIndex = cell.tableIndex;
+  const tableCells = getTableCells(gameFieldData, tableIndex);
+  return tableCells.find((tableCell) => tableCell.row === cell.row);
+}
+
 export function getAllGuests(gameFieldData: GameFieldData) {
   return gameFieldData.flat().filter(hasPerson);
 }
