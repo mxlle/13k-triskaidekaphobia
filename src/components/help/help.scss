@@ -56,6 +56,10 @@
 
     &.has-person {
       border: 0.125rem solid rgba(theme.$main-color, 0.5);
+
+      .chair-inner {
+        display: none;
+      }
     }
 
     &.table {
