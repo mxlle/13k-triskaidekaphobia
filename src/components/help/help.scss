@@ -69,6 +69,10 @@
       }
     }
 
+    .chair-inner {
+      transform: rotate(90deg);
+    }
+
     &:after {
       content: none;
     }

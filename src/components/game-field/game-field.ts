@@ -20,6 +20,7 @@ let mainContainer: HTMLElement | undefined;
 let gameFieldElem: HTMLElement | undefined;
 let miniHelp: HTMLElement | undefined;
 let clickedCell: Cell | undefined;
+let lastClickedCell: Cell | undefined;
 let hasMadeFirstMove = false;
 const cellElements: CellElementObject[][] = [];
 
@@ -120,13 +121,13 @@ function cellClickHandler(rowIndex: number, columnIndex: number, onboardingArrow
     onboardingArrow.remove();
   }
 
-  if (miniHelp) {
-    miniHelp.remove();
-    miniHelp = undefined;
+  if (!hasPerson(cell) && lastClickedCell && isSameCell(cell, lastClickedCell)) {
+    updateMiniHelp();
+    lastClickedCell = undefined;
+  } else {
+    updateMiniHelp(cell);
+    lastClickedCell = cell;
   }
-
-  miniHelp = getMiniHelpContent(cell);
-  mainContainer?.append(miniHelp);
 
   if (!hasPerson(cell)) {
     if (!clickedCell) {
@@ -157,8 +158,8 @@ function cellClickHandler(rowIndex: number, columnIndex: number, onboardingArrow
     moveGuest(clickedCell, cell);
     updateCell(clickedCell, clickedCellElementObject);
     updateCell(cell, cellElementObject);
-    resetSelection(cell);
     updateState(globals.gameFieldData);
+    resetSelection(cell, true);
   } else {
     clickedCell = cell;
     updateStateForSelection(globals.gameFieldData, clickedCell);
@@ -171,7 +172,7 @@ export function getCellElementObject(cell: Cell): CellElementObject {
   return cellElements[cell.row]?.[cell.column];
 }
 
-function resetSelection(cell: Cell) {
+function resetSelection(cell: Cell, keepMiniHelp = false) {
   const cellElementObject = getCellElementObject(cell);
   const clickedCellElementObject = getCellElementObject(clickedCell);
 
@@ -184,12 +185,16 @@ function resetSelection(cell: Cell) {
 
   document.body.classList.remove("selecting");
 
+  updateMiniHelp(keepMiniHelp ? cell : undefined);
+}
+
+function updateMiniHelp(cell?: Cell) {
   if (miniHelp) {
     miniHelp.remove();
     miniHelp = undefined;
   }
 
-  miniHelp = getMiniHelpContent();
+  miniHelp = getMiniHelpContent(cell);
   mainContainer?.append(miniHelp);
 }
 
