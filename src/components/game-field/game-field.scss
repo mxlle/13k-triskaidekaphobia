@@ -52,6 +52,29 @@ $border-style: outset;
   width: 100%;
   height: 100%;
 
+  > span {
+    grid-area: 1 / 1;
+  }
+
+  .chair-inner {
+    height: 85%;
+    width: 85%;
+    border-radius: 35% 15% 15% 35%;
+    background: $table-bg;
+    border: 0.125rem $border-style $table-border;
+    border-left-width: 0.35rem;
+
+    &.right {
+      transform: rotate(180deg);
+    }
+  }
+
+  &.has-person {
+    .chair-inner {
+      opacity: 0.3;
+    }
+  }
+
   &.table {
     border: none;
     $tableHeight: var(--table-height, 8);
@@ -68,6 +91,7 @@ $border-style: outset;
         height: calc(#{$tableHeight} * 100%);
         background: $table-bg;
         border: 0.125rem $border-style $table-border;
+        border-radius: 0.33rem;
       }
     }
   }
@@ -91,17 +115,21 @@ $border-style: outset;
 
   &.has-person {
     cursor: pointer;
-    border-width: 0.125rem;
+
+    .text {
+      z-index: 1;
+    }
   }
 
   &.panic {
+    border-width: 0.125rem;
     border-color: $danger-color;
 
     &:not(.chair) {
       border-color: $warning-color;
     }
 
-    span {
+    .text {
       animation: tremble 0.2s infinite;
       animation-iteration-count: 5;
       transform-origin: 50% 50%;
@@ -114,7 +142,7 @@ $border-style: outset;
     z-index: 3;
     outline: 0.25rem dashed $danger-color;
 
-    span {
+    .text {
       z-index: 1;
       animation: scary-pulse $scary-scale-props;
     }
@@ -124,7 +152,7 @@ $border-style: outset;
     z-index: 3;
     outline: 0.125rem dotted $danger-color;
 
-    span {
+    .text {
       z-index: 1;
       animation: scared-pulse $scary-scale-props;
     }
@@ -139,7 +167,7 @@ $border-style: outset;
         color: $danger-color-contrast;
         animation: scary-pulse-table $scary-scale-props;
 
-        span {
+        .text {
           z-index: 1;
           animation: scary-pulse $scary-scale-props;
         }
@@ -163,6 +191,7 @@ $border-style: outset;
   background: $overlay-bg;
   width: 45%;
   height: 45%;
+  z-index: 2;
 
   &.hidden {
     display: none;

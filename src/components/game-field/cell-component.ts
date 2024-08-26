@@ -10,7 +10,7 @@ export interface CellElementObject {
   smallFearElem: HTMLElement;
 }
 
-export function createCellElement(cell: Cell, isInMiddle: boolean = false): CellElementObject {
+export function createCellElement(cell: Cell, isInMiddle: boolean = false, isOnTheRightOfATable: boolean = false): CellElementObject {
   const cellElem = createElement({
     cssClass: "cell",
   });
@@ -36,6 +36,17 @@ export function createCellElement(cell: Cell, isInMiddle: boolean = false): Cell
 
   if (isChair(cell)) {
     cellElem.classList.add("chair");
+
+    const chairElement = createElement({
+      tag: "span",
+      cssClass: "chair-inner",
+    });
+
+    if (isOnTheRightOfATable) {
+      chairElement.classList.add("right");
+    }
+
+    cellElem.append(chairElement);
   }
 
   const textElem = createElement({

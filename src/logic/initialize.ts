@@ -68,7 +68,7 @@ function getGameFieldObject(
     type,
     row,
     column,
-    content: type === CellType.GUEST ? CellType.EMPTY : type,
+    content: isGuest(type) || isChair(type) ? CellType.EMPTY : type,
   };
 
   if (isChair(type) || isTable(type)) {

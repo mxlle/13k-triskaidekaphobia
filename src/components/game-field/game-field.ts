@@ -227,7 +227,9 @@ export function generateGameFieldElement(gameFieldData: GameFieldData) {
 
     row.forEach((cell, columnIndex) => {
       const isInMiddle = isTableMiddle(rowIndex);
-      const cellElementObject = createCellElement(cell, isInMiddle);
+      const leftNeighbor = columnIndex > 0 ? gameFieldData[rowIndex][columnIndex - 1] : undefined;
+      const isOnTheRightOfATable = leftNeighbor ? isTable(leftNeighbor) : false;
+      const cellElementObject = createCellElement(cell, isInMiddle, isOnTheRightOfATable);
 
       let arrow: HTMLElement | undefined;
 
