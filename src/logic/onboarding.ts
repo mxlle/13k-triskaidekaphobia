@@ -31,27 +31,27 @@ export interface OnboardingData {
 }
 // a 5 by 5 grid
 const onboardingField = (() => {
-  const { GUEST, EMPTY, TABLE, CHAIR, DOOR_, WINDO } = getCellTypesWithoutPrefix();
+  const { GUEST, EMPTY, TABLE, CHAIR, DOOR_ } = getCellTypesWithoutPrefix();
   return [
     [DOOR_, GUEST, EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, CHAIR, TABLE, CHAIR],
     [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, CHAIR, TABLE, CHAIR],
-    [WINDO, EMPTY, EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
   ];
 })();
 
 // a 7 by 7 grid
 const mediumField = (() => {
-  const { GUEST, EMPTY, TABLE, CHAIR, DOOR_, WINDO } = getCellTypesWithoutPrefix();
+  const { GUEST, EMPTY, TABLE, CHAIR, DOOR_ } = getCellTypesWithoutPrefix();
   return [
-    [DOOR_, GUEST, EMPTY, EMPTY, EMPTY, EMPTY, WINDO],
+    [DOOR_, GUEST, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
     [CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR],
     [CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR],
     [CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR],
     [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
-    [WINDO, GUEST, EMPTY, EMPTY, EMPTY, EMPTY, WINDO],
+    [EMPTY, GUEST, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
   ];
 })();
 

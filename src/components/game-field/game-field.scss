@@ -54,7 +54,7 @@ $border-style: outset;
 
   &.table {
     border: none;
-    $tableHeight: var(--table-height, 7);
+    $tableHeight: var(--table-height, 8);
 
     &.middle {
       z-index: 2;
@@ -63,6 +63,7 @@ $border-style: outset;
       &::after {
         content: "";
         position: absolute;
+        top: var(--table-top, auto);
         width: 100%;
         height: calc(#{$tableHeight} * 100%);
         background: $table-bg;

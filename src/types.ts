@@ -6,7 +6,6 @@ export const enum CellType {
   TABLE = "🟫",
   CHAIR = "🪑",
   DOOR = "🚪",
-  WINDOW = "🪟",
 }
 
 interface CellPosition {
@@ -49,7 +48,6 @@ const getType = (typeOrObject: string | Cell) => (typeof typeOrObject === "strin
 export const isTable = (typeOrObject: string | Cell) => getType(typeOrObject) === CellType.TABLE;
 export const isGuest = (typeOrObject: string | Cell) => getType(typeOrObject) === CellType.GUEST;
 export const isDoor = (typeOrObject: string | Cell) => getType(typeOrObject) === CellType.DOOR;
-export const isWindow = (typeOrObject: string | Cell) => getType(typeOrObject) === CellType.WINDOW;
 export const isChair = (typeOrObject: string | Cell) => getType(typeOrObject) === CellType.CHAIR;
 export const isEmpty = (typeOrObject: string | Cell) => getType(typeOrObject) === CellType.EMPTY;
 
@@ -74,6 +72,5 @@ export function getCellTypesWithoutPrefix() {
     TABLE: CellType.TABLE,
     CHAIR: CellType.CHAIR,
     DOOR_: CellType.DOOR,
-    WINDO: CellType.WINDOW,
   };
 }

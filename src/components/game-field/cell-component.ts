@@ -1,4 +1,4 @@
-import { Cell, hasPerson, isChair, isDoor, isTable, isWindow, OccupiedCell, Person } from "../../types";
+import { Cell, hasPerson, isChair, isDoor, isTable, OccupiedCell, Person } from "../../types";
 import { createElement } from "../../utils/html-utils";
 import { isGermanLanguage } from "../../translations/i18n";
 import { getPhobiaName } from "../../phobia";
@@ -15,7 +15,7 @@ export function createCellElement(cell: Cell, isInMiddle: boolean = false): Cell
     cssClass: "cell",
   });
 
-  if (isDoor(cell) || isWindow(cell)) {
+  if (isDoor(cell)) {
     cellElem.classList.add("door");
   }
 
