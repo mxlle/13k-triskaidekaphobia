@@ -81,7 +81,6 @@ $border-style: outset;
 
     &.middle {
       z-index: 2;
-      font-family: $font-family-special;
 
       &::after {
         content: "";
@@ -191,12 +190,18 @@ $border-style: outset;
     &.table {
       &.middle {
         z-index: 5;
-        color: $danger-color-contrast;
         animation: scary-pulse-table $scary-scale-props;
 
-        .text {
-          z-index: 1;
-          animation: scary-pulse $scary-scale-props;
+        &::after {
+          content: "13";
+          display: grid;
+          place-items: center;
+          font-family: $font-family-special;
+          color: $danger-color-contrast;
+        }
+
+        .plate {
+          display: none;
         }
       }
     }

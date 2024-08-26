@@ -27,13 +27,6 @@ export function createCellElement(cell: Cell, isInMiddle: boolean = false, isOnT
 
     if (isInMiddle) {
       cellElem.classList.add("middle");
-
-      const textElem = createElement({
-        tag: "span",
-        text: "13",
-      });
-
-      cellElem.append(textElem);
     }
 
     const plateElem1 = createElement({
