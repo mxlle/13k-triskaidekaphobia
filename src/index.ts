@@ -67,7 +67,7 @@ function init() {
   //   createButton({ text: "⚙️", onClick: openConfig, iconBtn: true }),
   // );
 
-  const scoreBaseText = "? 🚪 + ? 😱 + ? 😀 / ?";
+  const scoreBaseText = "?/? 😀";
 
   scoreElement = createElement({
     cssClass: "score",
@@ -89,10 +89,8 @@ function init() {
   });
 
   pubSubService.subscribe(PubSubEvent.UPDATE_SCORE, (gameFieldData) => {
-    const { unseatedGuests, unhappyGuests, happyGuests, totalGuests } = getHappyStats(gameFieldData);
-    scoreElement.textContent = totalGuests
-      ? `${unseatedGuests}🚪 + ${unhappyGuests} 😱 + ${happyGuests} 😀 / ${totalGuests}`
-      : scoreBaseText;
+    const { happyGuests, totalGuests } = getHappyStats(gameFieldData);
+    scoreElement.textContent = totalGuests ? `${happyGuests}/${totalGuests} 😀` : scoreBaseText;
   });
 }
 

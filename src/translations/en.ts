@@ -22,7 +22,7 @@ export const enTranslations: Record<TranslationKey, string> = {
 
 1️⃣3️⃣🙀 Also all emojis suffer from <em>Triskaidekaphobia</em>.
 
-🚪 Most emojis are already seated at the tables. But there might also be some waiting at the door.
+🍽️ Most emojis are already seated at the tables. But there might also be some waiting in the room.
 
 😀 If all emojis are happy, you win! 🎉`,
   [TranslationKey.INFO_PLACEHOLDER]: "Select an emoji to learn more about it.",

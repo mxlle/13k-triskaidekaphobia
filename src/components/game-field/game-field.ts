@@ -2,7 +2,7 @@ import "./game-field.scss";
 
 import { createButton, createElement } from "../../utils/html-utils";
 import { moveGuest, newGame } from "../../logic/game-logic";
-import { Cell, GameFieldData, hasPerson, isChair, isDoor, isSameCell, isTable } from "../../types";
+import { Cell, GameFieldData, hasPerson, isChair, isSameCell, isTable } from "../../types";
 import { createWinScreen } from "../win-screen/win-screen";
 import { CellElementObject, createCellElement, updateCell } from "./cell-component";
 import { getTranslation, TranslationKey } from "../../translations/i18n";
@@ -130,11 +130,7 @@ function cellClickHandler(rowIndex: number, columnIndex: number, onboardingArrow
   }
 
   if (!hasPerson(cell)) {
-    if (!clickedCell) {
-      return;
-    }
-
-    if (isDoor(cell) || isTable(cell)) {
+    if (!clickedCell || isTable(cell)) {
       return;
     }
   }

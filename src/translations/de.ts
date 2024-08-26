@@ -22,7 +22,7 @@ export const deTranslations: Record<TranslationKey, string> = {
 
 1️⃣3️⃣🙀 Außerdem leiden alle Emojis an <em>Triskaidekaphobie</em>.
 
-🚪 Die meisten Emojis sitzen bereits an den Tischen. Aber es könnte auch einige geben, die an der Tür warten.
+🍽️ Die meisten Emojis sitzen bereits an den Tischen. Aber es könnte auch einige geben, die im Raum warten.
 
 😀 Wenn alle Emojis glücklich sind, hast du gewonnen! 🎉`,
   [TranslationKey.INFO_PLACEHOLDER]: "Wähle ein Emoji aus, um mehr darüber zu erfahren.",

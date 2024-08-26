@@ -29,23 +29,22 @@ export interface OnboardingData {
     direction: Direction;
   };
 }
-// a 5 by 5 grid
+// a 4 by 4 grid
 const onboardingField = (() => {
-  const { GUEST, EMPTY, TABLE, CHAIR, DOOR_ } = getCellTypesWithoutPrefix();
+  const { GUEST, EMPTY, TABLE, CHAIR } = getCellTypesWithoutPrefix();
   return [
-    [DOOR_, GUEST, EMPTY, EMPTY, EMPTY],
-    [EMPTY, EMPTY, CHAIR, TABLE, CHAIR],
-    [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
-    [EMPTY, EMPTY, CHAIR, TABLE, CHAIR],
-    [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+    [EMPTY, CHAIR, TABLE, CHAIR],
+    [GUEST, EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY, EMPTY],
+    [EMPTY, CHAIR, TABLE, CHAIR],
   ];
 })();
 
 // a 7 by 7 grid
 const mediumField = (() => {
-  const { GUEST, EMPTY, TABLE, CHAIR, DOOR_ } = getCellTypesWithoutPrefix();
+  const { GUEST, EMPTY, TABLE, CHAIR } = getCellTypesWithoutPrefix();
   return [
-    [DOOR_, GUEST, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY, GUEST, EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
     [CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR],
     [CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR],
@@ -94,22 +93,22 @@ function getOnboardingDataForIntro(): OnboardingData {
       name: ob1,
       fear: ob2,
       smallFear: undefined,
-      row: 0,
-      column: 1,
+      row: 1,
+      column: 0,
     },
     {
       name: ob2,
       fear: undefined,
       smallFear: undefined,
-      row: 1,
-      column: 4,
+      row: 0,
+      column: 3,
     },
     {
       name: ob3,
       fear: undefined,
       smallFear: undefined,
       row: 3,
-      column: 4,
+      column: 3,
     },
   ];
 
@@ -117,13 +116,13 @@ function getOnboardingDataForIntro(): OnboardingData {
     field: onboardingField,
     characters: onboardingCharacters,
     tableHeight: 1,
-    isTableMiddle: (rowIndex) => rowIndex === 1 || rowIndex === 3,
+    isTableMiddle: (rowIndex) => rowIndex === 0 || rowIndex === 3,
     getTableIndex: (row, _column) => {
       return row < 2 ? 0 : 1;
     },
     arrow: {
-      row: 0,
-      column: 1,
+      row: 1,
+      column: 0,
       direction: Direction.UP,
     },
   };
@@ -141,7 +140,7 @@ function getOnboardingDataForBothPhobias(): OnboardingData {
       fear: ob2,
       smallFear: ob3,
       row: 0,
-      column: 1,
+      column: 3,
     },
     {
       name: ob2,
@@ -183,7 +182,7 @@ function getOnboardingDataForBothPhobias(): OnboardingData {
     },
     arrow: {
       row: 0,
-      column: 1,
+      column: 3,
       direction: Direction.LEFT,
     },
   };

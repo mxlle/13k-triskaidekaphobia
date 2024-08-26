@@ -71,6 +71,5 @@ export function getCellTypesWithoutPrefix() {
     EMPTY: CellType.EMPTY,
     TABLE: CellType.TABLE,
     CHAIR: CellType.CHAIR,
-    DOOR_: CellType.DOOR,
   };
 }
