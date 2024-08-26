@@ -158,8 +158,8 @@ function cellClickHandler(rowIndex: number, columnIndex: number, onboardingArrow
     moveGuest(clickedCell, cell);
     updateCell(clickedCell, clickedCellElementObject);
     updateCell(cell, cellElementObject);
-    updateState(globals.gameFieldData);
-    resetSelection(cell, true);
+    const hasWon = updateState(globals.gameFieldData);
+    resetSelection(cell, !hasWon);
   } else {
     clickedCell = cell;
     updateStateForSelection(globals.gameFieldData, clickedCell);
@@ -198,7 +198,7 @@ function updateMiniHelp(cell?: Cell) {
   mainContainer?.append(miniHelp);
 }
 
-function updateState(gameFieldData: Cell[][], skipWinCheck = false) {
+function updateState(gameFieldData: Cell[][], skipWinCheck = false): boolean {
   const panickedTableCells = checkTableStates(gameFieldData);
   void updatePanicStates(gameFieldData, panickedTableCells);
   pubSubService.publish(PubSubEvent.UPDATE_SCORE, gameFieldData);
@@ -210,6 +210,8 @@ function updateState(gameFieldData: Cell[][], skipWinCheck = false) {
 
     pokiSdk.gameplayStop();
   }
+
+  return hasWon;
 }
 
 export function generateGameFieldElement(gameFieldData: GameFieldData) {
