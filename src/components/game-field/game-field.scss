@@ -94,6 +94,33 @@ $border-style: outset;
         border-radius: 0.33rem;
       }
     }
+
+    .plate {
+      display: none;
+      position: absolute;
+      z-index: 4;
+      font-size: 0.6em;
+      transform: rotate(90deg);
+      left: 1px;
+
+      + .plate {
+        transform: rotate(-90deg);
+        right: 1px;
+        left: auto;
+      }
+    }
+
+    &.has-left {
+      .plate:first-of-type {
+        display: block;
+      }
+    }
+
+    &.has-right {
+      .plate + .plate {
+        display: block;
+      }
+    }
   }
 
   &.selected {

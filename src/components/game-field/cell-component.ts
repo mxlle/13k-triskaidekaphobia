@@ -32,6 +32,18 @@ export function createCellElement(cell: Cell, isInMiddle: boolean = false, isOnT
 
       cellElem.append(textElem);
     }
+
+    const plateElem1 = createElement({
+      cssClass: "plate",
+      text: "🍽️",
+    });
+    const plateElem2 = createElement({
+      cssClass: "plate",
+      text: "🍽️",
+    });
+
+    cellElem.append(plateElem1);
+    cellElem.append(plateElem2);
   }
 
   if (isChair(cell)) {

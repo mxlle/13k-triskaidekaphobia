@@ -196,6 +196,7 @@ function resetSelection(cell: Cell) {
 function updateState(gameFieldData: Cell[][], skipWinCheck = false) {
   const panickedTableCells = checkTableStates(gameFieldData);
   void updatePanicStates(gameFieldData, panickedTableCells);
+  updatePlateStates(gameFieldData);
   pubSubService.publish(PubSubEvent.UPDATE_SCORE, gameFieldData);
   const { hasWon } = getHappyStats(gameFieldData);
 
@@ -205,6 +206,20 @@ function updateState(gameFieldData: Cell[][], skipWinCheck = false) {
 
     pokiSdk.gameplayStop();
   }
+}
+
+function updatePlateStates(gameFieldData: Cell[][]) {
+  const guestsAtTables = getAllGuests(gameFieldData).filter((cell) => isChair(cell));
+  const tableCells = gameFieldData.flat().filter(isTable);
+
+  tableCells.forEach((tableCell) => {
+    const hasPersonOnLeft = guestsAtTables.some((guest) => guest.column === tableCell.column - 1 && guest.row === tableCell.row);
+    const hasPersonOnRight = guestsAtTables.some((guest) => guest.column === tableCell.column + 1 && guest.row === tableCell.row);
+
+    const cellElementObject = getCellElementObject(tableCell);
+    cellElementObject.elem.classList.toggle("has-left", hasPersonOnLeft);
+    cellElementObject.elem.classList.toggle("has-right", hasPersonOnRight);
+  });
 }
 
 export function generateGameFieldElement(gameFieldData: GameFieldData) {
