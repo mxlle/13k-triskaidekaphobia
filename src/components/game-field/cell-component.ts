@@ -97,13 +97,13 @@ export function updateCell(cell: Cell, cellElementObject: CellElementObject) {
   cellElementObject.elem.classList.toggle("panic", person?.hasPanic ?? false);
 
   const nearestTableCell = getNearestTableCell(globals.gameFieldData, cell);
-  console.log(nearestTableCell);
 
   if (nearestTableCell && isChair(cell)) {
     const classToToggle = nearestTableCell.column < cell.column ? "has-right" : "has-left";
     const tableCellElementObject = getCellElementObject(nearestTableCell);
-    console.log(classToToggle, !!person);
-    tableCellElementObject.elem.classList.toggle(classToToggle, !!person);
+    if (tableCellElementObject) {
+      tableCellElementObject.elem.classList.toggle(classToToggle, !!person);
+    }
   }
 
   if (hasPerson(cell)) {
