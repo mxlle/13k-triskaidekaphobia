@@ -101,7 +101,7 @@
 
   .stats-grid {
     display: grid;
-    grid-template-columns: repeat(3, auto);
+    grid-template-columns: repeat(2, auto);
     gap: 0.5rem;
     align-items: center;
     line-height: 1;
@@ -114,10 +114,6 @@
       font-size: 1.4em;
       font-family: monospace;
       font-weight: bold;
-    }
-
-    > :nth-child(2) {
-      font-size: 1.3em;
     }
 
     &.satisfied {

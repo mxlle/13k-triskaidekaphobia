@@ -148,19 +148,23 @@ function getSatisfactionStats(cell: OccupiedCell): HTMLElement {
       satisfied: !isTriskaidekaphobia,
       explainText: getTranslation(TranslationKey.INFO_TRISKAIDEKAPHOBIA),
     },
-    { phobia: cell.person.fear, satisfied: noBigFear, explainText: getTranslation(TranslationKey.INFO_BIG_FEAR) },
-    { phobia: cell.person.smallFear, satisfied: noSmallFear, explainText: getTranslation(TranslationKey.INFO_SMALL_FEAR) },
+    { phobia: cell.person.fear, satisfied: noBigFear, explainText: getTranslation(TranslationKey.INFO_BIG_FEAR, cell.person.fear) },
+    {
+      phobia: cell.person.smallFear,
+      satisfied: noSmallFear,
+      explainText: getTranslation(TranslationKey.INFO_SMALL_FEAR, cell.person.smallFear),
+    },
     { phobia: CellType.CHAIR, satisfied: hasChair, explainText: getTranslation(TranslationKey.INFO_FOMO) },
   ];
 
   stats
     .filter(({ phobia }) => !!phobia)
-    .forEach(({ phobia, satisfied, explainText }) => {
+    .forEach(({ satisfied, explainText }) => {
       const stat = createElement({
         cssClass: `stat ${satisfied ? "satisfied" : "unsatisfied"}`,
       });
 
-      const elems = [satisfied ? "✔" : "X", phobia, explainText];
+      const elems = [satisfied ? "✔" : "X", explainText];
 
       stat.innerHTML = elems.map((content) => `<span>${content}</span>`).join("");
 

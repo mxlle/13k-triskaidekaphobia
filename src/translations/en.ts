@@ -12,9 +12,9 @@ export const enTranslations: Record<TranslationKey, string> = {
   [TranslationKey.CANCEL]: "Cancel",
   [TranslationKey.EXAMPLE_BIG_FEAR]: "Big <em>{0}</em>: {1} must not sit at the same table.",
   [TranslationKey.EXAMPLE_SMALL_FEAR]: "Small <em>{0}</em>: {1} must not sit next to or opposite.",
-  [TranslationKey.INFO_BIG_FEAR]: "NOT at the same table",
-  [TranslationKey.INFO_SMALL_FEAR]: "NOT next to or opposite",
-  [TranslationKey.INFO_FOMO]: "seated at a table",
+  [TranslationKey.INFO_BIG_FEAR]: "no {0} at the same table",
+  [TranslationKey.INFO_SMALL_FEAR]: "no {0} next to or opposite",
+  [TranslationKey.INFO_FOMO]: "assigned to a seat at the table 🍽️",
   [TranslationKey.RULES]: "Rules",
   [TranslationKey.RULES_CONTENT]: `🏁 The goal is to seat all emojis at the tables without anybody being frightened.
 
