@@ -1,4 +1,4 @@
-import { getRandomPhobia, getRandomPhobiaExcluding } from "../phobia";
+import { getRandomPhobia, getRandomPhobiaExcluding, ONBOARDING_PHOBIAS_EMOJIS } from "../phobia";
 import { CellType, getCellTypesWithoutPrefix, PersonWithPosition } from "../types";
 import { globals } from "../globals";
 import { LocalStorageKey, setLocalStorageItem } from "../utils/local-storage";
@@ -84,10 +84,12 @@ export function increaseOnboardingStepIfApplicable() {
   setLocalStorageItem(LocalStorageKey.ONBOARDING_STEP, step.toString());
 }
 
+const onboardingPhobias = [...ONBOARDING_PHOBIAS_EMOJIS];
+
 function getOnboardingDataForIntro(): OnboardingData {
-  const ob1 = getRandomPhobia();
-  const ob2 = getRandomPhobiaExcluding([ob1]);
-  const ob3 = getRandomPhobiaExcluding([ob1, ob2]);
+  const ob1 = getRandomPhobia(onboardingPhobias);
+  const ob2 = getRandomPhobiaExcluding([ob1], onboardingPhobias);
+  const ob3 = getRandomPhobiaExcluding([ob1, ob2], onboardingPhobias);
   const onboardingCharacters: PersonWithPosition[] = [
     {
       name: ob1,
@@ -129,11 +131,11 @@ function getOnboardingDataForIntro(): OnboardingData {
 }
 
 function getOnboardingDataForBothPhobias(): OnboardingData {
-  const ob1 = getRandomPhobia();
-  const ob2 = getRandomPhobiaExcluding([ob1]);
-  const ob3 = getRandomPhobiaExcluding([ob1, ob2]);
-  const ob4 = getRandomPhobiaExcluding([ob1, ob2, ob3]);
-  const ob5 = getRandomPhobiaExcluding([ob1, ob2, ob3, ob4]);
+  const ob1 = getRandomPhobia(onboardingPhobias);
+  const ob2 = getRandomPhobiaExcluding([ob1], onboardingPhobias);
+  const ob3 = getRandomPhobiaExcluding([ob1, ob2], onboardingPhobias);
+  const ob4 = getRandomPhobiaExcluding([ob1, ob2, ob3], onboardingPhobias);
+  const ob5 = getRandomPhobiaExcluding([ob1, ob2, ob3, ob4], onboardingPhobias);
   const onboardingCharacters: PersonWithPosition[] = [
     {
       name: ob1,

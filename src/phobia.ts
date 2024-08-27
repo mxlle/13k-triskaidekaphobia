@@ -1,52 +1,32 @@
 import { getRandomItem } from "./utils/array-utils";
 import { CellType, isChair } from "./types";
 
-export const PHOBIAS_EMOJIS = [
-  "🔢",
-  "🟡",
-  "💰",
-  "8️⃣",
-  "🎈",
-  "🧵️",
-  "🪞",
-  "👴",
-  "🤡",
-  "🍌",
-  "☀️",
-  "🦵",
-  // "🩳",
-  "🟣",
-  "🧄",
-  "📰",
-  "🐸",
-  "🐶",
-  "🥇",
-  "📚",
-] as const;
+export const ONBOARDING_PHOBIAS_EMOJIS = ["👴", "🤡", "🐸", "🐶", "💃", "🦋", "🐴", "🦐", "🐔"] as const;
+
+export const PHOBIAS_EMOJIS = [...ONBOARDING_PHOBIAS_EMOJIS, "🔢", "💰", "🎈", "🪞", "🍌", "☀️", "🧄", "📰", "🥇", "📚"] as const;
 
 export type Phobia = (typeof PHOBIAS_EMOJIS)[number];
 
 const PhobiaNameMap: Record<Phobia, string> = {
   "🔢": "Arithmophobia",
-  "🟡": "Xanthophobia",
   "💰": "Plutophobia",
-  "8️⃣": "Octophobia",
   "🎈": "Globophobia",
-  "🧵️": "Linonophobia",
   "🪞": "Eisoptrophobia",
   "👴": "Peladphobia",
   "🤡": "Coulrophobia",
   "🍌": "Bananaphobia",
   "☀️": "Heliophobia",
-  "🦵": "Genuphobia",
-  // "🩳": "Pantophobia",
-  "🟣": "Porphyrophobia",
   "🧄": "Alliumphobia",
   "📰": "Chloephobia",
   "🐸": "Ranidaphobia",
   "🐶": "Cynophobia",
   "🥇": "Aurophobia",
   "📚": "Bibliophobia",
+  "💃": "Chorophobia",
+  "🦋": "Lepidopterophobia",
+  "🐴": "Equinophobia",
+  "🦐": "Ostraconophobia",
+  "🐔": "Alektorophobia",
 };
 
 export function getPhobiaName(phobia: Phobia | CellType.CHAIR | undefined, isGerman: boolean = false): string {
@@ -67,9 +47,11 @@ export function getPhobiaName(phobia: Phobia | CellType.CHAIR | undefined, isGer
   return phobiaName;
 }
 
-export const getRandomPhobia = (): Phobia => getRandomItem<Phobia>([...PHOBIAS_EMOJIS]);
+export const getRandomPhobia = (phobiaPool: Phobia[] = [...PHOBIAS_EMOJIS]): Phobia => {
+  return getRandomItem(phobiaPool);
+};
 
-export function getRandomPhobiaExcluding(excluded: (Phobia | unknown)[]): Phobia {
-  const emojis = PHOBIAS_EMOJIS.filter((emoji) => !excluded.includes(emoji));
+export function getRandomPhobiaExcluding(excluded: (Phobia | unknown)[], phobiaPool: Phobia[] = [...PHOBIAS_EMOJIS]): Phobia {
+  const emojis = phobiaPool.filter((emoji) => !excluded.includes(emoji));
   return getRandomItem(emojis);
 }
