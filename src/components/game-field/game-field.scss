@@ -11,6 +11,7 @@ $border-style: outset;
   position: relative;
   margin: 0 auto;
   justify-content: center;
+  height: fit-content;
   --t-1: #{$tile-color-1};
   --t-2: #{$tile-color-2};
 
@@ -166,17 +167,15 @@ $border-style: outset;
 
   &.scary {
     z-index: 3;
-    outline: 0.25rem dashed $danger-color;
 
     .text {
-      z-index: 1;
+      z-index: 3;
       animation: scary-pulse $scary-scale-props;
     }
   }
 
   &.scared:not(.scary) {
     z-index: 3;
-    outline: 0.125rem dotted $danger-color;
 
     .text {
       z-index: 1;

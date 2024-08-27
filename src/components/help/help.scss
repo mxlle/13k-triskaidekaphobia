@@ -46,7 +46,7 @@
   }
 
   .cell {
-    background: theme.$bg-alpha-10;
+    background: theme.$bg-alpha-05;
     $example-size: var(--c-size, 7rem);
     width: $example-size;
     height: $example-size;
@@ -55,7 +55,7 @@
     border-radius: theme.$border-radius;
 
     &.has-person {
-      border: 0.125rem solid rgba(theme.$main-color, 0.5);
+      border: 0.125rem solid theme.$bg-alpha-10;
 
       .chair-inner {
         display: none;
