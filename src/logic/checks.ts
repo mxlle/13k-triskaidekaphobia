@@ -47,8 +47,8 @@ export function getScaryNeighbors(gameFieldData: GameFieldData, cell: OccupiedCe
 }
 
 // get all 8 neighbors of a cell, plus the three cells on the other side of the table
-export function getNeighbors(gameFieldData: GameFieldData, row: number, column: number): Cell[] {
-  const neighbors: Cell[] = [];
+export function getNeighbors(gameFieldData: GameFieldData, row: number, column: number): OccupiedCell[] {
+  const neighbors: OccupiedCell[] = [];
 
   for (let rowIndex = row - 1; rowIndex <= row + 1; rowIndex++) {
     for (let columnIndex = column - 1; columnIndex <= column + 1; columnIndex++) {

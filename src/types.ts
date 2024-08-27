@@ -8,6 +8,13 @@ export const enum CellType {
   DOOR = "🚪",
 }
 
+export interface Settings {
+  minAmount: number;
+  maxAmount: number;
+  chanceForBigFear: number;
+  chanceForSmallFear: number;
+}
+
 interface CellPosition {
   row: number;
   column: number;
@@ -51,6 +58,10 @@ export const isDoor = (typeOrObject: string | Cell) => getType(typeOrObject) ===
 export const isChair = (typeOrObject: string | Cell) => getType(typeOrObject) === CellType.CHAIR;
 export const isEmpty = (typeOrObject: string | Cell) => getType(typeOrObject) === CellType.EMPTY;
 
+export function isEmptyChair(cell: Cell): boolean {
+  return isChair(cell) && !hasPerson(cell);
+}
+
 export function hasPerson(cell: Cell): cell is OccupiedCell {
   return !!cell.person;
 }
@@ -72,4 +83,8 @@ export function getCellTypesWithoutPrefix() {
     TABLE: CellType.TABLE,
     CHAIR: CellType.CHAIR,
   };
+}
+
+export function getGameFieldCopy(gameFieldData: GameFieldData): GameFieldData {
+  return JSON.parse(JSON.stringify(gameFieldData));
 }

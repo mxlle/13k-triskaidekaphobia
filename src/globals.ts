@@ -1,4 +1,4 @@
-import { GameFieldData } from "./types";
+import { GameFieldData, Settings } from "./types";
 import { getLocalStorageItem, LocalStorageKey } from "./utils/local-storage";
 
 interface GameGlobals {
@@ -7,9 +7,17 @@ interface GameGlobals {
   baseFieldData: GameFieldData;
   gameFieldData: GameFieldData;
   language: string;
+  settings: Settings;
 }
 
 const onboardingStepSetting = getLocalStorageItem(LocalStorageKey.ONBOARDING_STEP);
+
+const defaultSettings: Settings = {
+  minAmount: 18,
+  maxAmount: 27,
+  chanceForBigFear: 0.6,
+  chanceForSmallFear: 0.6,
+};
 
 const defaultGlobals: GameGlobals = {
   previousOnboardingStep: undefined,
@@ -17,6 +25,7 @@ const defaultGlobals: GameGlobals = {
   baseFieldData: [],
   gameFieldData: [],
   language: "en",
+  settings: defaultSettings,
 };
 
 export const globals: GameGlobals = { ...defaultGlobals };
