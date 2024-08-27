@@ -101,11 +101,7 @@ function appendGameField() {
 
   mainContainer.append(gameFieldElem);
 
-  if (!miniHelp) {
-    miniHelp = getMiniHelpContent();
-  }
-
-  mainContainer.append(miniHelp);
+  updateMiniHelp();
 }
 
 function cellClickHandler(rowIndex: number, columnIndex: number, onboardingArrow?: HTMLElement) {

@@ -7,6 +7,7 @@ export const enum TranslationKey {
   EXAMPLE_TRISKAIDEKAPHOBIA,
   WELCOME,
   GOAL,
+  GOAL_2,
   START_GAME,
   WIN,
   PLAY_AGAIN,

@@ -8,6 +8,7 @@ import { createDialog, Dialog } from "../dialog/dialog";
 import { CellElementObject, createCellElement } from "../game-field/cell-component";
 import { getChairsAtTable, getGuestsOnTable } from "../../logic/checks";
 import { globals } from "../../globals";
+import { getOnboardingData } from "../../logic/onboarding";
 
 let helpDialog: Dialog | undefined;
 
@@ -51,7 +52,9 @@ export function getMiniHelpContent(cell?: Cell): HTMLElement {
       cssClass: "welcome",
     });
 
-    const helpTexts = [getTranslation(TranslationKey.GOAL), getTranslation(TranslationKey.INFO_PLACEHOLDER)];
+    const goalText = getOnboardingData() ? getTranslation(TranslationKey.GOAL) : getTranslation(TranslationKey.GOAL_2);
+
+    const helpTexts = [goalText, getTranslation(TranslationKey.INFO_PLACEHOLDER)];
 
     helpText.innerHTML = helpTexts.map((text) => `<p>${text}</p>`).join("");
 

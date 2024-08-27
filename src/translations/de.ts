@@ -5,6 +5,7 @@ export const deTranslations: Record<TranslationKey, string> = {
   [TranslationKey.EXAMPLE_TRISKAIDEKAPHOBIA]: "<em class='t13a'>Triskaidekaphobie</em>: 13 dürfen nicht an einem Tisch sitzen.",
   [TranslationKey.WELCOME]: "Willkommen bei der Gesellschaft der Multiphobiker",
   [TranslationKey.GOAL]: "🏁 Platziere alle Emojis an den Tischen ohne ihre Phobien auszulösen.",
+  [TranslationKey.GOAL_2]: "🏁 Was für ein Chaos! Sortiere die Emojis um, bis alle Phobien aufgelöst sind.",
   [TranslationKey.START_GAME]: "Spiel starten",
   [TranslationKey.WIN]: "Gewonnen 🎉",
   [TranslationKey.PLAY_AGAIN]: "Nochmal spielen",
@@ -21,8 +22,6 @@ export const deTranslations: Record<TranslationKey, string> = {
 😱 Emojis fürchten sich vor bestimmten anderen Emojis. Klicke auf ein Emoji, um zu sehen, vor wem sie sich fürchten.
 
 1️⃣3️⃣🙀 Außerdem leiden alle Emojis an <em>Triskaidekaphobie</em>.
-
-🍽️ Die meisten Emojis sitzen bereits an den Tischen. Aber es könnte auch einige geben, die im Raum warten.
 
 😀 Wenn alle Emojis glücklich sind, hast du gewonnen! 🎉`,
   [TranslationKey.INFO_PLACEHOLDER]: "Wähle ein Emoji aus, um mehr darüber zu erfahren.",

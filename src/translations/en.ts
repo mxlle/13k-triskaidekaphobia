@@ -5,6 +5,7 @@ export const enTranslations: Record<TranslationKey, string> = {
   [TranslationKey.EXAMPLE_TRISKAIDEKAPHOBIA]: "<em class='t13a'>Triskaidekaphobia</em>: 13 must not be seated at a table.",
   [TranslationKey.WELCOME]: "Welcome to the Society of Multiphobics",
   [TranslationKey.GOAL]: "🏁 Seat all emojis at the tables without triggering any phobias.",
+  [TranslationKey.GOAL_2]: "🏁 What a mess! Re-sort the emojis at the tables until all phobias are resolved.",
   [TranslationKey.START_GAME]: "Start game",
   [TranslationKey.WIN]: "You win 🎉",
   [TranslationKey.PLAY_AGAIN]: "Play again",
@@ -21,8 +22,6 @@ export const enTranslations: Record<TranslationKey, string> = {
 😱 Emojis are afraid of certain other emojis. Click on an emoji to see who they are afraid of.
 
 1️⃣3️⃣🙀 Also all emojis suffer from <em>Triskaidekaphobia</em>.
-
-🍽️ Most emojis are already seated at the tables. But there might also be some waiting in the room.
 
 😀 If all emojis are happy, you win! 🎉`,
   [TranslationKey.INFO_PLACEHOLDER]: "Select an emoji to learn more about it.",
