@@ -55,7 +55,7 @@ export function createCellElement(cell: Cell, isInMiddle: boolean = false, isOnT
 
   const textElem = createElement({
     tag: "span",
-    cssClass: "text",
+    cssClass: "emoji",
     text: cell.person?.name ?? "",
   });
 

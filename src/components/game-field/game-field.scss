@@ -143,7 +143,7 @@ $border-style: outset;
   &.has-person {
     cursor: pointer;
 
-    .text {
+    .emoji {
       z-index: 1;
     }
   }
@@ -156,7 +156,7 @@ $border-style: outset;
       border-color: $warning-color;
     }
 
-    .text {
+    .emoji {
       animation: tremble 0.2s infinite;
       animation-iteration-count: 5;
       transform-origin: 50% 50%;
@@ -168,7 +168,7 @@ $border-style: outset;
   &.scary {
     z-index: 3;
 
-    .text {
+    .emoji {
       z-index: 3;
       animation: scary-pulse $scary-scale-props;
     }
@@ -177,7 +177,7 @@ $border-style: outset;
   &.scared:not(.scary) {
     z-index: 3;
 
-    .text {
+    .emoji {
       z-index: 1;
       animation: scared-pulse $scary-scale-props;
     }
