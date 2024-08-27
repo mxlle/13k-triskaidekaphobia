@@ -6,7 +6,6 @@ import {
   getGameFieldCopy,
   isChair,
   isEmptyChair,
-  isGuest,
   isTable,
   Person,
   PersonWithPosition,
@@ -18,18 +17,18 @@ import { getRandomIntFromInterval, shuffleArray } from "../utils/random-utils";
 import { getGuestsOnTable, getNeighbors } from "./checks";
 
 const baseField = (() => {
-  const { GUEST, EMPTY, TABLE, CHAIR } = getCellTypesWithoutPrefix();
+  const { _, T, c } = getCellTypesWithoutPrefix();
   return [
-    [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
-    [EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY],
-    [EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY],
-    [EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY],
-    [EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY],
-    [EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY],
-    [EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY],
-    [EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY],
-    [EMPTY, CHAIR, TABLE, CHAIR, EMPTY, EMPTY, CHAIR, TABLE, CHAIR, EMPTY],
-    [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, GUEST, EMPTY, EMPTY, EMPTY, GUEST],
+    [_, _, _, _, _, _, _, _, _, _],
+    [_, c, T, c, _, _, c, T, c, _],
+    [_, c, T, c, _, _, c, T, c, _],
+    [_, c, T, c, _, _, c, T, c, _],
+    [_, c, T, c, _, _, c, T, c, _],
+    [_, c, T, c, _, _, c, T, c, _],
+    [_, c, T, c, _, _, c, T, c, _],
+    [_, c, T, c, _, _, c, T, c, _],
+    [_, c, T, c, _, _, c, T, c, _],
+    [_, _, _, _, _, _, _, _, _, _],
   ];
 })();
 
@@ -80,7 +79,6 @@ function getGameFieldObject(type: CellType, row: number, column: number, onboard
     type,
     row,
     column,
-    content: isGuest(type) || isChair(type) ? CellType.EMPTY : type,
   };
 
   if (isChair(type) || isTable(type)) {

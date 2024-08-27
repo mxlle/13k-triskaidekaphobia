@@ -56,7 +56,7 @@ export function createCellElement(cell: Cell, isInMiddle: boolean = false, isOnT
   const textElem = createElement({
     tag: "span",
     cssClass: "text",
-    text: cell.content,
+    text: cell.person?.name ?? "",
   });
 
   if (!isTable(cell)) {
@@ -84,7 +84,7 @@ export function createCellElement(cell: Cell, isInMiddle: boolean = false, isOnT
 export function updateCell(cell: Cell, cellElementObject: CellElementObject) {
   const person: Person | undefined = cell.person;
 
-  cellElementObject.textElem.textContent = person?.name ?? cell.content;
+  cellElementObject.textElem.textContent = person?.name ?? "";
   cellElementObject.fearElem.textContent = person?.fear ?? null;
   cellElementObject.fearElem.classList.toggle("hidden", !person?.fear ?? false);
   cellElementObject.smallFearElem.textContent = person?.smallFear ?? null;

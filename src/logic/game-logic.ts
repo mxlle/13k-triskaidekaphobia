@@ -1,4 +1,4 @@
-import { Cell, CellType, isChair, isGuest } from "../types";
+import { Cell } from "../types";
 import { PubSubEvent, pubSubService } from "../utils/pub-sub-service";
 
 export function newGame() {
@@ -7,7 +7,6 @@ export function newGame() {
 
 export function moveGuest(fromCell: Cell, toCell: Cell) {
   const fromPerson = fromCell.person;
-  fromCell.content = isGuest(fromCell) || isChair(fromCell) ? CellType.EMPTY : fromCell.type;
   fromCell.person = undefined;
   toCell.person = fromPerson;
 }

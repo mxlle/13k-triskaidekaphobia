@@ -31,26 +31,26 @@ export interface OnboardingData {
 }
 // a 4 by 4 grid
 const onboardingField = (() => {
-  const { GUEST, EMPTY, TABLE, CHAIR } = getCellTypesWithoutPrefix();
+  const { _, T, c } = getCellTypesWithoutPrefix();
   return [
-    [EMPTY, CHAIR, TABLE, CHAIR],
-    [GUEST, EMPTY, EMPTY, EMPTY],
-    [EMPTY, EMPTY, EMPTY, EMPTY],
-    [EMPTY, CHAIR, TABLE, CHAIR],
+    [_, c, T, c],
+    [_, _, _, _],
+    [_, _, _, _],
+    [_, c, T, c],
   ];
 })();
 
 // a 7 by 7 grid
 const mediumField = (() => {
-  const { GUEST, EMPTY, TABLE, CHAIR } = getCellTypesWithoutPrefix();
+  const { _, T, c } = getCellTypesWithoutPrefix();
   return [
-    [EMPTY, EMPTY, EMPTY, GUEST, EMPTY, EMPTY, EMPTY],
-    [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
-    [CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR],
-    [CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR],
-    [CHAIR, TABLE, CHAIR, EMPTY, CHAIR, TABLE, CHAIR],
-    [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
-    [EMPTY, GUEST, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+    [_, _, _, _, _, _, _],
+    [_, _, _, _, _, _, _],
+    [c, T, c, _, c, T, c],
+    [c, T, c, _, c, T, c],
+    [c, T, c, _, c, T, c],
+    [_, _, _, _, _, _, _],
+    [_, _, _, _, _, _, _],
   ];
 })();
 

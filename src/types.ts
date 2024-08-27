@@ -1,11 +1,9 @@
 import { Phobia } from "./phobia";
 
 export const enum CellType {
-  GUEST = "👤",
   EMPTY = "",
   TABLE = "🟫",
   CHAIR = "🪑",
-  DOOR = "🚪",
 }
 
 export interface Settings {
@@ -23,7 +21,6 @@ interface CellPosition {
 export interface Cell extends CellPosition {
   type: CellType;
   tableIndex?: number;
-  content: CellType;
   person?: Person;
 }
 
@@ -53,8 +50,6 @@ export type GameFieldData = Cell[][];
 const getType = (typeOrObject: string | Cell) => (typeof typeOrObject === "string" ? typeOrObject : typeOrObject.type);
 
 export const isTable = (typeOrObject: string | Cell) => getType(typeOrObject) === CellType.TABLE;
-export const isGuest = (typeOrObject: string | Cell) => getType(typeOrObject) === CellType.GUEST;
-export const isDoor = (typeOrObject: string | Cell) => getType(typeOrObject) === CellType.DOOR;
 export const isChair = (typeOrObject: string | Cell) => getType(typeOrObject) === CellType.CHAIR;
 export const isEmpty = (typeOrObject: string | Cell) => getType(typeOrObject) === CellType.EMPTY;
 
@@ -78,10 +73,9 @@ export function pushCellIfNotInList(cell: Cell, list: Cell[]) {
 
 export function getCellTypesWithoutPrefix() {
   return {
-    GUEST: CellType.GUEST,
-    EMPTY: CellType.EMPTY,
-    TABLE: CellType.TABLE,
-    CHAIR: CellType.CHAIR,
+    _: CellType.EMPTY,
+    T: CellType.TABLE,
+    c: CellType.CHAIR,
   };
 }
 
