@@ -66,7 +66,7 @@ export function getGameFieldData(skipAssignment: boolean = false): GameFieldData
     if (onboardingData) {
       applySeatedCharacters(gameField, onboardingData.characters);
     } else {
-      const charactersForGame = generateCharactersForGame(getGameFieldCopy(gameField));
+      const charactersForGame = generateCharactersForGame(gameField);
       randomlyApplyCharactersOnBoard(gameField, charactersForGame, globals.settings.minInitialPanic);
     }
   }
@@ -92,19 +92,32 @@ function getGameFieldObject(type: CellType, row: number, column: number, onboard
   return obj;
 }
 
-function generateCharactersForGame(baseGameField: GameFieldData): Person[] {
+function generateCharactersForGame(baseGameField: GameFieldData, iteration: number = 0): Person[] {
+  const gameFieldCopy = getGameFieldCopy(baseGameField);
   const { minAmount, maxAmount, chanceForBigFear, chanceForSmallFear } = globals.settings;
   const amount = getRandomIntFromInterval(minAmount, maxAmount);
   const characters: Person[] = [];
 
   while (characters.length < amount) {
     const newPerson = generatePerson(chanceForBigFear, chanceForSmallFear);
-    const chair = findValidChair(baseGameField, newPerson);
+    const chair = findValidChair(gameFieldCopy, newPerson);
 
     if (chair) {
       characters.push(newPerson);
       chair.person = newPerson;
     }
+  }
+
+  const table1Guests = getGuestsOnTable(gameFieldCopy, 0);
+  const table2Guests = getGuestsOnTable(gameFieldCopy, 1);
+
+  if (table1Guests.length === 13 || table2Guests.length === 13) {
+    if (iteration < 10) {
+      console.info("triskaidekaphobia is triggered, recreating");
+      return generateCharactersForGame(baseGameField, iteration + 1);
+    }
+
+    console.warn("did not find valid gamefield after 10 iterations, might not be solvable");
   }
 
   return characters;
