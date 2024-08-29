@@ -85,7 +85,7 @@ $table-border: var(--table-border, $table-border-dark);
   }
 }
 
-@mixin selectable($bg-base: $alpha-base-dark, $alpha1: 0.2, $alpha2: 0.4, $skip-hover: false) {
+@mixin selectable($bg-base: $alpha-base-dark, $alpha: 0.3) {
   &:after {
     content: "";
     position: absolute;
@@ -93,7 +93,7 @@ $table-border: var(--table-border, $table-border-dark);
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(to bottom right, rgba($bg-base, $alpha1), rgba($bg-base, $alpha2));
+    background: rgba($bg-base, $alpha);
     pointer-events: none;
     animation: opacityBlink 1s infinite;
   }

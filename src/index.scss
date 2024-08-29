@@ -1,12 +1,5 @@
 @import "theme";
 
-:root {
-  --sat: env(safe-area-inset-top);
-  --sar: env(safe-area-inset-right);
-  --sab: env(safe-area-inset-bottom);
-  --sal: env(safe-area-inset-left);
-}
-
 html,
 body {
   height: 100%;
@@ -36,7 +29,6 @@ body {
   user-select: none;
   -webkit-tap-highlight-color: transparent;
   hyphens: auto;
-  overflow: hidden;
   display: grid;
   grid-template-rows: min-content 1fr;
 
@@ -46,8 +38,8 @@ body {
 }
 
 main {
-  height: 100%;
-  width: 100%;
+  // height: 100%;
+  // width: 100%;
   overflow: auto;
   display: grid;
   padding: 1rem;
@@ -63,7 +55,7 @@ main {
 header {
   display: flex;
   justify-content: space-between;
-  padding: max(0.5rem, var(--sat)) 1rem 0.5rem;
+  padding: 0.5rem 1rem;
   align-items: center;
   gap: 1rem;
 
@@ -88,7 +80,7 @@ button {
   }
 
   &.primary-btn {
-    border: 1px solid $main-color;
+    border-color: $main-color;
     background-color: rgba($main-color, 0.3);
 
     @include hover {

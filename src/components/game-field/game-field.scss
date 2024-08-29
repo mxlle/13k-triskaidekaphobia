@@ -12,8 +12,7 @@ $border-style: outset;
   margin: 0 auto;
   justify-content: center;
   height: fit-content;
-  --t-1: #{$tile-color-1};
-  --t-2: #{$tile-color-2};
+  --t: #{$tile-color-1};
 
   .row {
     display: contents;
@@ -21,16 +20,14 @@ $border-style: outset;
     &:nth-child(even) {
       .cell {
         &:nth-child(odd) {
-          --t-1: #{$tile-color-2};
-          --t-2: #{$tile-color-1};
+          --t: #{$tile-color-2};
         }
       }
     }
 
     &:nth-child(odd) {
       .cell:not(:nth-child(odd)) {
-        --t-1: #{$tile-color-2};
-        --t-2: #{$tile-color-1};
+        --t: #{$tile-color-2};
       }
     }
   }
@@ -45,13 +42,13 @@ $border-style: outset;
 }
 
 .cell {
-  background-color: var(--t-2);
-  border: 0.0625rem $border-style var(--t-1);
+  background-color: var(--t);
+  border: 2px dotted transparent;
   display: grid;
   place-items: center;
   position: relative;
-  width: 100%;
-  height: 100%;
+  // width: 100%;
+  // height: 100%;
 
   > span {
     grid-area: 1 / 1;
@@ -149,7 +146,6 @@ $border-style: outset;
   }
 
   &.panic {
-    border-width: 0.125rem;
     border-color: $danger-color;
 
     &:not(.chair) {
@@ -157,17 +153,13 @@ $border-style: outset;
     }
 
     .emoji {
-      animation: tremble 0.2s infinite;
-      animation-iteration-count: 5;
-      transform-origin: 50% 50%;
+      animation: tremble 0.2s 5;
     }
   }
 
   $scary-scale-props: 3s infinite step-end;
 
   &.scary {
-    z-index: 3;
-
     .emoji {
       z-index: 3;
       animation: scary-pulse $scary-scale-props;
@@ -175,10 +167,7 @@ $border-style: outset;
   }
 
   &.scared:not(.scary) {
-    z-index: 3;
-
     .emoji {
-      z-index: 1;
       animation: scared-pulse $scary-scale-props;
     }
   }
@@ -237,8 +226,7 @@ $border-style: outset;
   }
 
   // overlay a cross over the fear icon
-  &::before,
-  &::after {
+  &::before {
     content: "";
     position: absolute;
     width: 0.0625rem;
@@ -249,10 +237,6 @@ $border-style: outset;
   &::before {
     transform: rotate(45deg);
   }
-
-  &::after {
-    transform: rotate(45deg);
-  }
 }
 
 body {
@@ -261,7 +245,7 @@ body {
       &.chair:not(.has-person) {
         cursor: pointer;
 
-        @include selectable($success-color-light, 0.3, 0.5);
+        @include selectable($success-color-light);
       }
     }
   }
