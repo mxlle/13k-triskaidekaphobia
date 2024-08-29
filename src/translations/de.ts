@@ -13,8 +13,8 @@ export const deTranslations: Record<TranslationKey, string> = {
   [TranslationKey.CANCEL]: "Abbrechen",
   [TranslationKey.EXAMPLE_BIG_FEAR]: "Große <em>{0}</em>: {1} darf nicht am selben Tisch sitzen.",
   [TranslationKey.EXAMPLE_SMALL_FEAR]: "Kleine <em>{0}</em>: {1} darf nicht daneben oder gegenüber sitzen.",
-  [TranslationKey.INFO_BIG_FEAR]: "keine {0} am selben Tisch",
-  [TranslationKey.INFO_SMALL_FEAR]: "keine {0} daneben oder gegenüber",
+  [TranslationKey.INFO_BIG_FEAR]: "keine {0} am selben Tisch (A)",
+  [TranslationKey.INFO_SMALL_FEAR]: "keine {0} daneben oder gegenüber (B)",
   [TranslationKey.INFO_FOMO]: "einem Sitzplatz zugewiesen 🍽️",
   [TranslationKey.RULES]: "Regeln",
   [TranslationKey.RULES_CONTENT]: `🏁 Das Ziel ist es, alle Emojis an den Tischen zu platzieren, ohne dass sich jemand fürchtet.

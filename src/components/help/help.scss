@@ -60,6 +60,25 @@
       .chair-inner {
         display: none;
       }
+
+      .fear {
+        &::after {
+          content: "A) ←";
+          position: absolute;
+          left: 0;
+          font-size: 1.2rem;
+          bottom: 0;
+          white-space: nowrap;
+          transform: translateX(-100%);
+          padding: 0.5rem;
+        }
+
+        &.small:after {
+          content: "→ B)";
+          right: 0;
+          transform: translateX(100%);
+        }
+      }
     }
 
     &.table {
