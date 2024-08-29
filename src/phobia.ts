@@ -3,30 +3,37 @@ import { CellType, isChair } from "./types";
 
 export const ONBOARDING_PHOBIAS_EMOJIS = ["👴", "🤡", "🐸", "🐶", "💃", "🦋", "🐴", "🦐", "🐔"] as const;
 
-export const PHOBIAS_EMOJIS = [...ONBOARDING_PHOBIAS_EMOJIS, "🔢", "💰", "🎈", "🪞", "🍌", "☀️", "🧄", "📰", "🥇", "📚"] as const;
+export const OTHER_EMOJIS = ["🔢", "💰", "🎈", "🪞", "🍌", "☀️", "🧄", "📰", "🥇", "📚"] as const;
 
-export type Phobia = (typeof PHOBIAS_EMOJIS)[number];
+export const PHOBIAS_EMOJIS = [...ONBOARDING_PHOBIAS_EMOJIS, ...OTHER_EMOJIS];
+
+export type Indices<T extends readonly any[]> = Exclude<Partial<T>["length"], T["length"]>;
+
+export type OnboardingEmojiIndex = Indices<typeof ONBOARDING_PHOBIAS_EMOJIS>;
+export type OtherEmojiIndex = Indices<typeof OTHER_EMOJIS>;
+
+export type Phobia = (typeof ONBOARDING_PHOBIAS_EMOJIS)[OnboardingEmojiIndex] | (typeof OTHER_EMOJIS)[OtherEmojiIndex];
 
 const PhobiaNameMap: Record<Phobia, string> = {
-  "🔢": "Arithmophobia",
-  "💰": "Plutophobia",
-  "🎈": "Globophobia",
-  "🪞": "Eisoptrophobia",
   "👴": "Peladphobia",
   "🤡": "Coulrophobia",
-  "🍌": "Bananaphobia",
-  "☀️": "Heliophobia",
-  "🧄": "Alliumphobia",
-  "📰": "Chloephobia",
   "🐸": "Ranidaphobia",
   "🐶": "Cynophobia",
-  "🥇": "Aurophobia",
-  "📚": "Bibliophobia",
   "💃": "Chorophobia",
   "🦋": "Lepidopterophobia",
   "🐴": "Equinophobia",
   "🦐": "Ostraconophobia",
   "🐔": "Alektorophobia",
+  "🔢": "Arithmophobia",
+  "💰": "Plutophobia",
+  "🎈": "Globophobia",
+  "🪞": "Eisoptrophobia",
+  "🍌": "Bananaphobia",
+  "☀️": "Heliophobia",
+  "🧄": "Alliumphobia",
+  "📰": "Chloephobia",
+  "🥇": "Aurophobia",
+  "📚": "Bibliophobia",
 };
 
 export function getPhobiaName(phobia: Phobia | CellType.CHAIR | undefined, isGerman: boolean = false): string {

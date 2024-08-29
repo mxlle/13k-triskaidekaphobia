@@ -1,36 +1,10 @@
-import {
-  Cell,
-  CellType,
-  GameFieldData,
-  getCellTypesWithoutPrefix,
-  getGameFieldCopy,
-  isChair,
-  isEmptyChair,
-  isTable,
-  Person,
-  PersonWithPosition,
-} from "../types";
+import { Cell, CellType, GameFieldData, getGameFieldCopy, isChair, isEmptyChair, isTable, Person, PersonWithPosition } from "../types";
 import { getRandomPhobia, getRandomPhobiaExcluding, Phobia } from "../phobia";
 import { getOnboardingData, OnboardingData } from "./onboarding";
 import { globals } from "../globals";
 import { getRandomIntFromInterval, shuffleArray } from "../utils/random-utils";
 import { checkTableStates, getAllGuests, getGuestsOnTable, getNeighbors } from "./checks";
-
-const baseField = (() => {
-  const { _, T, c } = getCellTypesWithoutPrefix();
-  return [
-    [_, _, _, _, _, _, _, _, _, _],
-    [_, c, T, c, _, _, c, T, c, _],
-    [_, c, T, c, _, _, c, T, c, _],
-    [_, c, T, c, _, _, c, T, c, _],
-    [_, c, T, c, _, _, c, T, c, _],
-    [_, c, T, c, _, _, c, T, c, _],
-    [_, c, T, c, _, _, c, T, c, _],
-    [_, c, T, c, _, _, c, T, c, _],
-    [_, c, T, c, _, _, c, T, c, _],
-    [_, _, _, _, _, _, _, _, _, _],
-  ];
-})();
+import { baseField } from "./base-field";
 
 export function getGameFieldData(skipAssignment: boolean = false): GameFieldData {
   let field = baseField;
