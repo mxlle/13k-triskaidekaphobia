@@ -55,6 +55,8 @@ export async function initializeEmptyGameField() {
 export async function startNewGame() {
   document.body.classList.remove("selecting");
   hasMadeFirstMove = false;
+  clickedCell = undefined;
+  lastClickedCell = undefined;
 
   if (globals.gameFieldData.length && gameFieldElem) {
     // reset old game field
