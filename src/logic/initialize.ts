@@ -14,7 +14,7 @@ import { getRandomPhobia, getRandomPhobiaExcluding, Phobia } from "../phobia";
 import { getOnboardingData, OnboardingData } from "./onboarding";
 import { globals } from "../globals";
 import { getRandomIntFromInterval, shuffleArray } from "../utils/random-utils";
-import { getGuestsOnTable, getNeighbors } from "./checks";
+import { checkTableStates, getAllGuests, getGuestsOnTable, getNeighbors } from "./checks";
 
 const baseField = (() => {
   const { _, T, c } = getCellTypesWithoutPrefix();
@@ -67,7 +67,7 @@ export function getGameFieldData(skipAssignment: boolean = false): GameFieldData
       applySeatedCharacters(gameField, onboardingData.characters);
     } else {
       const charactersForGame = generateCharactersForGame(getGameFieldCopy(gameField));
-      randomlyApplyCharactersOnBoard(gameField, charactersForGame);
+      randomlyApplyCharactersOnBoard(gameField, charactersForGame, globals.settings.minInitialPanic);
     }
   }
 
@@ -172,12 +172,28 @@ function generatePerson(chanceForBigFear: number, chanceForSmallFear: number): P
   };
 }
 
-function randomlyApplyCharactersOnBoard(gameFieldData: GameFieldData, characters: Person[]) {
+function randomlyApplyCharactersOnBoard(
+  gameFieldData: GameFieldData,
+  characters: Person[],
+  minInitialPanic: number,
+  iteration: number = 0,
+) {
+  const copyOfCharacters = [...characters];
   const allChairs = gameFieldData.flat().filter(isEmptyChair);
-  const shuffledRequiredChairs = shuffleArray(allChairs).slice(0, characters.length);
+  const shuffledRequiredChairs = shuffleArray(allChairs).slice(0, copyOfCharacters.length);
   shuffledRequiredChairs.forEach((chair: Cell) => {
-    chair.person = characters.pop();
+    chair.person = copyOfCharacters.pop();
   });
+
+  checkTableStates(gameFieldData);
+  const allGuests = getAllGuests(gameFieldData);
+  const numAfraid = allGuests.filter((cell) => cell.person.hasPanic).length;
+
+  if (numAfraid < minInitialPanic && iteration < 10) {
+    console.info("not afraid enough, reshuffling");
+    allGuests.forEach((cell) => (cell.person = undefined));
+    randomlyApplyCharactersOnBoard(gameFieldData, characters, minInitialPanic, iteration + 1);
+  }
 }
 
 function applySeatedCharacters(gameFieldData: GameFieldData, characters: PersonWithPosition[]) {

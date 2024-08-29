@@ -11,6 +11,7 @@ export interface Settings {
   maxAmount: number;
   chanceForBigFear: number;
   chanceForSmallFear: number;
+  minInitialPanic: number;
 }
 
 interface CellPosition {

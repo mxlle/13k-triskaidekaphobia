@@ -17,6 +17,7 @@ const defaultSettings: Settings = {
   maxAmount: 27,
   chanceForBigFear: 0.6,
   chanceForSmallFear: 0.6,
+  minInitialPanic: 4,
 };
 
 const defaultGlobals: GameGlobals = {
