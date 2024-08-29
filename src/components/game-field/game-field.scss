@@ -43,7 +43,7 @@ $border-style: outset;
 
 .cell {
   background-color: var(--t);
-  border: 2px dotted transparent;
+  border: 0.125rem dotted transparent;
   display: grid;
   place-items: center;
   position: relative;
