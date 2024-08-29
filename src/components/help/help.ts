@@ -134,8 +134,12 @@ export function getMiniHelpContent(cell?: Cell): HTMLElement {
 function getSatisfactionStats(cell: OccupiedCell): HTMLElement {
   const isTriskaidekaphobia = cell.person.triskaidekaphobia;
   const hasChair = isChair(cell.type);
-  const noBigFear = cell.person.afraidOf.filter((otherCell) => cell.person.fear === otherCell.person.name).length === 0;
-  const noSmallFear = cell.person.afraidOf.filter((otherCell) => cell.person.smallFear === otherCell.person.name).length === 0;
+  const noBigFear = !hasChair
+    ? undefined
+    : cell.person.afraidOf.filter((otherCell) => cell.person.fear === otherCell.person.name).length === 0;
+  const noSmallFear = !hasChair
+    ? undefined
+    : cell.person.afraidOf.filter((otherCell) => cell.person.smallFear === otherCell.person.name).length === 0;
 
   const satisfactionStats = createElement({
     cssClass: "satisfaction-stats",
@@ -164,10 +168,10 @@ function getSatisfactionStats(cell: OccupiedCell): HTMLElement {
     .filter(({ phobia }) => !!phobia)
     .forEach(({ satisfied, explainText }) => {
       const stat = createElement({
-        cssClass: `stat ${satisfied ? "satisfied" : "unsatisfied"}`,
+        cssClass: `stat${satisfied !== undefined ? (satisfied ? " satisfied" : " unsatisfied") : ""}`,
       });
 
-      const elems = [satisfied ? "✔" : "X", explainText];
+      const elems = [satisfied !== undefined ? (satisfied ? "✔" : "X") : "?", explainText];
 
       stat.innerHTML = elems.map((content) => `<span>${content}</span>`).join("");
 
