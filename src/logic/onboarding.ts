@@ -1,4 +1,4 @@
-import { getRandomPhobia, getRandomPhobiaExcluding, ONBOARDING_PHOBIAS_EMOJIS, OnboardingEmojiIndex } from "../phobia";
+import { ONBOARDING_PHOBIAS_EMOJIS, OnboardingEmojiIndex } from "../phobia";
 import { CellType, getCellTypesWithoutPrefix, PersonWithPosition } from "../types";
 import { globals } from "../globals";
 import { LocalStorageKey, setLocalStorageItem } from "../utils/local-storage";
@@ -104,36 +104,15 @@ export function increaseOnboardingStepIfApplicable() {
 const onboardingPhobias = [...ONBOARDING_PHOBIAS_EMOJIS];
 
 function getOnboardingDataForIntro(): OnboardingData {
-  const ob1 = getRandomPhobia(onboardingPhobias);
-  const ob2 = getRandomPhobiaExcluding([ob1], onboardingPhobias);
-  const ob3 = getRandomPhobiaExcluding([ob1, ob2], onboardingPhobias);
-  const onboardingCharacters: PersonWithPosition[] = [
-    {
-      name: ob1,
-      fear: ob2,
-      smallFear: undefined,
-      row: 1,
-      column: 0,
-    },
-    {
-      name: ob2,
-      fear: undefined,
-      smallFear: undefined,
-      row: 0,
-      column: 3,
-    },
-    {
-      name: ob3,
-      fear: undefined,
-      smallFear: undefined,
-      row: 3,
-      column: 3,
-    },
+  const short: ShortCharacterDefinition[] = [
+    [0, 1, -1, 1, 0],
+    [1, -1, -1, 0, 3],
+    [2, -1, -1, 3, 3],
   ];
 
   return {
     field: onboardingField,
-    characters: onboardingCharacters,
+    characters: getPersonsWithPositionFromShortDescription(short),
     tableHeight: 1,
     isTableMiddle: (rowIndex) => rowIndex === 0 || rowIndex === 3,
     getTableIndex: (row, _column) => {
@@ -148,52 +127,17 @@ function getOnboardingDataForIntro(): OnboardingData {
 }
 
 function getOnboardingDataForBothPhobias(): OnboardingData {
-  const ob1 = getRandomPhobia(onboardingPhobias);
-  const ob2 = getRandomPhobiaExcluding([ob1], onboardingPhobias);
-  const ob3 = getRandomPhobiaExcluding([ob1, ob2], onboardingPhobias);
-  const ob4 = getRandomPhobiaExcluding([ob1, ob2, ob3], onboardingPhobias);
-  const ob5 = getRandomPhobiaExcluding([ob1, ob2, ob3, ob4], onboardingPhobias);
-  const onboardingCharacters: PersonWithPosition[] = [
-    {
-      name: ob1,
-      fear: ob2,
-      smallFear: ob3,
-      row: 0,
-      column: 3,
-    },
-    {
-      name: ob2,
-      fear: undefined,
-      smallFear: undefined,
-      row: 2,
-      column: 0,
-    },
-    {
-      name: ob4,
-      fear: undefined,
-      smallFear: undefined,
-      row: 4,
-      column: 6,
-    },
-    {
-      name: ob3,
-      fear: ob2,
-      smallFear: undefined,
-      row: 2,
-      column: 4,
-    },
-    {
-      name: ob5,
-      fear: undefined,
-      smallFear: undefined,
-      row: 3,
-      column: 2,
-    },
+  const short: ShortCharacterDefinition[] = [
+    [0, 1, 2, 0, 3],
+    [1, -1, -1, 2, 0],
+    [2, 1, -1, 2, 4],
+    [3, -1, -1, 4, 6],
+    [4, -1, -1, 3, 2],
   ];
 
   return {
     field: mediumField,
-    characters: onboardingCharacters,
+    characters: getPersonsWithPositionFromShortDescription(short),
     tableHeight: 3,
     isTableMiddle: (rowIndex) => rowIndex === 3,
     getTableIndex: (_row, column) => {
