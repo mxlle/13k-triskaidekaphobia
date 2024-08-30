@@ -22,7 +22,9 @@ export default {
     svg(),
     typescript(),
     nodeResolve(),
-    styles(),
+    styles({
+      minimize: production,
+    }),
     production &&
       terser({
         mangle: {
