@@ -63,19 +63,19 @@
 
       .fear {
         &::after {
-          content: "A) ←";
+          content: "A ―";
           position: absolute;
-          left: 0;
+          left: 0.25rem;
           font-size: 1.2rem;
           bottom: 0;
           white-space: nowrap;
           transform: translateX(-100%);
-          padding: 0.5rem;
+          padding: 0.5rem 0;
         }
 
         &.small:after {
-          content: "→ B)";
-          right: 0;
+          content: "― B";
+          right: 0.25rem;
           transform: translateX(100%);
         }
       }
