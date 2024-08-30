@@ -159,10 +159,10 @@ function getOnboardingDataForBothPhobias(): OnboardingData {
 function getOnboardingDataForTriskaidekaphobia(): OnboardingData {
   // there are 9 different emojis in the onboarding, so the nameIndex is 0-8, same for the fears, we then repeat some
   const onboardingCharacters: ShortCharacterDefinition[] = [
-    [0, 2, 4, 0, 4],
+    [0, 1, 4, 0, 4],
     [1, 4, -1, 2, 1],
     [1, -1, -1, 3, 1],
-    [2, 5, -1, 4, 1],
+    [2, -1, -1, 4, 1],
     [2, -1, -1, 5, 1],
     [3, -1, 6, 6, 1],
     [3, -1, -1, 7, 1],
@@ -174,7 +174,7 @@ function getOnboardingDataForTriskaidekaphobia(): OnboardingData {
     [3, -1, -1, 7, 3],
     [4, -1, 0, 2, 6],
     [4, -1, 6, 3, 6],
-    [5, 1, -1, 4, 6],
+    [5, -1, -1, 4, 6],
     [5, -1, -1, 5, 6],
     [6, 2, -1, 6, 6],
     [6, -1, -1, 7, 6],
