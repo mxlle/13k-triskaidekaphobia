@@ -4,7 +4,7 @@ import { createButton, createElement } from "../../utils/html-utils";
 import { moveGuest, newGame } from "../../logic/game-logic";
 import { Cell, GameFieldData, hasPerson, isChair, isSameCell, isTable } from "../../types";
 import { createWinScreen } from "../win-screen/win-screen";
-import { CellElementObject, createCellElement, updateCell } from "./cell-component";
+import { createCellElement, updateCellOccupancy } from "./cell-component";
 import { getTranslation, TranslationKey } from "../../translations/i18n";
 import { globals } from "../../globals";
 import { requestAnimationFrameWithTimeout } from "../../utils/promise-utils";
@@ -22,7 +22,7 @@ let miniHelp: HTMLElement | undefined;
 let clickedCell: Cell | undefined;
 let lastClickedCell: Cell | undefined;
 let hasMadeFirstMove = false;
-const cellElements: CellElementObject[][] = [];
+const cellElements: HTMLElement[][] = [];
 
 const TIMEOUT_BETWEEN_GAMES = 300;
 const TIMEOUT_CELL_APPEAR = 30;
@@ -113,7 +113,6 @@ function cellClickHandler(rowIndex: number, columnIndex: number, onboardingArrow
   }
 
   const cell = globals.gameFieldData[rowIndex][columnIndex];
-  const cellElementObject = getCellElementObject(cell);
 
   if (onboardingArrow) {
     onboardingArrow.remove();
@@ -134,7 +133,7 @@ function cellClickHandler(rowIndex: number, columnIndex: number, onboardingArrow
   }
 
   if (clickedCell) {
-    const clickedCellElementObject = getCellElementObject(clickedCell);
+    const clickedCellElement = getCellElement(clickedCell);
 
     if (isSameCell(clickedCell, cell)) {
       resetSelection(cell);
@@ -143,15 +142,15 @@ function cellClickHandler(rowIndex: number, columnIndex: number, onboardingArrow
     }
 
     if (hasPerson(cell)) {
-      clickedCellElementObject.elem.classList.remove("selected");
+      clickedCellElement.classList.remove("selected");
       clickedCell = cell;
       updateStateForSelection(globals.gameFieldData, clickedCell);
       return;
     }
 
     moveGuest(clickedCell, cell);
-    updateCell(clickedCell, clickedCellElementObject);
-    updateCell(cell, cellElementObject);
+    updateCellOccupancy(clickedCell, clickedCellElement);
+    updateCellOccupancy(cell, getCellElement(cell));
     const hasWon = updateState(globals.gameFieldData);
     resetSelection(cell, !hasWon);
   } else {
@@ -162,20 +161,17 @@ function cellClickHandler(rowIndex: number, columnIndex: number, onboardingArrow
   document.body.classList.toggle("selecting", !!clickedCell);
 }
 
-export function getCellElementObject(cell: Cell): CellElementObject {
+export function getCellElement(cell: Cell): HTMLElement {
   return cellElements[cell.row]?.[cell.column];
 }
 
 function resetSelection(cell: Cell, keepMiniHelp = false) {
-  const cellElementObject = getCellElementObject(cell);
-  const clickedCellElementObject = getCellElementObject(clickedCell);
-
   if (clickedCell) {
-    clickedCellElementObject.elem.classList.remove("selected");
+    getCellElement(clickedCell).classList.remove("selected");
     clickedCell = undefined;
   }
 
-  cellElementObject.elem.classList.remove("selected");
+  getCellElement(cell).classList.remove("selected");
 
   document.body.classList.remove("selecting");
 
@@ -220,7 +216,7 @@ export function generateGameFieldElement(gameFieldData: GameFieldData) {
     : (rowIndex: number) => rowIndex === Math.ceil(gameFieldData.length / 2) - 1;
 
   gameFieldData.forEach((row, rowIndex) => {
-    const rowElements: CellElementObject[] = [];
+    const rowElements: HTMLElement[] = [];
     const rowElem = createElement({
       cssClass: "row",
     });
@@ -230,21 +226,21 @@ export function generateGameFieldElement(gameFieldData: GameFieldData) {
       const isInMiddle = isTableMiddle(rowIndex);
       const leftNeighbor = columnIndex > 0 ? gameFieldData[rowIndex][columnIndex - 1] : undefined;
       const isOnTheRightOfATable = leftNeighbor ? isTable(leftNeighbor) : false;
-      const cellElementObject = createCellElement(cell, isInMiddle, isOnTheRightOfATable);
+      const cellElement = createCellElement(cell, isInMiddle, isOnTheRightOfATable);
 
       let arrow: HTMLElement | undefined;
 
       if (onboardingData?.arrow && onboardingData.arrow.row === rowIndex && onboardingData.arrow.column === columnIndex) {
         arrow = getOnboardingArrow(onboardingData.arrow.direction);
-        cellElementObject.elem.append(arrow);
+        cellElement.append(arrow);
       }
 
-      cellElementObject.elem.addEventListener("click", () => {
+      cellElement.addEventListener("click", () => {
         cellClickHandler(rowIndex, columnIndex, arrow);
       });
 
-      rowElem.append(cellElementObject.elem);
-      rowElements.push(cellElementObject);
+      rowElem.append(cellElement);
+      rowElements.push(cellElement);
     });
 
     cellElements.push(rowElements);
@@ -257,10 +253,13 @@ export async function updateGameFieldElement(gameFieldData: GameFieldData) {
   const flatGameFieldData = gameFieldData.flat();
 
   for (let i = 0; i < flatGameFieldData.length; i++) {
+    const previousCellElement = cellElements.flat()[i];
+    const hadPerson = previousCellElement.classList.contains("has-person");
+
     const cell: Cell = flatGameFieldData[i];
-    const cellElementObject = getCellElementObject(cell);
-    const hadPerson = cellElementObject.elem.classList.contains("has-person");
-    updateCell(cell, cellElementObject);
+
+    updateCellOccupancy(cell, getCellElement(cell));
+
     if (hasPerson(cell) || hadPerson) {
       await requestAnimationFrameWithTimeout(TIMEOUT_CELL_APPEAR);
     }
@@ -269,51 +268,51 @@ export async function updateGameFieldElement(gameFieldData: GameFieldData) {
 
 export async function updatePanicStates(gameFieldData: GameFieldData, panickedTableCells: Cell[]) {
   gameFieldData.flat().forEach((cell) => {
-    const cellElementObject = getCellElementObject(cell);
-    cellElementObject.elem.classList.remove("scary");
-    cellElementObject.elem.classList.remove("scared");
-    cellElementObject.elem.classList.remove("t13a");
-    cellElementObject.elem.classList.remove("panic");
+    const cellElement = getCellElement(cell);
+    cellElement.classList.remove("scary");
+    cellElement.classList.remove("scared");
+    cellElement.classList.remove("t13a");
+    cellElement.classList.remove("panic");
   });
 
   await requestAnimationFrameWithTimeout(0); // to trigger restart of tremble animation
 
   getAllGuests(gameFieldData).forEach((cell) => {
-    const cellElementObject = getCellElementObject(cell);
+    const cellElement = getCellElement(cell);
     const hasPanic = cell.person.hasPanic || !isChair(cell);
-    cellElementObject.elem.classList.toggle("panic", hasPanic);
+    cellElement.classList.toggle("panic", hasPanic);
   });
 
   panickedTableCells.forEach((cell) => {
-    const cellElementObject = getCellElementObject(cell);
-    cellElementObject.elem.classList.add("t13a");
+    const cellElement = getCellElement(cell);
+    cellElement.classList.add("t13a");
   });
 }
 
 export function updateStateForSelection(gameFieldData: GameFieldData, selectedCell: Cell | undefined) {
   gameFieldData.flat().forEach((cell) => {
-    const cellElementObject = getCellElementObject(cell);
-    cellElementObject.elem.classList.remove("scary");
-    cellElementObject.elem.classList.remove("scared");
+    const cellElement = getCellElement(cell);
+    cellElement.classList.remove("scary");
+    cellElement.classList.remove("scared");
   });
 
   if (!selectedCell) {
     return;
   }
 
-  const selectedCellElementObject = getCellElementObject(selectedCell);
+  const selectedCellElement = getCellElement(selectedCell);
 
-  selectedCellElementObject.elem.classList.add("selected");
+  selectedCellElement.classList.add("selected");
 
   if (!hasPerson(selectedCell)) {
     return;
   }
 
   selectedCell.person.afraidOf.forEach((afraidOf) => {
-    getCellElementObject(afraidOf).elem.classList.add("scary");
+    getCellElement(afraidOf).classList.add("scary");
   });
 
   selectedCell.person.makesAfraid.forEach((makesAfraid) => {
-    getCellElementObject(makesAfraid).elem.classList.add("scared");
+    getCellElement(makesAfraid).classList.add("scared");
   });
 }

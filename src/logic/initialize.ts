@@ -1,10 +1,22 @@
-import { Cell, CellType, GameFieldData, getGameFieldCopy, isChair, isEmptyChair, isTable, Person, PersonWithPosition } from "../types";
+import {
+  BasePerson,
+  Cell,
+  CellType,
+  GameFieldData,
+  getGameFieldCopy,
+  isChair,
+  isEmptyChair,
+  isTable,
+  Person,
+  PersonWithPosition,
+} from "../types";
 import { getRandomPhobia, getRandomPhobiaExcluding, Phobia } from "../phobia";
 import { getOnboardingData, OnboardingData } from "./onboarding";
 import { globals } from "../globals";
 import { getRandomIntFromInterval, shuffleArray } from "../utils/random-utils";
 import { checkTableStates, getAllGuests, getGuestsOnTable, getNeighbors } from "./checks";
 import { baseField } from "./base-field";
+import { createPersonElement } from "../components/game-field/cell-component";
 
 export function getGameFieldData(skipAssignment: boolean = false): GameFieldData {
   let field = baseField;
@@ -148,14 +160,19 @@ function generatePerson(chanceForBigFear: number, chanceForSmallFear: number): P
     smallFear = getRandomPhobiaExcluding([name, fear]);
   }
 
-  return {
+  const basePerson: BasePerson = {
     name,
     fear,
     smallFear,
+  };
+
+  return {
+    ...basePerson,
     hasPanic: false,
     triskaidekaphobia: false,
     afraidOf: [],
     makesAfraid: [],
+    personElement: createPersonElement(basePerson),
   };
 }
 
@@ -191,6 +208,7 @@ function applySeatedCharacters(gameFieldData: GameFieldData, characters: PersonW
       hasPanic: false,
       afraidOf: [],
       makesAfraid: [],
+      personElement: createPersonElement(character),
     };
   });
 }

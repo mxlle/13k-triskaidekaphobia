@@ -5,7 +5,7 @@ import { getTranslation, isGermanLanguage, TranslationKey } from "../../translat
 import { Cell, CellType, hasPerson, isChair, isEmpty, isTable, OccupiedCell } from "../../types";
 import { getPhobiaName, Phobia } from "../../phobia";
 import { createDialog, Dialog } from "../dialog/dialog";
-import { CellElementObject, createCellElement } from "../game-field/cell-component";
+import { createCellElement, createPersonElement, updateCellOccupancy } from "../game-field/cell-component";
 import { getChairsAtTable, getGuestsOnTable } from "../../logic/checks";
 import { globals } from "../../globals";
 import { getOnboardingData } from "../../logic/onboarding";
@@ -36,7 +36,7 @@ export function openHelp() {
 }
 
 export function getMiniHelpContent(cell?: Cell): HTMLElement {
-  const name = (cell?.person?.name ?? cell?.type ?? "<?>") || "[ ]";
+  // const name = (cell?.person?.name ?? cell?.type ?? "<?>") || "[ ]";
   const isEmptyState = !cell;
 
   const miniHelpContent = createElement({
@@ -69,13 +69,17 @@ export function getMiniHelpContent(cell?: Cell): HTMLElement {
 
     return miniHelpContent;
   }
-  let helpCellElementObject: CellElementObject | undefined;
+  let helpCellElement: HTMLElement | undefined;
   let statsElem: HTMLElement | undefined;
 
   if (hasPerson(cell)) {
     statsElem = getSatisfactionStats(cell);
 
-    helpCellElementObject = createCellElement(cell);
+    helpCellElement = createCellElement(cell);
+    updateCellOccupancy(cell, helpCellElement);
+    const personElement = createPersonElement(cell.person);
+    helpCellElement.append(personElement);
+    helpCellElement.classList.toggle("has-person", true);
     const { fear, smallFear } = cell.person;
 
     const isGerman = isGermanLanguage();
@@ -93,7 +97,7 @@ export function getMiniHelpContent(cell?: Cell): HTMLElement {
       .map((text) => `<p>${text}</p>`)
       .join("");
   } else {
-    helpCellElementObject = createCellElement(cell, true);
+    helpCellElement = createCellElement(cell, true);
 
     if (isTable(cell)) {
       const tableIndex = cell.tableIndex ?? 0;
@@ -107,7 +111,7 @@ export function getMiniHelpContent(cell?: Cell): HTMLElement {
 
       if (occupancy === 13) {
         helpTexts.push("😱😱😱");
-        helpCellElementObject.elem.classList.add("t13a");
+        helpCellElement.classList.add("t13a");
       }
 
       helpText.innerHTML = helpTexts.map((text) => `<p>${text}</p>`).join("");
@@ -118,8 +122,8 @@ export function getMiniHelpContent(cell?: Cell): HTMLElement {
     }
   }
 
-  if (helpCellElementObject) {
-    miniHelpContent.append(helpCellElementObject.elem);
+  if (helpCellElement) {
+    miniHelpContent.append(helpCellElement);
   }
 
   if (statsElem) {

@@ -29,7 +29,7 @@ export interface OccupiedCell extends Cell {
   person: Person;
 }
 
-interface BasePerson {
+export interface BasePerson {
   name: Phobia;
   fear: Phobia | undefined;
   smallFear: Phobia | undefined;
@@ -40,6 +40,7 @@ export interface Person extends BasePerson {
   triskaidekaphobia: boolean;
   afraidOf: OccupiedCell[];
   makesAfraid: OccupiedCell[];
+  personElement: HTMLElement;
 }
 
 export interface PersonWithPosition extends BasePerson, CellPosition {}
