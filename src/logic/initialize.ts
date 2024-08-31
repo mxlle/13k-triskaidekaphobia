@@ -68,7 +68,7 @@ function getGameFieldObject(type: CellType, row: number, column: number, onboard
   };
 
   if (isChair(type) || isTable(type)) {
-    obj.tableIndex = column > 4 ? 1 : 0;
+    obj.tableIndex = column > 3 ? 1 : 0;
 
     if (onboardingData) {
       obj.tableIndex = onboardingData.getTableIndex(row, column);

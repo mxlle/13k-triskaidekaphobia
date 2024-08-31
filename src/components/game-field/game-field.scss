@@ -13,6 +13,7 @@ $border-style: outset;
   justify-content: center;
   height: fit-content;
   --t: #{$tile-color-1};
+  border: calc(var(--s-size) / 4) solid var(--t);
 
   .row {
     display: contents;
