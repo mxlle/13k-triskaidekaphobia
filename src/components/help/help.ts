@@ -76,7 +76,7 @@ export function getMiniHelpContent(cell?: Cell): HTMLElement {
     statsElem = getSatisfactionStats(cell);
 
     helpCellElement = createCellElement(cell);
-    updateCellOccupancy(cell, helpCellElement);
+    updateCellOccupancy(cell, helpCellElement, true);
     const personElement = createPersonElement(cell.person);
     helpCellElement.append(personElement);
     helpCellElement.classList.toggle("has-person", true);

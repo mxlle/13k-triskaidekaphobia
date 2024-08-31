@@ -47,13 +47,12 @@ export function createCellElement(cell: Cell, isInMiddle: boolean = false, isOnT
   return cellElem;
 }
 
-export function updateCellOccupancy(cell: Cell, cellElement: HTMLElement): void {
+export function updateCellOccupancy(cell: Cell, cellElement: HTMLElement, shouldCopyPerson: boolean = false): void {
   const person: Person | undefined = cell.person;
 
-  // cellElement.children[1]?.remove(); // todo - improve this
-
   if (person) {
-    cellElement.append(person.personElement);
+    const personElement = shouldCopyPerson ? person.personElement.cloneNode(true) : person.personElement;
+    cellElement.append(personElement);
   }
 
   cellElement.classList.toggle("has-person", hasPerson(cell));
