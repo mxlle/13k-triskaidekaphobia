@@ -12,7 +12,7 @@ import { getGameFieldData } from "../../logic/initialize";
 import { checkTableStates, getAllGuests, getHappyStats } from "../../logic/checks";
 import { PubSubEvent, pubSubService } from "../../utils/pub-sub-service";
 import { handlePokiCommercial, pokiSdk } from "../../poki-integration";
-import { getOnboardingData, isOnboarding, OnboardingData, wasOnboarding } from "../../logic/onboarding";
+import { getOnboardingData, OnboardingData, wasOnboarding } from "../../logic/onboarding";
 import { getMiniHelpContent } from "../help/help";
 import { getOnboardingArrow } from "../onboarding/onboarding-components";
 
@@ -196,8 +196,7 @@ function updateState(gameFieldData: Cell[][], skipWinCheck = false): boolean {
   const { hasWon } = getHappyStats(gameFieldData);
 
   if (hasWon && !skipWinCheck) {
-    const submitKey = isOnboarding() ? TranslationKey.CONTINUE : TranslationKey.PLAY_AGAIN;
-    createWinScreen(submitKey);
+    createWinScreen();
 
     pokiSdk.gameplayStop();
   }

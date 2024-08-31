@@ -30,4 +30,9 @@ export const deTranslations: Record<TranslationKey, string> = {
   [TranslationKey.INFO_TABLE_OCCUPANCY]: "Belegung: {0}/{1} 🪑",
   [TranslationKey.INFO_DECOR]: "Dekoration",
   [TranslationKey.INFO_EMPTY]: "Leeres Feld. Jemand kann hier warten.",
+  [TranslationKey.DIFFICULTY]: "Schwierigkeit",
+  [TranslationKey.DIFFICULTY_EASY]: "Leicht",
+  [TranslationKey.DIFFICULTY_MEDIUM]: "Mittel",
+  [TranslationKey.DIFFICULTY_HARD]: "Schwer",
+  [TranslationKey.DIFFICULTY_EXTREME]: "Extrem",
 };

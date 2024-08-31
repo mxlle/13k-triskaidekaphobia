@@ -1,5 +1,6 @@
 import { GameFieldData, Settings } from "./types";
 import { getLocalStorageItem, LocalStorageKey } from "./utils/local-storage";
+import { Difficulty, difficultySettings } from "./logic/difficulty";
 
 interface GameGlobals {
   previousOnboardingStep: number | undefined;
@@ -8,17 +9,12 @@ interface GameGlobals {
   gameFieldData: GameFieldData;
   language: string;
   settings: Settings;
+  difficulty: Difficulty;
 }
 
 const onboardingStepSetting = getLocalStorageItem(LocalStorageKey.ONBOARDING_STEP);
 
-const defaultSettings: Settings = {
-  minAmount: 18,
-  maxAmount: 27,
-  chanceForBigFear: 0.6,
-  chanceForSmallFear: 0.6,
-  minInitialPanic: 4,
-};
+const defaultSettings: Settings = difficultySettings[Difficulty.EASY];
 
 const defaultGlobals: GameGlobals = {
   previousOnboardingStep: undefined,
@@ -27,6 +23,7 @@ const defaultGlobals: GameGlobals = {
   gameFieldData: [],
   language: "en",
   settings: defaultSettings,
+  difficulty: Difficulty.EASY,
 };
 
 export const globals: GameGlobals = { ...defaultGlobals };

@@ -26,6 +26,11 @@ export const enum TranslationKey {
   INFO_TABLE_OCCUPANCY,
   INFO_DECOR,
   INFO_EMPTY,
+  DIFFICULTY,
+  DIFFICULTY_EASY,
+  DIFFICULTY_MEDIUM,
+  DIFFICULTY_HARD,
+  DIFFICULTY_EXTREME,
 }
 
 function getTranslationRecords(): Record<TranslationKey, string> {

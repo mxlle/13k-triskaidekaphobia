@@ -30,4 +30,9 @@ export const enTranslations: Record<TranslationKey, string> = {
   [TranslationKey.INFO_TABLE_OCCUPANCY]: "Occupancy: {0}/{1} 🪑",
   [TranslationKey.INFO_DECOR]: "Decoration",
   [TranslationKey.INFO_EMPTY]: "Empty field. Someone can wait here.",
+  [TranslationKey.DIFFICULTY]: "Difficulty",
+  [TranslationKey.DIFFICULTY_EASY]: "Easy",
+  [TranslationKey.DIFFICULTY_MEDIUM]: "Medium",
+  [TranslationKey.DIFFICULTY_HARD]: "Hard",
+  [TranslationKey.DIFFICULTY_EXTREME]: "Extreme",
 };
