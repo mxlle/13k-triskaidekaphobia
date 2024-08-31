@@ -8,13 +8,15 @@ interface GameGlobals {
   baseFieldData: GameFieldData;
   gameFieldData: GameFieldData;
   language: string;
-  settings: Settings;
   difficulty: Difficulty;
+  settings: Settings;
 }
 
 const onboardingStepSetting = getLocalStorageItem(LocalStorageKey.ONBOARDING_STEP);
+const difficultySetting = getLocalStorageItem(LocalStorageKey.DIFFICULTY);
 
-const defaultSettings: Settings = difficultySettings[Difficulty.EASY];
+const initialDifficulty: Difficulty = difficultySetting ? Number(difficultySetting) : Difficulty.EASY;
+const initialSettings = difficultySettings[initialDifficulty];
 
 const defaultGlobals: GameGlobals = {
   previousOnboardingStep: undefined,
@@ -22,8 +24,8 @@ const defaultGlobals: GameGlobals = {
   baseFieldData: [],
   gameFieldData: [],
   language: "en",
-  settings: defaultSettings,
-  difficulty: Difficulty.EASY,
+  difficulty: initialDifficulty,
+  settings: initialSettings,
 };
 
 export const globals: GameGlobals = { ...defaultGlobals };

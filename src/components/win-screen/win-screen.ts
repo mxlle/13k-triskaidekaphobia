@@ -61,6 +61,7 @@ function getWinScreenContent() {
         onClick: () => {
           setDifficulty(difficulty);
           updateConfirmText();
+          winDialog?.close(true);
         },
       });
     }),

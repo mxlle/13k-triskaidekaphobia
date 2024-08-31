@@ -1,6 +1,7 @@
 import { getTranslation, TranslationKey } from "../translations/i18n";
 import { Settings } from "../types";
 import { globals } from "../globals";
+import { LocalStorageKey, setLocalStorageItem } from "../utils/local-storage";
 
 export const enum Difficulty {
   EASY,
@@ -12,6 +13,7 @@ export const enum Difficulty {
 export function setDifficulty(difficulty: Difficulty) {
   globals.settings = difficultySettings[difficulty];
   globals.difficulty = difficulty;
+  setLocalStorageItem(LocalStorageKey.DIFFICULTY, difficulty.toString());
 }
 
 export const difficulties = [Difficulty.EASY, Difficulty.MEDIUM, Difficulty.HARD, Difficulty.EXTREME];

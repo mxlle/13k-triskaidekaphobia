@@ -7,7 +7,7 @@ let zIndexCounter = 10; // start at 5 to be above regular content
 
 export interface Dialog {
   open: (openImmediately?: boolean) => Promise<boolean>;
-  close: () => void;
+  close: (isSubmit?: boolean) => void;
   changeHeader: (headerText: string) => void;
   toggleSubmitDisabled: (isDisabled: boolean) => void;
   recreateDialogContent: (newInnerElement: HTMLElement) => void;
@@ -96,7 +96,14 @@ export function createDialog(
         submitButton?.addEventListener("click", () => resolve(true));
       });
     },
-    close: () => closeDialog(),
+    close: (isSubmit: boolean) => {
+      if (isSubmit) {
+        submitButton.click();
+        return;
+      }
+
+      closeDialog();
+    },
     changeHeader: (newHeaderText) => {
       if (header) header.innerText = newHeaderText;
     },

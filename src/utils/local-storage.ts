@@ -3,6 +3,7 @@ const LOCAL_STORAGE_PREFIX = "mxlle-13th";
 export const enum LocalStorageKey {
   MUTED = "muted",
   ONBOARDING_STEP = "oSt3",
+  DIFFICULTY = "d8y",
 }
 
 export function setLocalStorageItem(key: LocalStorageKey, value: string | false) {
