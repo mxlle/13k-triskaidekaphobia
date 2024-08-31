@@ -85,11 +85,12 @@ export function getOnboardingData(): OnboardingData | undefined {
 }
 
 export function increaseOnboardingStepIfApplicable() {
-  globals.previousOnboardingStep = globals.onboardingStep;
-
   if (!isOnboarding()) {
+    globals.previousOnboardingStep = undefined;
     return;
   }
+
+  globals.previousOnboardingStep = globals.onboardingStep;
 
   let step = globals.onboardingStep + 1;
 
