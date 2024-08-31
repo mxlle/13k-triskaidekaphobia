@@ -193,7 +193,7 @@ function randomlyApplyCharactersOnBoard(
   const allGuests = getAllGuests(gameFieldData);
   const numAfraid = allGuests.filter((cell) => cell.person.hasPanic).length;
 
-  if (numAfraid < minInitialPanic && iteration < 10) {
+  if ((numAfraid < minInitialPanic && iteration < 10) || (numAfraid === 0 && iteration < 50)) {
     console.info("not afraid enough, reshuffling");
     allGuests.forEach((cell) => (cell.person = undefined));
     randomlyApplyCharactersOnBoard(gameFieldData, characters, minInitialPanic, iteration + 1);
