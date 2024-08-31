@@ -4,11 +4,12 @@ import { createDialog, Dialog } from "../dialog/dialog";
 import { createButton, createElement } from "../../utils/html-utils";
 import { getTranslation, TranslationKey } from "../../translations/i18n";
 import { newGame } from "../../logic/game-logic";
-import { getOnboardingData, increaseOnboardingStepIfApplicable } from "../../logic/onboarding";
+import { getOnboardingData, increaseOnboardingStepIfApplicable, isOnboarding } from "../../logic/onboarding";
 import { difficulties, difficultyEmoji, getDifficultyText, setDifficulty } from "../../logic/difficulty";
 import { globals } from "../../globals";
 
 let winDialog: Dialog | undefined;
+let difficultyElement: HTMLElement | undefined;
 
 export function createWinScreen() {
   if (!winDialog) {
@@ -18,6 +19,8 @@ export function createWinScreen() {
   } else {
     updateConfirmText();
   }
+
+  difficultyElement?.classList.toggle("hidden", isOnboarding());
 
   winDialog.open().then((playAgain) => {
     if (playAgain) {
@@ -45,13 +48,13 @@ function getWinScreenContent() {
     cssClass: "win-screen",
   });
 
-  const difficultyElem = createElement({
+  difficultyElement = createElement({
     cssClass: "difficulty",
   });
 
-  winContentElem.append(difficultyElem);
+  winContentElem.append(difficultyElement);
 
-  difficultyElem.append(
+  difficultyElement.append(
     ...difficulties.map((difficulty) => {
       return createButton({
         text: difficultyEmoji[difficulty] + " " + getDifficultyText(difficulty),
