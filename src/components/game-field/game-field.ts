@@ -33,10 +33,11 @@ export async function initializeEmptyGameField() {
   const baseData = getGameFieldData(true);
 
   if (gameFieldElem) {
-    await updateGameFieldElement(baseData);
-  } else {
-    gameFieldElem = generateGameFieldElement(baseData);
+    console.error("initialize function should only be called once");
+    return;
   }
+
+  gameFieldElem = generateGameFieldElement(baseData);
 
   const startButton = createButton({
     text: getTranslation(TranslationKey.START_GAME),
@@ -61,7 +62,7 @@ export async function startNewGame() {
   if (globals.gameFieldData.length && gameFieldElem) {
     // reset old game field
     pubSubService.publish(PubSubEvent.UPDATE_SCORE, globals.baseFieldData);
-    await updateGameFieldElement(globals.baseFieldData);
+    await cleanGameField(globals.gameFieldData);
     await handlePokiCommercial();
     await requestAnimationFrameWithTimeout(TIMEOUT_BETWEEN_GAMES);
 
@@ -83,7 +84,7 @@ export async function startNewGame() {
     await requestAnimationFrameWithTimeout(TIMEOUT_BETWEEN_GAMES);
   }
 
-  await updateGameFieldElement(globals.gameFieldData);
+  await initializePersonsOnGameField(globals.gameFieldData);
 
   updateState(globals.gameFieldData);
 }
@@ -249,21 +250,36 @@ export function generateGameFieldElement(gameFieldData: GameFieldData) {
   return gameField;
 }
 
-export async function updateGameFieldElement(gameFieldData: GameFieldData) {
-  const flatGameFieldData = gameFieldData.flat();
+export async function initializePersonsOnGameField(gameFieldData: GameFieldData) {
+  const persons = getAllGuests(gameFieldData);
 
-  for (let i = 0; i < flatGameFieldData.length; i++) {
-    const previousCellElement = cellElements.flat()[i];
-    const hadPerson = previousCellElement.classList.contains("has-person");
-
-    const cell: Cell = flatGameFieldData[i];
-
-    updateCellOccupancy(cell, getCellElement(cell));
-
-    if (hasPerson(cell) || hadPerson) {
-      await requestAnimationFrameWithTimeout(TIMEOUT_CELL_APPEAR);
-    }
+  for (let i = 0; i < persons.length; i++) {
+    const cell = persons[i];
+    const cellElement = getCellElement(cell);
+    cellElement.append(cell.person.personElement);
+    updateCellOccupancy(cell, cellElement);
+    await requestAnimationFrameWithTimeout(TIMEOUT_CELL_APPEAR);
   }
+}
+
+export async function cleanGameField(gameFieldData: GameFieldData) {
+  const persons = getAllGuests(gameFieldData);
+
+  for (let i = 0; i < persons.length; i++) {
+    const cell = persons[i];
+    const cellElement = getCellElement(cell);
+    cell.person.personElement.remove();
+    cellElement.classList.remove(...Array.from(cellElement.classList.values()).filter((c) => !["cell", "chair"].includes(c)));
+    await requestAnimationFrameWithTimeout(TIMEOUT_CELL_APPEAR);
+  }
+
+  gameFieldData
+    .flat()
+    .filter(isTable)
+    .forEach((tableCell) => {
+      const tableCellElement = getCellElement(tableCell);
+      tableCellElement.classList.remove("t13a");
+    });
 }
 
 export async function updatePanicStates(gameFieldData: GameFieldData, panickedTableCells: Cell[]) {
