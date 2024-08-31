@@ -262,6 +262,14 @@ export async function initializePersonsOnGameField(gameFieldData: GameFieldData)
 }
 
 export async function cleanGameField(gameFieldData: GameFieldData) {
+  gameFieldData
+    .flat()
+    .filter(isTable)
+    .forEach((tableCell) => {
+      const tableCellElement = getCellElement(tableCell);
+      tableCellElement.classList.remove("t13a", "has-left", "has-right");
+    });
+
   const persons = getAllGuests(gameFieldData);
 
   for (let i = 0; i < persons.length; i++) {
@@ -271,14 +279,6 @@ export async function cleanGameField(gameFieldData: GameFieldData) {
     cellElement.classList.remove(...Array.from(cellElement.classList.values()).filter((c) => !["cell", "chair"].includes(c)));
     await requestAnimationFrameWithTimeout(TIMEOUT_CELL_APPEAR);
   }
-
-  gameFieldData
-    .flat()
-    .filter(isTable)
-    .forEach((tableCell) => {
-      const tableCellElement = getCellElement(tableCell);
-      tableCellElement.classList.remove("t13a");
-    });
 }
 
 export async function updatePanicStates(gameFieldData: GameFieldData, panickedTableCells: Cell[]) {
