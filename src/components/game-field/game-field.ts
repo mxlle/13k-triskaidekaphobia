@@ -15,6 +15,7 @@ import { handlePokiCommercial, pokiSdk } from "../../poki-integration";
 import { getOnboardingData, OnboardingData, wasOnboarding } from "../../logic/onboarding";
 import { getMiniHelpContent } from "../help/help";
 import { getOnboardingArrow } from "../onboarding/onboarding-components";
+import { calculateScore } from "../../logic/score";
 
 let mainContainer: HTMLElement | undefined;
 let gameFieldElem: HTMLElement | undefined;
@@ -22,6 +23,7 @@ let miniHelp: HTMLElement | undefined;
 let clickedCell: Cell | undefined;
 let lastClickedCell: Cell | undefined;
 let hasMadeFirstMove = false;
+let moves: number = 0;
 const cellElements: HTMLElement[][] = [];
 
 const TIMEOUT_BETWEEN_GAMES = 300;
@@ -58,10 +60,11 @@ export async function startNewGame() {
   hasMadeFirstMove = false;
   clickedCell = undefined;
   lastClickedCell = undefined;
+  moves = 0;
 
   if (globals.gameFieldData.length && gameFieldElem) {
     // reset old game field
-    pubSubService.publish(PubSubEvent.UPDATE_SCORE, globals.baseFieldData);
+    pubSubService.publish(PubSubEvent.UPDATE_SCORE, { score: 0, moves: 0 });
     await cleanGameField(globals.gameFieldData);
     await handlePokiCommercial();
     await requestAnimationFrameWithTimeout(TIMEOUT_BETWEEN_GAMES);
@@ -152,6 +155,7 @@ function cellClickHandler(rowIndex: number, columnIndex: number, onboardingArrow
     moveGuest(clickedCell, cell);
     updateCellOccupancy(clickedCell, clickedCellElement);
     updateCellOccupancy(cell, getCellElement(cell));
+    moves++;
     const hasWon = updateState(globals.gameFieldData);
     resetSelection(cell, !hasWon);
   } else {
@@ -192,11 +196,12 @@ function updateMiniHelp(cell?: Cell) {
 function updateState(gameFieldData: Cell[][], skipWinCheck = false): boolean {
   const panickedTableCells = checkTableStates(gameFieldData);
   void updatePanicStates(gameFieldData, panickedTableCells);
-  pubSubService.publish(PubSubEvent.UPDATE_SCORE, gameFieldData);
+  const score = calculateScore(gameFieldData, moves);
+  pubSubService.publish(PubSubEvent.UPDATE_SCORE, { score, moves });
   const { hasWon } = getHappyStats(gameFieldData);
 
   if (hasWon && !skipWinCheck) {
-    createWinScreen();
+    createWinScreen(score);
 
     pokiSdk.gameplayStop();
   }

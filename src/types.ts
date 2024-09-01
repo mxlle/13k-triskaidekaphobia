@@ -1,5 +1,10 @@
 import { Phobia } from "./phobia";
 
+export interface GameMetaData {
+  minMoves: number;
+  maxMoves: number;
+}
+
 export const enum CellType {
   EMPTY = "",
   TABLE = "🟫",

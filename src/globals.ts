@@ -1,4 +1,4 @@
-import { GameFieldData, Settings } from "./types";
+import { GameFieldData, GameMetaData, Settings } from "./types";
 import { getLocalStorageItem, LocalStorageKey } from "./utils/local-storage";
 import { Difficulty, difficultySettings } from "./logic/difficulty";
 
@@ -10,6 +10,7 @@ interface GameGlobals {
   language: string;
   difficulty: Difficulty;
   settings: Settings;
+  metaData?: GameMetaData;
 }
 
 const onboardingStepSetting = getLocalStorageItem(LocalStorageKey.ONBOARDING_STEP);

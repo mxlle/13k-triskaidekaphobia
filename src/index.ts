@@ -8,9 +8,9 @@ import { initializeEmptyGameField, startNewGame } from "./components/game-field/
 import { initAudio, togglePlayer } from "./audio/music-control";
 import { getLocalStorageItem, LocalStorageKey } from "./utils/local-storage";
 import { openHelp } from "./components/help/help";
-import { getHappyStats } from "./logic/checks";
 import { initPoki, pokiSdk } from "./poki-integration";
 import { isOnboarding } from "./logic/onboarding";
+import { globals } from "./globals";
 
 let configDialog: Dialog;
 
@@ -67,11 +67,8 @@ function init() {
   //   createButton({ text: "⚙️", onClick: openConfig, iconBtn: true }),
   // );
 
-  const scoreBaseText = "?/? 😀";
-
   scoreElement = createElement({
     cssClass: "score",
-    text: scoreBaseText,
   });
 
   header.append(scoreElement);
@@ -88,10 +85,18 @@ function init() {
     void startNewGame();
   });
 
-  pubSubService.subscribe(PubSubEvent.UPDATE_SCORE, (gameFieldData) => {
-    const { happyGuests, totalGuests } = getHappyStats(gameFieldData);
-    scoreElement.textContent = totalGuests ? `${happyGuests}/${totalGuests} 😀` : scoreBaseText;
+  pubSubService.subscribe(PubSubEvent.UPDATE_SCORE, ({ score, moves }) => {
+    if (isOnboarding()) {
+      scoreElement.textContent = "";
+    }
+
+    const scoreText = `Moves: ${moves} | Par: ${globals.metaData.minMoves} | ${formatNumber(score)}⭐️`;
+    scoreElement.textContent = scoreText;
   });
+}
+
+function formatNumber(num: number): string {
+  return ("" + (10000 + num)).substring(1);
 }
 
 // INIT

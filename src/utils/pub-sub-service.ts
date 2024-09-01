@@ -1,5 +1,3 @@
-import { GameFieldData } from "../types";
-
 export const enum PubSubEvent {
   NEW_GAME,
   GAME_OVER,
@@ -11,7 +9,7 @@ export const enum PubSubEvent {
 type EventDataTypes = {
   [PubSubEvent.NEW_GAME]: undefined;
   [PubSubEvent.GAME_OVER]: undefined;
-  [PubSubEvent.UPDATE_SCORE]: GameFieldData;
+  [PubSubEvent.UPDATE_SCORE]: { score: number; moves: number };
   [PubSubEvent.MUTE_MUSIC]: undefined;
   [PubSubEvent.UNMUTE_MUSIC]: undefined;
 };

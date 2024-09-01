@@ -11,12 +11,13 @@ import { globals } from "../../globals";
 let winDialog: Dialog | undefined;
 let difficultyElement: HTMLElement | undefined;
 
-export function createWinScreen() {
+export function createWinScreen(score: number) {
   if (!winDialog) {
-    const winContentElem = getWinScreenContent();
+    const winContentElem = getWinScreenContent(score);
 
     winDialog = createDialog(winContentElem, getConfirmText(), undefined, true);
   } else {
+    winDialog.recreateDialogContent(getWinScreenContent(score));
     updateConfirmText();
   }
 
@@ -42,11 +43,12 @@ function getConfirmText() {
   return getTranslation(TranslationKey.PLAY_AGAIN) + " " + difficultyEmoji[globals.difficulty];
 }
 
-function getWinScreenContent() {
+function getWinScreenContent(score: number) {
   const winContentElem = createElement({
-    text: getTranslation(TranslationKey.WIN),
     cssClass: "win-screen",
   });
+
+  winContentElem.innerHTML = getTranslation(TranslationKey.WIN) + "<br/><br>" + score + "⭐️";
 
   difficultyElement = createElement({
     cssClass: "difficulty",
