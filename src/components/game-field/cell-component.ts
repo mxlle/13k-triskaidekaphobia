@@ -55,8 +55,11 @@ export function updateCellOccupancy(cell: Cell, cellElement: HTMLElement, should
     cellElement.append(personElement);
   }
 
+  const hasPanic = cell.person?.hasPanic || !isChair(cell) || cell.person?.triskaidekaphobia;
+
   cellElement.classList.toggle("has-person", hasPerson(cell));
-  cellElement.classList.toggle("panic", person?.hasPanic ?? false);
+  cellElement.classList.toggle("panic", hasPanic);
+  cellElement.classList.toggle("p-t13a", (person?.triskaidekaphobia ?? false) && !cell.person?.hasPanic);
 
   const nearestTableCell = getNearestTableCell(globals.gameFieldData, cell);
 

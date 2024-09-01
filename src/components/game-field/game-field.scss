@@ -162,6 +162,10 @@ $border-style: outset;
       border-color: $warning-color;
     }
 
+    &.p-t13a {
+      border-color: mix($danger-color, $warning-color, 40%);
+    }
+
     .emoji {
       animation: tremble 0.2s 5;
     }

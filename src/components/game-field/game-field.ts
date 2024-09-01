@@ -299,8 +299,9 @@ export async function updatePanicStates(gameFieldData: GameFieldData, panickedTa
 
   getAllGuests(gameFieldData).forEach((cell) => {
     const cellElement = getCellElement(cell);
-    const hasPanic = cell.person.hasPanic || !isChair(cell);
+    const hasPanic = cell.person.hasPanic || !isChair(cell) || cell.person.triskaidekaphobia;
     cellElement.classList.toggle("panic", hasPanic);
+    cellElement.classList.toggle("p-t13a", cell.person.triskaidekaphobia && !cell.person.hasPanic);
   });
 
   panickedTableCells.forEach((cell) => {

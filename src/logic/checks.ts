@@ -16,7 +16,7 @@ export function checkTableStates(gameFieldData: GameFieldData) {
       const alsoAfraidOf = getScaryNeighbors(gameFieldData, guest);
       afraidOf.push(...alsoAfraidOf);
 
-      guest.person.hasPanic = isPanic || afraidOf.length > 0;
+      guest.person.hasPanic = afraidOf.length > 0;
       guest.person.triskaidekaphobia = isPanic;
       guest.person.afraidOf = afraidOf;
     });
@@ -26,6 +26,7 @@ export function checkTableStates(gameFieldData: GameFieldData) {
   otherGuestsInRoom.forEach((guest) => {
     const afraidOf = getScaryNeighbors(gameFieldData, guest);
     guest.person.hasPanic = afraidOf.length > 0;
+    guest.person.triskaidekaphobia = false;
     guest.person.afraidOf = afraidOf;
   });
 
