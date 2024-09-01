@@ -57,7 +57,9 @@ function getWinScreenContent(score: number) {
     cssClass: "win-screen",
   });
 
-  winContentElem.innerHTML = getTranslation(TranslationKey.WIN) + "<br/>" + score + "⭐️";
+  const scoreText = isOnboarding() ? "" : "<br/>" + score + "⭐️";
+
+  winContentElem.innerHTML = getTranslation(TranslationKey.WIN) + scoreText;
 
   difficultyElement = createElement({
     cssClass: "difficulty",

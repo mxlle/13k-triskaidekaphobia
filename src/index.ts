@@ -86,8 +86,9 @@ function init() {
   });
 
   pubSubService.subscribe(PubSubEvent.UPDATE_SCORE, ({ score, moves }) => {
-    if (isOnboarding()) {
+    if (isOnboarding() || !globals.metaData) {
       scoreElement.textContent = "";
+      return;
     }
 
     const scoreText = `Moves: ${moves} | Par: ${globals.metaData.minMoves} | ${formatNumber(score)}⭐️`;
