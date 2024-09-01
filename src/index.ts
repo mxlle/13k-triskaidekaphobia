@@ -91,7 +91,9 @@ function init() {
       return;
     }
 
-    const scoreText = `Moves: ${moves} | Par: ${globals.metaData.minMoves} | ${formatNumber(score)}⭐️`;
+    //  | Par: ${globals.metaData.minMoves}
+
+    const scoreText = `Moves: ${moves} | ${formatNumber(score)}⭐️`;
     scoreElement.textContent = scoreText;
   });
 }

@@ -55,7 +55,7 @@ export function getGameFieldData(skipAssignment: boolean = false): GameFieldData
       const charactersForGame = generateCharactersForGame(gameField);
       randomlyApplyCharactersOnBoard(gameField, charactersForGame, globals.settings.minInitialPanic);
       globals.metaData = {
-        minMoves: globals.settings.minInitialPanic,
+        minMoves: Math.max(globals.settings.minInitialPanic - 1, 1),
         maxMoves: charactersForGame.length,
       };
     }
