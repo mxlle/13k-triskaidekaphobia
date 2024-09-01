@@ -86,14 +86,13 @@ export function getAllGuests(gameFieldData: GameFieldData) {
 }
 
 export function getHappyGuests(gameFieldData: GameFieldData) {
-  return getAllGuests(gameFieldData).filter((guest) => !guest.person.hasPanic);
+  return getAllGuests(gameFieldData).filter((guest) => isChair(guest) && !guest.person.hasPanic && !guest.person.triskaidekaphobia);
 }
 
 export function getHappyStats(gameFieldData: GameFieldData) {
   const happyGuestList = getHappyGuests(gameFieldData);
   const totalGuestList = getAllGuests(gameFieldData);
-  const unseatedGuestList = totalGuestList.filter((g) => g.tableIndex === undefined);
-  const happyGuests = happyGuestList.length - unseatedGuestList.length;
+  const happyGuests = happyGuestList.length;
   const totalGuests = totalGuestList.length;
   const hasWon = happyGuests === totalGuests;
 
