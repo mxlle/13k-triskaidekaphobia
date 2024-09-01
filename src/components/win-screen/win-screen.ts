@@ -5,7 +5,14 @@ import { createButton, createElement } from "../../utils/html-utils";
 import { getTranslation, TranslationKey } from "../../translations/i18n";
 import { newGame } from "../../logic/game-logic";
 import { getOnboardingData, increaseOnboardingStepIfApplicable, isOnboarding } from "../../logic/onboarding";
-import { difficulties, difficultyEmoji, getDifficultyText, setDifficulty } from "../../logic/difficulty";
+import {
+  difficulties,
+  difficultyEmoji,
+  getDifficultyHighscore,
+  getDifficultyText,
+  setDifficulty,
+  setDifficultyHighscore,
+} from "../../logic/difficulty";
 import { globals } from "../../globals";
 
 let winDialog: Dialog | undefined;
@@ -44,11 +51,13 @@ function getConfirmText() {
 }
 
 function getWinScreenContent(score: number) {
+  setDifficultyHighscore(globals.difficulty, score);
+
   const winContentElem = createElement({
     cssClass: "win-screen",
   });
 
-  winContentElem.innerHTML = getTranslation(TranslationKey.WIN) + "<br/><br>" + score + "⭐️";
+  winContentElem.innerHTML = getTranslation(TranslationKey.WIN) + "<br/>" + score + "⭐️";
 
   difficultyElement = createElement({
     cssClass: "difficulty",
@@ -56,18 +65,26 @@ function getWinScreenContent(score: number) {
 
   winContentElem.append(difficultyElement);
 
-  difficultyElement.append(
-    ...difficulties.map((difficulty) => {
-      return createButton({
-        text: difficultyEmoji[difficulty] + " " + getDifficultyText(difficulty),
-        onClick: () => {
-          setDifficulty(difficulty);
-          updateConfirmText();
-          winDialog?.close(true);
-        },
-      });
-    }),
-  );
+  for (let difficulty of difficulties) {
+    const inner = createElement({});
+
+    const btn = createButton({
+      text: difficultyEmoji[difficulty] + " " + getDifficultyText(difficulty),
+      onClick: () => {
+        setDifficulty(difficulty);
+        updateConfirmText();
+        winDialog?.close(true);
+      },
+    });
+
+    const high = createElement({
+      cssClass: "high",
+      text: "" + getDifficultyHighscore(difficulty) + "⭐️",
+    });
+
+    inner.append(btn, high);
+    difficultyElement.append(inner);
+  }
 
   return winContentElem;
 }

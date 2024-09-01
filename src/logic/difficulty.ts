@@ -1,7 +1,7 @@
 import { getTranslation, TranslationKey } from "../translations/i18n";
 import { Settings } from "../types";
 import { globals } from "../globals";
-import { LocalStorageKey, setLocalStorageItem } from "../utils/local-storage";
+import { getLocalStorageItem, LocalStorageKey, setLocalStorageItem } from "../utils/local-storage";
 
 export const enum Difficulty {
   EASY,
@@ -66,5 +66,32 @@ export function getDifficultyText(difficulty: Difficulty): string {
       return getTranslation(TranslationKey.DIFFICULTY_HARD);
     case Difficulty.EXTREME:
       return getTranslation(TranslationKey.DIFFICULTY_EXTREME);
+  }
+}
+
+export function getDifficultyHighscore(difficulty: Difficulty): number {
+  const storedScore = getLocalStorageItem(getStorageKey(difficulty));
+
+  if (!storedScore) return 0;
+
+  return Number(storedScore);
+}
+
+export function setDifficultyHighscore(difficulty: Difficulty, score: number) {
+  if (score > getDifficultyHighscore(difficulty)) {
+    setLocalStorageItem(getStorageKey(difficulty), score.toString());
+  }
+}
+
+function getStorageKey(difficulty: Difficulty): LocalStorageKey {
+  switch (difficulty) {
+    case Difficulty.EASY:
+      return LocalStorageKey.DIFFICULTY_EASY;
+    case Difficulty.MEDIUM:
+      return LocalStorageKey.DIFFICULTY_MEDIUM;
+    case Difficulty.HARD:
+      return LocalStorageKey.DIFFICULTY_HARD;
+    case Difficulty.EXTREME:
+      return LocalStorageKey.DIFFICULTY_EXTREME;
   }
 }

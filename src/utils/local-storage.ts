@@ -4,6 +4,10 @@ export const enum LocalStorageKey {
   MUTED = "muted",
   ONBOARDING_STEP = "oSt3",
   DIFFICULTY = "d8y",
+  DIFFICULTY_EASY = "d8y0",
+  DIFFICULTY_MEDIUM = "d8y1",
+  DIFFICULTY_HARD = "d8y2",
+  DIFFICULTY_EXTREME = "d8y3",
 }
 
 export function setLocalStorageItem(key: LocalStorageKey, value: string | false) {
