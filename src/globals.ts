@@ -5,7 +5,6 @@ import { Difficulty, difficultySettings } from "./logic/difficulty";
 interface GameGlobals {
   previousOnboardingStep: number | undefined;
   onboardingStep: number;
-  baseFieldData: GameFieldData;
   gameFieldData: GameFieldData;
   placedPersons: PlacedPerson[];
   language: string;
@@ -23,7 +22,6 @@ const initialSettings = difficultySettings[initialDifficulty];
 const defaultGlobals: GameGlobals = {
   previousOnboardingStep: undefined,
   onboardingStep: onboardingStepSetting ? Number(onboardingStepSetting) : 0,
-  baseFieldData: [],
   gameFieldData: [],
   placedPersons: [],
   language: "en",

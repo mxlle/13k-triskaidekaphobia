@@ -8,7 +8,7 @@ import { createCellElement, updateCellOccupancy, updatePersonPanicState } from "
 import { getTranslation, TranslationKey } from "../../translations/i18n";
 import { globals } from "../../globals";
 import { requestAnimationFrameWithTimeout } from "../../utils/promise-utils";
-import { getGameFieldData, initializeGameField } from "../../logic/initialize";
+import { getGameFieldData, placePersonsInitially } from "../../logic/initialize";
 import { checkTableStates, getHappyStats } from "../../logic/checks";
 import { PubSubEvent, pubSubService } from "../../utils/pub-sub-service";
 import { handlePokiCommercial, pokiSdk } from "../../poki-integration";
@@ -86,18 +86,20 @@ export async function startNewGame() {
       console.debug("Was onboarding, removing game field");
       gameFieldElem.remove();
       gameFieldElem = undefined;
+      globals.gameFieldData = [];
     }
   }
 
   console.debug("Starting new game, onboarding step", globals.onboardingStep);
 
-  globals.baseFieldData = getGameFieldData();
-  const { gameFieldData, placedPersons } = initializeGameField();
-  globals.gameFieldData = gameFieldData;
-  globals.placedPersons = placedPersons;
+  if (!globals.gameFieldData.length) {
+    globals.gameFieldData = getGameFieldData();
+  }
+
+  globals.placedPersons = placePersonsInitially(globals.gameFieldData);
 
   if (!gameFieldElem) {
-    gameFieldElem = generateGameFieldElement(globals.baseFieldData);
+    gameFieldElem = generateGameFieldElement(globals.gameFieldData);
     appendGameField();
     await requestAnimationFrameWithTimeout(TIMEOUT_BETWEEN_GAMES);
   }

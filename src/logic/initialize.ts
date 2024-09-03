@@ -2,7 +2,6 @@ import {
   BasePerson,
   Cell,
   CellType,
-  GameData,
   GameFieldData,
   getGameFieldCopy,
   isChair,
@@ -19,10 +18,9 @@ import { checkTableStates, getGuestsOnTable, getNeighbors } from "./checks";
 import { baseField } from "./base-field";
 import { createPersonElement } from "../components/game-field/cell-component";
 
-export function initializeGameField(): GameData {
+export function placePersonsInitially(gameFieldData: GameFieldData): PlacedPerson[] {
   let onboardingData: OnboardingData | undefined = getOnboardingData();
 
-  const gameFieldData = getGameFieldData();
   let placedPersons: PlacedPerson[];
 
   if (onboardingData) {
@@ -36,10 +34,7 @@ export function initializeGameField(): GameData {
     };
   }
 
-  return {
-    gameFieldData,
-    placedPersons,
-  };
+  return placedPersons;
 }
 
 export function getGameFieldData(): GameFieldData {
