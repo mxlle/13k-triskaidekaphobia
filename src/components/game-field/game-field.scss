@@ -102,6 +102,7 @@ $border-style: outset;
         background: $table-bg;
         border: 0.125rem $border-style $table-border;
         border-radius: 0.33rem;
+        pointer-events: none;
       }
     }
 
