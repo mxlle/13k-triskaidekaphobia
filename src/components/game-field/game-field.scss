@@ -44,7 +44,6 @@ $border-style: outset;
 
 .cell {
   background-color: var(--t);
-  border: 0.125rem dotted transparent;
   display: grid;
   place-items: center;
   position: relative;
@@ -52,6 +51,7 @@ $border-style: outset;
   // height: 100%;
 
   .person {
+    border: 0.125rem dotted transparent;
     position: relative;
     display: grid;
     place-items: center;
@@ -133,7 +133,7 @@ $border-style: outset;
     }
   }
 
-  &.selected {
+  .selected {
     z-index: 4;
 
     &:after {
@@ -158,12 +158,14 @@ $border-style: outset;
     }
   }
 
-  &.panic {
-    border-color: $danger-color;
-
-    &:not(.chair) {
+  &:not(.chair) {
+    .panic {
       border-color: $warning-color;
     }
+  }
+
+  .panic {
+    border-color: $danger-color;
 
     &.p-t13a {
       border-color: mix($danger-color, $warning-color, 40%);
@@ -176,14 +178,14 @@ $border-style: outset;
 
   $scary-scale-props: 3s infinite step-end;
 
-  &.scary {
+  .scary {
     .emoji {
       z-index: 3;
       animation: scary-pulse $scary-scale-props;
     }
   }
 
-  &.scared:not(.scary) {
+  .scared:not(.scary) {
     .emoji {
       animation: scared-pulse $scary-scale-props;
     }

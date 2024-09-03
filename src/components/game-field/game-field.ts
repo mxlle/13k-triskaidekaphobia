@@ -2,9 +2,9 @@ import "./game-field.scss";
 
 import { createButton, createElement } from "../../utils/html-utils";
 import { moveGuest, newGame } from "../../logic/game-logic";
-import { Cell, GameFieldData, hasPerson, isChair, isSameCell, isTable } from "../../types";
+import { Cell, GameFieldData, hasPerson, isSameCell, isTable, OccupiedCell } from "../../types";
 import { createWinScreen } from "../win-screen/win-screen";
-import { createCellElement, updateCellOccupancy } from "./cell-component";
+import { createCellElement, updateCellOccupancy, updatePersonPanicState } from "./cell-component";
 import { getTranslation, TranslationKey } from "../../translations/i18n";
 import { globals } from "../../globals";
 import { requestAnimationFrameWithTimeout } from "../../utils/promise-utils";
@@ -20,7 +20,7 @@ import { calculateScore } from "../../logic/score";
 let mainContainer: HTMLElement | undefined;
 let gameFieldElem: HTMLElement | undefined;
 let miniHelp: HTMLElement | undefined;
-let clickedCell: Cell | undefined;
+let clickedCell: OccupiedCell | undefined;
 let lastClickedCell: Cell | undefined;
 let hasMadeFirstMove = false;
 let moves: number = 0;
@@ -159,7 +159,7 @@ function cellClickHandler(rowIndex: number, columnIndex: number, onboardingArrow
     }
 
     if (hasPerson(cell)) {
-      clickedCellElement.classList.remove(CssClass.SELECTED);
+      clickedCell.person.personElement.classList.remove(CssClass.SELECTED);
       clickedCell = cell;
       updateStateForSelection(globals.gameFieldData, clickedCell);
       return;
@@ -172,8 +172,10 @@ function cellClickHandler(rowIndex: number, columnIndex: number, onboardingArrow
     const hasWon = updateState(globals.gameFieldData);
     resetSelection(cell, !hasWon);
   } else {
-    clickedCell = cell;
-    updateStateForSelection(globals.gameFieldData, clickedCell);
+    if (hasPerson(cell)) {
+      clickedCell = cell;
+      updateStateForSelection(globals.gameFieldData, clickedCell);
+    }
   }
 
   document.body.classList.toggle(CssClass.SELECTING, !!clickedCell);
@@ -185,11 +187,12 @@ export function getCellElement(cell: Cell): HTMLElement {
 
 function resetSelection(cell: Cell, keepMiniHelp = false) {
   if (clickedCell) {
-    getCellElement(clickedCell).classList.remove(CssClass.SELECTED);
     clickedCell = undefined;
   }
 
-  getCellElement(cell).classList.remove(CssClass.SELECTED);
+  if (hasPerson(cell)) {
+    cell.person.personElement.classList.remove(CssClass.SELECTED);
+  }
 
   document.body.classList.remove(CssClass.SELECTING);
 
@@ -294,24 +297,28 @@ export async function cleanGameField(gameFieldData: GameFieldData) {
     const cell = persons[i];
     const cellElement = getCellElement(cell);
     cellElement.innerHTML = "";
-    cellElement.classList.remove(CssClass.HAS_PERSON, CssClass.PANIC, CssClass.P_T13A, CssClass.SELECTED, CssClass.SCARY, CssClass.SCARED);
+    cellElement.classList.remove(CssClass.HAS_PERSON);
     await requestAnimationFrameWithTimeout(TIMEOUT_CELL_APPEAR);
   }
 }
 
 export async function updatePanicStates(gameFieldData: GameFieldData, panickedTableCells: Cell[]) {
-  gameFieldData.flat().forEach((cell) => {
-    const cellElement = getCellElement(cell);
-    cellElement.classList.remove(CssClass.PANIC, CssClass.P_T13A, CssClass.SCARY, CssClass.SCARED, CssClass.T13A);
+  getAllGuests(gameFieldData).forEach((cell) => {
+    cell.person.personElement.classList.remove(CssClass.PANIC, CssClass.P_T13A, CssClass.SCARY, CssClass.SCARED);
   });
+
+  gameFieldData
+    .flat()
+    .filter(isTable)
+    .forEach((cell) => {
+      const cellElement = getCellElement(cell);
+      cellElement.classList.remove(CssClass.T13A);
+    });
 
   await requestAnimationFrameWithTimeout(0); // to trigger restart of tremble animation
 
   getAllGuests(gameFieldData).forEach((cell) => {
-    const cellElement = getCellElement(cell);
-    const hasPanic = cell.person.hasPanic || !isChair(cell) || cell.person.triskaidekaphobia;
-    cellElement.classList.toggle(CssClass.PANIC, hasPanic);
-    cellElement.classList.toggle(CssClass.P_T13A, cell.person.triskaidekaphobia && !cell.person.hasPanic);
+    updatePersonPanicState(cell);
   });
 
   panickedTableCells.forEach((cell) => {
@@ -320,29 +327,22 @@ export async function updatePanicStates(gameFieldData: GameFieldData, panickedTa
   });
 }
 
-export function updateStateForSelection(gameFieldData: GameFieldData, selectedCell: Cell | undefined) {
-  gameFieldData.flat().forEach((cell) => {
-    const cellElement = getCellElement(cell);
-    cellElement.classList.remove(CssClass.SCARY, CssClass.SCARED);
+export function updateStateForSelection(gameFieldData: GameFieldData, selectedCell: OccupiedCell | undefined) {
+  getAllGuests(gameFieldData).forEach((cell) => {
+    cell.person.personElement.classList.remove(CssClass.SCARY, CssClass.SCARED);
   });
 
   if (!selectedCell) {
     return;
   }
 
-  const selectedCellElement = getCellElement(selectedCell);
-
-  selectedCellElement.classList.add(CssClass.SELECTED);
-
-  if (!hasPerson(selectedCell)) {
-    return;
-  }
+  selectedCell.person.personElement.classList.add(CssClass.SELECTED);
 
   selectedCell.person.afraidOf.forEach((afraidOf) => {
-    getCellElement(afraidOf).classList.add(CssClass.SCARY);
+    afraidOf.person.personElement.classList.add(CssClass.SCARY);
   });
 
   selectedCell.person.makesAfraid.forEach((makesAfraid) => {
-    getCellElement(makesAfraid).classList.add(CssClass.SCARED);
+    makesAfraid.person.personElement.classList.add(CssClass.SCARED);
   });
 }

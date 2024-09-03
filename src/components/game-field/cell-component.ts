@@ -1,4 +1,4 @@
-import { BasePerson, Cell, hasPerson, isChair, isTable, Person } from "../../types";
+import { BasePerson, Cell, hasPerson, isChair, isTable, OccupiedCell, Person } from "../../types";
 import { createElement } from "../../utils/html-utils";
 import { getNearestTableCell } from "../../logic/checks";
 import { globals } from "../../globals";
@@ -43,16 +43,14 @@ export function createCellElement(cell: Cell, isInMiddle: boolean = false, isOnT
 export function updateCellOccupancy(cell: Cell, cellElement: HTMLElement, shouldCopyPerson: boolean = false): void {
   const person: Person | undefined = cell.person;
 
-  if (person) {
-    const personElement = shouldCopyPerson ? person.personElement.cloneNode(true) : person.personElement;
+  if (person && hasPerson(cell)) {
+    const personElement: HTMLElement = shouldCopyPerson ? (person.personElement.cloneNode(true) as HTMLElement) : person.personElement;
     cellElement.append(personElement);
+
+    updatePersonPanicState(cell, personElement);
   }
 
-  const hasPanic = cell.person?.hasPanic || !isChair(cell) || cell.person?.triskaidekaphobia;
-
   cellElement.classList.toggle(CssClass.HAS_PERSON, hasPerson(cell));
-  cellElement.classList.toggle(CssClass.PANIC, hasPanic);
-  cellElement.classList.toggle(CssClass.P_T13A, (person?.triskaidekaphobia ?? false) && !cell.person?.hasPanic);
 
   const nearestTableCell = getNearestTableCell(globals.gameFieldData, cell);
 
@@ -62,6 +60,13 @@ export function updateCellOccupancy(cell: Cell, cellElement: HTMLElement, should
       getCellElement(nearestTableCell).classList.toggle(classToToggle, !!person);
     }
   }
+}
+
+export function updatePersonPanicState(cell: OccupiedCell, personElement: HTMLElement = cell.person.personElement): void {
+  const person = cell.person;
+  const hasPanic = person.hasPanic || !isChair(cell) || person.triskaidekaphobia;
+  personElement.classList.toggle(CssClass.PANIC, hasPanic);
+  personElement.classList.toggle(CssClass.P_T13A, (person?.triskaidekaphobia ?? false) && !cell.person?.hasPanic);
 }
 
 export function createPersonElement(person: BasePerson): HTMLElement {
