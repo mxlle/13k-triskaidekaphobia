@@ -58,7 +58,7 @@
     &.has-person {
       border: 0.125rem solid theme.$bg-alpha-10;
 
-      .chair-inner {
+      &::before {
         display: none;
       }
 
@@ -93,7 +93,7 @@
       }
     }
 
-    .chair-inner {
+    .chair::before {
       transform: rotate(90deg);
     }
 

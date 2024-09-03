@@ -32,16 +32,9 @@ export function createCellElement(cell: Cell, isInMiddle: boolean = false, isOnT
   if (isChair(cell)) {
     cellElem.classList.add("chair");
 
-    const chairElement = createElement({
-      tag: "span",
-      cssClass: "chair-inner",
-    });
-
     if (isOnTheRightOfATable) {
-      chairElement.classList.add("right");
+      cellElem.classList.add("right");
     }
-
-    cellElem.append(chairElement);
   }
 
   return cellElem;

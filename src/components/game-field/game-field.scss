@@ -59,26 +59,29 @@ $border-style: outset;
     height: 100%;
   }
 
-  > span,
   > .person {
     grid-area: 1 / 1;
   }
 
-  .chair-inner {
-    height: 85%;
-    width: 85%;
-    border-radius: 50% 15% 15% 50%;
-    background: $table-bg;
-    border: 0.125rem $border-style $table-border;
-    border-left-width: 0.35rem;
+  &.chair {
+    &::before {
+      content: "";
+      grid-area: 1 / 1;
+      height: 85%;
+      width: 85%;
+      border-radius: 50% 15% 15% 50%;
+      background: $table-bg;
+      border: 0.125rem $border-style $table-border;
+      border-left-width: 0.35rem;
+    }
 
-    &.right {
+    &.right::before {
       transform: rotate(180deg);
     }
   }
 
   &.has-person {
-    .chair-inner {
+    &::before {
       opacity: 0.3;
     }
   }

@@ -280,8 +280,8 @@ export async function cleanGameField(gameFieldData: GameFieldData) {
   for (let i = 0; i < persons.length; i++) {
     const cell = persons[i];
     const cellElement = getCellElement(cell);
-    cell.person.personElement.remove();
-    cellElement.classList.remove(...Array.from(cellElement.classList.values()).filter((c) => !["cell", "chair"].includes(c)));
+    cellElement.innerHTML = "";
+    cellElement.classList.remove("selected", "scary", "scared", "panic", "p-t13a", "has-person");
     await requestAnimationFrameWithTimeout(TIMEOUT_CELL_APPEAR);
   }
 }
