@@ -2,7 +2,7 @@ import { BasePerson, Cell, hasPerson, isChair, isTable, Person } from "../../typ
 import { createElement } from "../../utils/html-utils";
 import { getNearestTableCell } from "../../logic/checks";
 import { globals } from "../../globals";
-import { getCellElement } from "./game-field";
+import { CssClass, getCellElement } from "./game-field";
 
 export function createCellElement(cell: Cell, isInMiddle: boolean = false, isOnTheRightOfATable: boolean = false): HTMLElement {
   const cellElem = createElement({
@@ -50,14 +50,14 @@ export function updateCellOccupancy(cell: Cell, cellElement: HTMLElement, should
 
   const hasPanic = cell.person?.hasPanic || !isChair(cell) || cell.person?.triskaidekaphobia;
 
-  cellElement.classList.toggle("has-person", hasPerson(cell));
-  cellElement.classList.toggle("panic", hasPanic);
-  cellElement.classList.toggle("p-t13a", (person?.triskaidekaphobia ?? false) && !cell.person?.hasPanic);
+  cellElement.classList.toggle(CssClass.HAS_PERSON, hasPerson(cell));
+  cellElement.classList.toggle(CssClass.PANIC, hasPanic);
+  cellElement.classList.toggle(CssClass.P_T13A, (person?.triskaidekaphobia ?? false) && !cell.person?.hasPanic);
 
   const nearestTableCell = getNearestTableCell(globals.gameFieldData, cell);
 
   if (nearestTableCell && isChair(cell)) {
-    const classToToggle = nearestTableCell.column < cell.column ? "has-right" : "has-left";
+    const classToToggle = nearestTableCell.column < cell.column ? CssClass.HAS_RIGHT : CssClass.HAS_LEFT;
     if (nearestTableCell) {
       getCellElement(nearestTableCell).classList.toggle(classToToggle, !!person);
     }

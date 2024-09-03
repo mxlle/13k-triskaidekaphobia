@@ -29,8 +29,21 @@ const cellElements: HTMLElement[][] = [];
 const TIMEOUT_BETWEEN_GAMES = 300;
 const TIMEOUT_CELL_APPEAR = 30;
 
+export const enum CssClass {
+  SELECTING = "selecting",
+  SELECTED = "selected",
+  PANIC = "panic",
+  SCARED = "scared",
+  SCARY = "scary",
+  T13A = "t13a",
+  P_T13A = "p-t13a",
+  HAS_PERSON = "has-person",
+  HAS_LEFT = "has-left",
+  HAS_RIGHT = "has-right",
+}
+
 export async function initializeEmptyGameField() {
-  document.body.classList.remove("selecting");
+  document.body.classList.remove(CssClass.SELECTING);
 
   const baseData = getGameFieldData(true);
 
@@ -56,7 +69,7 @@ export async function initializeEmptyGameField() {
 }
 
 export async function startNewGame() {
-  document.body.classList.remove("selecting");
+  document.body.classList.remove(CssClass.SELECTING);
   hasMadeFirstMove = false;
   clickedCell = undefined;
   lastClickedCell = undefined;
@@ -146,7 +159,7 @@ function cellClickHandler(rowIndex: number, columnIndex: number, onboardingArrow
     }
 
     if (hasPerson(cell)) {
-      clickedCellElement.classList.remove("selected");
+      clickedCellElement.classList.remove(CssClass.SELECTED);
       clickedCell = cell;
       updateStateForSelection(globals.gameFieldData, clickedCell);
       return;
@@ -163,7 +176,7 @@ function cellClickHandler(rowIndex: number, columnIndex: number, onboardingArrow
     updateStateForSelection(globals.gameFieldData, clickedCell);
   }
 
-  document.body.classList.toggle("selecting", !!clickedCell);
+  document.body.classList.toggle(CssClass.SELECTING, !!clickedCell);
 }
 
 export function getCellElement(cell: Cell): HTMLElement {
@@ -172,13 +185,13 @@ export function getCellElement(cell: Cell): HTMLElement {
 
 function resetSelection(cell: Cell, keepMiniHelp = false) {
   if (clickedCell) {
-    getCellElement(clickedCell).classList.remove("selected");
+    getCellElement(clickedCell).classList.remove(CssClass.SELECTED);
     clickedCell = undefined;
   }
 
-  getCellElement(cell).classList.remove("selected");
+  getCellElement(cell).classList.remove(CssClass.SELECTED);
 
-  document.body.classList.remove("selecting");
+  document.body.classList.remove(CssClass.SELECTING);
 
   updateMiniHelp(keepMiniHelp ? cell : undefined);
 }
@@ -272,7 +285,7 @@ export async function cleanGameField(gameFieldData: GameFieldData) {
     .filter(isTable)
     .forEach((tableCell) => {
       const tableCellElement = getCellElement(tableCell);
-      tableCellElement.classList.remove("t13a", "has-left", "has-right");
+      tableCellElement.classList.remove(CssClass.T13A, CssClass.HAS_LEFT, CssClass.HAS_RIGHT);
     });
 
   const persons = getAllGuests(gameFieldData);
@@ -281,7 +294,7 @@ export async function cleanGameField(gameFieldData: GameFieldData) {
     const cell = persons[i];
     const cellElement = getCellElement(cell);
     cellElement.innerHTML = "";
-    cellElement.classList.remove("selected", "scary", "scared", "panic", "p-t13a", "has-person");
+    cellElement.classList.remove(CssClass.HAS_PERSON, CssClass.PANIC, CssClass.P_T13A, CssClass.SELECTED, CssClass.SCARY, CssClass.SCARED);
     await requestAnimationFrameWithTimeout(TIMEOUT_CELL_APPEAR);
   }
 }
@@ -289,10 +302,7 @@ export async function cleanGameField(gameFieldData: GameFieldData) {
 export async function updatePanicStates(gameFieldData: GameFieldData, panickedTableCells: Cell[]) {
   gameFieldData.flat().forEach((cell) => {
     const cellElement = getCellElement(cell);
-    cellElement.classList.remove("scary");
-    cellElement.classList.remove("scared");
-    cellElement.classList.remove("t13a");
-    cellElement.classList.remove("panic");
+    cellElement.classList.remove(CssClass.PANIC, CssClass.P_T13A, CssClass.SCARY, CssClass.SCARED, CssClass.T13A);
   });
 
   await requestAnimationFrameWithTimeout(0); // to trigger restart of tremble animation
@@ -300,21 +310,20 @@ export async function updatePanicStates(gameFieldData: GameFieldData, panickedTa
   getAllGuests(gameFieldData).forEach((cell) => {
     const cellElement = getCellElement(cell);
     const hasPanic = cell.person.hasPanic || !isChair(cell) || cell.person.triskaidekaphobia;
-    cellElement.classList.toggle("panic", hasPanic);
-    cellElement.classList.toggle("p-t13a", cell.person.triskaidekaphobia && !cell.person.hasPanic);
+    cellElement.classList.toggle(CssClass.PANIC, hasPanic);
+    cellElement.classList.toggle(CssClass.P_T13A, cell.person.triskaidekaphobia && !cell.person.hasPanic);
   });
 
   panickedTableCells.forEach((cell) => {
     const cellElement = getCellElement(cell);
-    cellElement.classList.add("t13a");
+    cellElement.classList.add(CssClass.T13A);
   });
 }
 
 export function updateStateForSelection(gameFieldData: GameFieldData, selectedCell: Cell | undefined) {
   gameFieldData.flat().forEach((cell) => {
     const cellElement = getCellElement(cell);
-    cellElement.classList.remove("scary");
-    cellElement.classList.remove("scared");
+    cellElement.classList.remove(CssClass.SCARY, CssClass.SCARED);
   });
 
   if (!selectedCell) {
@@ -323,17 +332,17 @@ export function updateStateForSelection(gameFieldData: GameFieldData, selectedCe
 
   const selectedCellElement = getCellElement(selectedCell);
 
-  selectedCellElement.classList.add("selected");
+  selectedCellElement.classList.add(CssClass.SELECTED);
 
   if (!hasPerson(selectedCell)) {
     return;
   }
 
   selectedCell.person.afraidOf.forEach((afraidOf) => {
-    getCellElement(afraidOf).classList.add("scary");
+    getCellElement(afraidOf).classList.add(CssClass.SCARY);
   });
 
   selectedCell.person.makesAfraid.forEach((makesAfraid) => {
-    getCellElement(makesAfraid).classList.add("scared");
+    getCellElement(makesAfraid).classList.add(CssClass.SCARED);
   });
 }
