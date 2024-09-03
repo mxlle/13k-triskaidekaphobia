@@ -2,7 +2,7 @@ import "./help.scss";
 
 import { createElement } from "../../utils/html-utils";
 import { getTranslation, isGermanLanguage, TranslationKey } from "../../translations/i18n";
-import { Cell, CellType, hasPerson, isChair, isEmpty, isTable, OccupiedCell } from "../../types";
+import { Cell, CellType, findPerson, isChair, isEmpty, isTable, PlacedPerson } from "../../types";
 import { getPhobiaName, Phobia } from "../../phobia";
 import { createDialog, Dialog } from "../dialog/dialog";
 import { createCellElement, createPersonElement, updateCellOccupancy } from "../game-field/cell-component";
@@ -38,6 +38,7 @@ export function openHelp() {
 export function getMiniHelpContent(cell?: Cell): HTMLElement {
   // const name = (cell?.person?.name ?? cell?.type ?? "<?>") || "[ ]";
   const isEmptyState = !cell;
+  const person = cell ? findPerson(globals.placedPersons, cell) : undefined;
 
   const miniHelpContent = createElement({
     cssClass: "mini-help",
@@ -72,22 +73,22 @@ export function getMiniHelpContent(cell?: Cell): HTMLElement {
   let helpCellElement: HTMLElement | undefined;
   let statsElem: HTMLElement | undefined;
 
-  if (hasPerson(cell)) {
-    statsElem = getSatisfactionStats(cell);
+  if (person) {
+    statsElem = getSatisfactionStats(person);
 
     helpCellElement = createCellElement(cell);
     updateCellOccupancy(cell, helpCellElement, true);
-    const personElement = createPersonElement(cell.person);
+    const personElement = createPersonElement(person);
     helpCellElement.append(personElement);
     helpCellElement.classList.toggle("has-person", true);
-    const { fear, smallFear } = cell.person;
+    const { fear, smallFear } = person;
 
     const isGerman = isGermanLanguage();
     const fearName = getPhobiaName(fear, isGerman);
     const smallFearName = getPhobiaName(smallFear, isGerman);
 
     const helpTexts = [
-      cell.person.triskaidekaphobia ? getTranslation(TranslationKey.EXAMPLE_TRISKAIDEKAPHOBIA) : "",
+      person.triskaidekaphobia ? getTranslation(TranslationKey.EXAMPLE_TRISKAIDEKAPHOBIA) : "",
       fear ? getTranslation(TranslationKey.EXAMPLE_BIG_FEAR, fearName, fear) : "",
       smallFear ? getTranslation(TranslationKey.EXAMPLE_SMALL_FEAR, smallFearName, smallFear) : "",
     ];
@@ -102,7 +103,7 @@ export function getMiniHelpContent(cell?: Cell): HTMLElement {
     if (isTable(cell)) {
       const tableIndex = cell.tableIndex ?? 0;
       const numChairs = getChairsAtTable(globals.gameFieldData, tableIndex).length;
-      const occupancy = getGuestsOnTable(globals.gameFieldData, tableIndex).length;
+      const occupancy = getGuestsOnTable(globals.placedPersons, tableIndex).length;
 
       const helpTexts = [
         getTranslation(TranslationKey.INFO_TABLE, tableIndex + 1),
@@ -135,15 +136,11 @@ export function getMiniHelpContent(cell?: Cell): HTMLElement {
   return miniHelpContent;
 }
 
-function getSatisfactionStats(cell: OccupiedCell): HTMLElement {
-  const isTriskaidekaphobia = cell.person.triskaidekaphobia;
-  const hasChair = isChair(cell.type);
-  const noBigFear = !hasChair
-    ? undefined
-    : cell.person.afraidOf.filter((otherCell) => cell.person.fear === otherCell.person.name).length === 0;
-  const noSmallFear = !hasChair
-    ? undefined
-    : cell.person.afraidOf.filter((otherCell) => cell.person.smallFear === otherCell.person.name).length === 0;
+function getSatisfactionStats(person: PlacedPerson): HTMLElement {
+  const isTriskaidekaphobia = person.triskaidekaphobia;
+  const hasTable = person.tableIndex !== undefined;
+  const noBigFear = !hasTable ? undefined : person.afraidOf.filter((otherCell) => person.fear === otherCell.name).length === 0;
+  const noSmallFear = !hasTable ? undefined : person.afraidOf.filter((otherCell) => person.smallFear === otherCell.name).length === 0;
 
   const satisfactionStats = createElement({
     cssClass: "satisfaction-stats",
@@ -159,13 +156,13 @@ function getSatisfactionStats(cell: OccupiedCell): HTMLElement {
       satisfied: !isTriskaidekaphobia,
       explainText: getTranslation(TranslationKey.INFO_TRISKAIDEKAPHOBIA),
     },
-    { phobia: cell.person.fear, satisfied: noBigFear, explainText: getTranslation(TranslationKey.INFO_BIG_FEAR, cell.person.fear) },
+    { phobia: person.fear, satisfied: noBigFear, explainText: getTranslation(TranslationKey.INFO_BIG_FEAR, person.fear) },
     {
-      phobia: cell.person.smallFear,
+      phobia: person.smallFear,
       satisfied: noSmallFear,
-      explainText: getTranslation(TranslationKey.INFO_SMALL_FEAR, cell.person.smallFear),
+      explainText: getTranslation(TranslationKey.INFO_SMALL_FEAR, person.smallFear),
     },
-    { phobia: CellType.CHAIR, satisfied: hasChair, explainText: getTranslation(TranslationKey.INFO_FOMO) },
+    { phobia: CellType.CHAIR, satisfied: hasTable, explainText: getTranslation(TranslationKey.INFO_FOMO) },
   ];
 
   stats

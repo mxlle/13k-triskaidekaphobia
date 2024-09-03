@@ -1,4 +1,14 @@
-import { BasePerson, Cell, hasPerson, isChair, isTable, OccupiedCell, Person } from "../../types";
+import {
+  BasePerson,
+  Cell,
+  CellPositionWithTableIndex,
+  findPerson,
+  hasPerson,
+  isAtTable,
+  isChair,
+  isTable,
+  PlacedPerson,
+} from "../../types";
 import { createElement } from "../../utils/html-utils";
 import { getNearestTableCell } from "../../logic/checks";
 import { globals } from "../../globals";
@@ -40,21 +50,21 @@ export function createCellElement(cell: Cell, isInMiddle: boolean = false, isOnT
   return cellElem;
 }
 
-export function updateCellOccupancy(cell: Cell, cellElement: HTMLElement, shouldCopyPerson: boolean = false): void {
-  const person: Person | undefined = cell.person;
+export function updateCellOccupancy(cell: CellPositionWithTableIndex, cellElement: HTMLElement, shouldCopyPerson: boolean = false): void {
+  const person: PlacedPerson | undefined = findPerson(globals.placedPersons, cell);
 
-  if (person && hasPerson(cell)) {
+  if (person && hasPerson(globals.placedPersons, cell)) {
     const personElement: HTMLElement = shouldCopyPerson ? (person.personElement.cloneNode(true) as HTMLElement) : person.personElement;
     cellElement.append(personElement);
 
-    updatePersonPanicState(cell, personElement);
+    updatePersonPanicState(person, personElement);
   }
 
-  cellElement.classList.toggle(CssClass.HAS_PERSON, hasPerson(cell));
+  cellElement.classList.toggle(CssClass.HAS_PERSON, !!person);
 
   const nearestTableCell = getNearestTableCell(globals.gameFieldData, cell);
 
-  if (nearestTableCell && isChair(cell)) {
+  if (nearestTableCell && isAtTable(cell)) {
     const classToToggle = nearestTableCell.column < cell.column ? CssClass.HAS_RIGHT : CssClass.HAS_LEFT;
     if (nearestTableCell) {
       getCellElement(nearestTableCell).classList.toggle(classToToggle, !!person);
@@ -62,11 +72,10 @@ export function updateCellOccupancy(cell: Cell, cellElement: HTMLElement, should
   }
 }
 
-export function updatePersonPanicState(cell: OccupiedCell, personElement: HTMLElement = cell.person.personElement): void {
-  const person = cell.person;
-  const hasPanic = person.hasPanic || !isChair(cell) || person.triskaidekaphobia;
+export function updatePersonPanicState(person: PlacedPerson, personElement: HTMLElement = person.personElement): void {
+  const hasPanic = person.hasPanic || person.tableIndex === undefined || person.triskaidekaphobia;
   personElement.classList.toggle(CssClass.PANIC, hasPanic);
-  personElement.classList.toggle(CssClass.P_T13A, (person?.triskaidekaphobia ?? false) && !cell.person?.hasPanic);
+  personElement.classList.toggle(CssClass.P_T13A, person.triskaidekaphobia && !person.hasPanic);
 }
 
 export function createPersonElement(person: BasePerson): HTMLElement {

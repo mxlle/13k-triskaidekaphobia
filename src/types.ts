@@ -27,11 +27,6 @@ interface CellPosition {
 export interface Cell extends CellPosition {
   type: CellType;
   tableIndex?: number;
-  person?: Person;
-}
-
-export interface OccupiedCell extends Cell {
-  person: Person;
 }
 
 export interface BasePerson {
@@ -43,14 +38,27 @@ export interface BasePerson {
 export interface Person extends BasePerson {
   hasPanic: boolean;
   triskaidekaphobia: boolean;
-  afraidOf: OccupiedCell[];
-  makesAfraid: OccupiedCell[];
+  afraidOf: PlacedPerson[];
+  makesAfraid: PlacedPerson[];
   personElement: HTMLElement;
 }
+
+export interface CellPositionWithTableIndex extends CellPosition {
+  tableIndex?: number;
+}
+
+export interface PlacedPerson extends Person, CellPositionWithTableIndex {}
 
 export interface PersonWithPosition extends BasePerson, CellPosition {}
 
 export type GameFieldData = Cell[][];
+
+export interface GameData {
+  gameFieldData: GameFieldData;
+  placedPersons: PlacedPerson[];
+  settings?: Settings;
+  metaData?: GameMetaData;
+}
 
 // type helpers
 
@@ -60,15 +68,23 @@ export const isTable = (typeOrObject: string | Cell) => getType(typeOrObject) ==
 export const isChair = (typeOrObject: string | Cell) => getType(typeOrObject) === CellType.CHAIR;
 export const isEmpty = (typeOrObject: string | Cell) => getType(typeOrObject) === CellType.EMPTY;
 
-export function isEmptyChair(cell: Cell): boolean {
-  return isChair(cell) && !hasPerson(cell);
+export function isEmptyChair(placedPersons: PlacedPerson[], cell: Cell): boolean {
+  return isChair(cell) && !hasPerson(placedPersons, cell);
 }
 
-export function hasPerson(cell: Cell): cell is OccupiedCell {
-  return !!cell.person;
+export function isAtTable(cell: CellPositionWithTableIndex): boolean {
+  return cell.tableIndex !== undefined;
 }
 
-export function isSameCell(cell1: Cell, cell2: Cell) {
+export function hasPerson(placedPersons: PlacedPerson[], cell: CellPosition): boolean {
+  return placedPersons.some((p) => isSameCell(p, cell));
+}
+
+export function findPerson(placedPersons: PlacedPerson[], cell: CellPosition): PlacedPerson | undefined {
+  return placedPersons.find((p) => isSameCell(p, cell));
+}
+
+export function isSameCell(cell1: CellPosition, cell2: CellPosition) {
   return cell1.row === cell2.row && cell1.column === cell2.column;
 }
 

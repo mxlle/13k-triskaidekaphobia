@@ -2,23 +2,47 @@ import {
   BasePerson,
   Cell,
   CellType,
+  GameData,
   GameFieldData,
   getGameFieldCopy,
   isChair,
   isEmptyChair,
   isTable,
   Person,
-  PersonWithPosition,
+  PlacedPerson,
 } from "../types";
 import { getRandomPhobia, getRandomPhobiaExcluding, Phobia } from "../phobia";
 import { getOnboardingData, OnboardingData } from "./onboarding";
 import { globals } from "../globals";
 import { getRandomIntFromInterval, shuffleArray } from "../utils/random-utils";
-import { checkTableStates, getAllGuests, getGuestsOnTable, getNeighbors } from "./checks";
+import { checkTableStates, getGuestsOnTable, getNeighbors } from "./checks";
 import { baseField } from "./base-field";
 import { createPersonElement } from "../components/game-field/cell-component";
 
-export function getGameFieldData(skipAssignment: boolean = false): GameFieldData {
+export function initializeGameField(): GameData {
+  let onboardingData: OnboardingData | undefined = getOnboardingData();
+
+  const gameFieldData = getGameFieldData();
+  let placedPersons: PlacedPerson[];
+
+  if (onboardingData) {
+    placedPersons = applySeatedCharacters(onboardingData);
+  } else {
+    const charactersForGame = generateCharactersForGame(gameFieldData);
+    placedPersons = randomlyApplyCharactersOnBoard(gameFieldData, charactersForGame, globals.settings.minInitialPanic);
+    globals.metaData = {
+      minMoves: Math.max(globals.settings.minInitialPanic - 1, 1),
+      maxMoves: charactersForGame.length,
+    };
+  }
+
+  return {
+    gameFieldData,
+    placedPersons,
+  };
+}
+
+export function getGameFieldData(): GameFieldData {
   let field = baseField;
   let onboardingData: OnboardingData | undefined = getOnboardingData();
   let tableHeight = 8;
@@ -48,19 +72,6 @@ export function getGameFieldData(skipAssignment: boolean = false): GameFieldData
     gameField.push(rowArray);
   }
 
-  if (!skipAssignment) {
-    if (onboardingData) {
-      applySeatedCharacters(gameField, onboardingData.characters);
-    } else {
-      const charactersForGame = generateCharactersForGame(gameField);
-      randomlyApplyCharactersOnBoard(gameField, charactersForGame, globals.settings.minInitialPanic);
-      globals.metaData = {
-        minMoves: Math.max(globals.settings.minInitialPanic - 1, 1),
-        maxMoves: charactersForGame.length,
-      };
-    }
-  }
-
   return gameField;
 }
 
@@ -84,22 +95,24 @@ function getGameFieldObject(type: CellType, row: number, column: number, onboard
 
 function generateCharactersForGame(baseGameField: GameFieldData, iteration: number = 0): Person[] {
   const gameFieldCopy = getGameFieldCopy(baseGameField);
+  const placedPersons: PlacedPerson[] = [];
   const { minAmount, maxAmount, chanceForBigFear, chanceForSmallFear } = globals.settings;
   const amount = getRandomIntFromInterval(minAmount, maxAmount);
   const characters: Person[] = [];
 
   while (characters.length < amount) {
     const newPerson = generatePerson(chanceForBigFear, chanceForSmallFear);
-    const chair = findValidChair(gameFieldCopy, newPerson);
+    const chair = findValidChair(gameFieldCopy, placedPersons, newPerson);
 
     if (chair) {
       characters.push(newPerson);
-      chair.person = newPerson;
+      const { row, column, tableIndex } = chair;
+      placedPersons.push({ ...newPerson, row, column, tableIndex });
     }
   }
 
-  const table1Guests = getGuestsOnTable(gameFieldCopy, 0);
-  const table2Guests = getGuestsOnTable(gameFieldCopy, 1);
+  const table1Guests = getGuestsOnTable(placedPersons, 0);
+  const table2Guests = getGuestsOnTable(placedPersons, 1);
 
   if (table1Guests.length === 13 || table2Guests.length === 13) {
     if (iteration < 10) {
@@ -113,33 +126,33 @@ function generateCharactersForGame(baseGameField: GameFieldData, iteration: numb
   return characters;
 }
 
-function findValidChair(gameFieldData: GameFieldData, person: Person): Cell | undefined {
-  const emptyChairs = gameFieldData.flat().filter(isEmptyChair);
+function findValidChair(gameFieldData: GameFieldData, placedPersons: PlacedPerson[], person: Person): Cell | undefined {
+  const emptyChairs = gameFieldData.flat().filter((cell) => isEmptyChair(placedPersons, cell));
 
   for (let chair of emptyChairs) {
-    if (!isTriggeringPhobia(gameFieldData, chair, person)) {
+    if (!isTriggeringPhobia(placedPersons, chair, person)) {
       return chair;
     }
   }
 }
 
-function isTriggeringPhobia(gameFieldData: GameFieldData, cell: Cell, person: Person): boolean {
-  const tableGuests = getGuestsOnTable(gameFieldData, cell.tableIndex);
+function isTriggeringPhobia(placedPersons: PlacedPerson[], cell: Cell, person: Person): boolean {
+  const tableGuests = getGuestsOnTable(placedPersons, cell.tableIndex);
 
   for (let guest of tableGuests) {
-    const isAfraidOf = person.fear && guest.person.name === person.fear;
-    const makesAfraid = guest.person.fear && guest.person.fear === person.name;
+    const isAfraidOf = person.fear && guest.name === person.fear;
+    const makesAfraid = guest.fear && guest.fear === person.name;
 
     if (isAfraidOf || makesAfraid) {
       return true;
     }
   }
 
-  const neighbors = getNeighbors(gameFieldData, cell.row, cell.column);
+  const neighbors = getNeighbors(placedPersons, cell);
 
   for (let guest of neighbors) {
-    const isAfraidOf = person.smallFear && guest.person.name === person.smallFear;
-    const makesAfraid = guest.person.smallFear && guest.person.smallFear === person.name;
+    const isAfraidOf = person.smallFear && guest.name === person.smallFear;
+    const makesAfraid = guest.smallFear && guest.smallFear === person.name;
 
     if (isAfraidOf || makesAfraid) {
       return true;
@@ -185,33 +198,42 @@ function randomlyApplyCharactersOnBoard(
   characters: Person[],
   minInitialPanic: number,
   iteration: number = 0,
-) {
+): PlacedPerson[] {
+  const placedPersons: PlacedPerson[] = [];
   const copyOfCharacters = [...characters];
-  const allChairs = gameFieldData.flat().filter(isEmptyChair);
+  const allChairs = gameFieldData.flat().filter(isChair);
   const shuffledRequiredChairs = shuffleArray(allChairs).slice(0, copyOfCharacters.length);
   shuffledRequiredChairs.forEach((chair: Cell) => {
-    chair.person = copyOfCharacters.pop();
+    const person = copyOfCharacters.pop();
+    const { row, column, tableIndex } = chair;
+    placedPersons.push({ ...person, row, column, tableIndex });
   });
 
-  checkTableStates(gameFieldData);
-  const allGuests = getAllGuests(gameFieldData);
-  const numAfraid = allGuests.filter((cell) => cell.person.hasPanic).length;
+  checkTableStates(gameFieldData, placedPersons);
+  const numAfraid = placedPersons.filter((person) => person.hasPanic).length;
 
   if ((numAfraid < minInitialPanic && iteration < 10) || (numAfraid === 0 && iteration < 50)) {
     console.info("not afraid enough, reshuffling");
-    allGuests.forEach((cell) => (cell.person = undefined));
-    randomlyApplyCharactersOnBoard(gameFieldData, characters, minInitialPanic, iteration + 1);
+
+    return randomlyApplyCharactersOnBoard(gameFieldData, characters, minInitialPanic, iteration + 1);
   }
+
+  return placedPersons;
 }
 
-function applySeatedCharacters(gameFieldData: GameFieldData, characters: PersonWithPosition[]) {
-  characters.forEach((character) => {
-    gameFieldData[character.row][character.column].person = {
+function applySeatedCharacters(onboardingData: OnboardingData): PlacedPerson[] {
+  const { getTableIndex, characters } = onboardingData;
+
+  return characters.map((character): PlacedPerson => {
+    const relatedCellType = onboardingData.field[character.row][character.column];
+
+    return {
       ...character,
       triskaidekaphobia: false,
       hasPanic: false,
       afraidOf: [],
       makesAfraid: [],
+      tableIndex: isChair(relatedCellType) ? getTableIndex(character.row, character.column) : undefined,
       personElement: createPersonElement(character),
     };
   });

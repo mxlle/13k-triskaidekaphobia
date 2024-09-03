@@ -1,9 +1,9 @@
-import { GameFieldData } from "../types";
+import { PlacedPerson } from "../types";
 import { getHappyStats } from "./checks";
 import { globals } from "../globals";
 
-export function calculateScore(gameFieldData: GameFieldData, moves: number): number {
-  const { happyGuests, totalGuests } = getHappyStats(gameFieldData);
+export function calculateScore(persons: PlacedPerson[], moves: number): number {
+  const { happyGuests, totalGuests } = getHappyStats(persons);
 
   if (!totalGuests || !globals.metaData) {
     return 0;

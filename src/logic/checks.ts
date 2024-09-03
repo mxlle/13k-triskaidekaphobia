@@ -1,10 +1,10 @@
-import { Cell, GameFieldData, hasPerson, isChair, isSameCell, isTable, OccupiedCell } from "../types";
+import { Cell, CellPositionWithTableIndex, GameFieldData, isAtTable, isChair, isSameCell, isTable, PlacedPerson } from "../types";
 
-export function checkTableStates(gameFieldData: GameFieldData) {
+export function checkTableStates(gameFieldData: GameFieldData, placedPersons: PlacedPerson[]) {
   const panickedTableCells: Cell[] = [];
 
   for (let tableIndex = 0; tableIndex < 2; tableIndex++) {
-    const guests = getGuestsOnTable(gameFieldData, tableIndex);
+    const guests = getGuestsOnTable(placedPersons, tableIndex);
     const isPanic = guests.length === 13;
 
     if (isPanic) {
@@ -12,88 +12,65 @@ export function checkTableStates(gameFieldData: GameFieldData) {
     }
 
     guests.forEach((guest) => {
-      const afraidOf = guests.filter((otherGuest) => otherGuest.person.name === guest.person.fear);
-      const alsoAfraidOf = getScaryNeighbors(gameFieldData, guest);
+      const afraidOf = guests.filter((otherGuest) => otherGuest.name === guest.fear);
+      const alsoAfraidOf = getScaryNeighbors(placedPersons, guest);
       afraidOf.push(...alsoAfraidOf);
 
-      guest.person.hasPanic = afraidOf.length > 0;
-      guest.person.triskaidekaphobia = isPanic;
-      guest.person.afraidOf = afraidOf;
+      guest.hasPanic = afraidOf.length > 0;
+      guest.triskaidekaphobia = isPanic;
+      guest.afraidOf = afraidOf;
     });
   }
 
-  const otherGuestsInRoom = getAllGuests(gameFieldData).filter((guest) => guest.tableIndex === undefined);
+  const otherGuestsInRoom = placedPersons.filter((guest) => guest.tableIndex === undefined);
   otherGuestsInRoom.forEach((guest) => {
-    const afraidOf = getScaryNeighbors(gameFieldData, guest);
-    guest.person.hasPanic = afraidOf.length > 0;
-    guest.person.triskaidekaphobia = false;
-    guest.person.afraidOf = afraidOf;
+    const afraidOf = getScaryNeighbors(placedPersons, guest);
+    guest.hasPanic = afraidOf.length > 0;
+    guest.triskaidekaphobia = false;
+    guest.afraidOf = afraidOf;
   });
 
-  const allGuests = getAllGuests(gameFieldData);
-  const afraidGuests = allGuests.filter((guest) => guest.person.hasPanic);
-  allGuests.forEach((guest) => {
-    guest.person.makesAfraid = afraidGuests.filter((otherGuest) =>
-      otherGuest.person.afraidOf.find((afraidOf) => isSameCell(afraidOf, guest)),
-    );
+  const afraidGuests = placedPersons.filter((guest) => guest.hasPanic);
+  placedPersons.forEach((guest) => {
+    guest.makesAfraid = afraidGuests.filter((otherGuest) => otherGuest.afraidOf.find((afraidOf) => isSameCell(afraidOf, guest)));
   });
 
   return panickedTableCells;
 }
 
-export function getScaryNeighbors(gameFieldData: GameFieldData, cell: OccupiedCell) {
-  const neighbors = getNeighbors(gameFieldData, cell.row, cell.column);
-  const neighborsWithPerson = neighbors.filter(hasPerson);
-  return neighborsWithPerson.filter((neighbor) => neighbor.person.name === cell.person.smallFear);
+export function getScaryNeighbors(placedPersons: PlacedPerson[], person: PlacedPerson) {
+  const neighbors = getNeighbors(placedPersons, person);
+  return neighbors.filter((neighbor) => neighbor.name === person.smallFear);
 }
 
 // get all 8 neighbors of a cell, plus the three cells on the other side of the table
-export function getNeighbors(gameFieldData: GameFieldData, row: number, column: number): OccupiedCell[] {
-  const neighbors: OccupiedCell[] = [];
+export function getNeighbors(placedPersons: PlacedPerson[], self: CellPositionWithTableIndex): PlacedPerson[] {
+  const { row, column } = self;
 
-  for (let rowIndex = row - 1; rowIndex <= row + 1; rowIndex++) {
-    for (let columnIndex = column - 1; columnIndex <= column + 1; columnIndex++) {
-      if (rowIndex === row && columnIndex === column) {
-        continue;
-      }
+  const neighbors: PlacedPerson[] = placedPersons.filter((person) => {
+    const isSelf = person.row === row && person.column === column;
+    const isOpposite = person.row === row && person.column !== column && person.tableIndex === self.tableIndex;
 
-      const cell = gameFieldData[rowIndex]?.[columnIndex];
-      if (cell && hasPerson(cell)) {
-        neighbors.push(cell);
-      }
-    }
-  }
-
-  // add the cell on the other side of the table
-  const tableIndex = gameFieldData[row][column].tableIndex;
-  const additionalNeighbors = getGuestsOnTable(gameFieldData, tableIndex).filter(
-    (cell) => cell.column !== column && cell.row === row && neighbors.indexOf(cell) === -1,
-  );
-
-  neighbors.push(...additionalNeighbors);
+    return (!isSelf && Math.abs(person.row - row) <= 1 && Math.abs(person.column - column) <= 1) || isOpposite;
+  });
 
   return neighbors;
 }
 
-export function getNearestTableCell(gameFieldData: GameFieldData, cell: Cell) {
+export function getNearestTableCell(gameFieldData: GameFieldData, cell: CellPositionWithTableIndex) {
   const tableIndex = cell.tableIndex;
   const tableCells = getTableCells(gameFieldData, tableIndex);
   return tableCells.find((tableCell) => tableCell.row === cell.row);
 }
 
-export function getAllGuests(gameFieldData: GameFieldData) {
-  return gameFieldData.flat().filter(hasPerson);
+export function getHappyGuests(persons: PlacedPerson[]) {
+  return persons.filter((guest) => isAtTable(guest) && !guest.hasPanic && !guest.triskaidekaphobia);
 }
 
-export function getHappyGuests(gameFieldData: GameFieldData) {
-  return getAllGuests(gameFieldData).filter((guest) => isChair(guest) && !guest.person.hasPanic && !guest.person.triskaidekaphobia);
-}
-
-export function getHappyStats(gameFieldData: GameFieldData) {
-  const happyGuestList = getHappyGuests(gameFieldData);
-  const totalGuestList = getAllGuests(gameFieldData);
+export function getHappyStats(persons: PlacedPerson[]) {
+  const happyGuestList = getHappyGuests(persons);
   const happyGuests = happyGuestList.length;
-  const totalGuests = totalGuestList.length;
+  const totalGuests = persons.length;
   const hasWon = happyGuests === totalGuests;
 
   return {
@@ -107,8 +84,8 @@ export function getTableCells(gameFieldData: GameFieldData, tableIndex: number) 
   return gameFieldData.flat().filter((cell) => isTable(cell) && cell.tableIndex === tableIndex);
 }
 
-export function getGuestsOnTable(gameFieldData: GameFieldData, tableIndex: number): OccupiedCell[] {
-  return gameFieldData.flat().filter((cell): cell is OccupiedCell => cell.tableIndex === tableIndex && hasPerson(cell));
+export function getGuestsOnTable(placedPersons: PlacedPerson[], tableIndex: number): PlacedPerson[] {
+  return placedPersons.filter((person) => person.tableIndex === tableIndex);
 }
 
 export function getChairsAtTable(gameFieldData: GameFieldData, tableIndex: number) {
