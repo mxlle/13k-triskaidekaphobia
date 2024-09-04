@@ -16,7 +16,7 @@ import { CssClass, getCellElement } from "./game-field";
 
 export function createCellElement(cell: Cell, isInMiddle: boolean = false, isOnTheRightOfATable: boolean = false): HTMLElement {
   const cellElem = createElement({
-    cssClass: "cell",
+    cssClass: CssClass.CELL,
   });
 
   if (isTable(cell)) {

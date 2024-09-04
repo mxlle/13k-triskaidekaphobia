@@ -2,7 +2,16 @@ import "./game-field.scss";
 
 import { createButton, createElement } from "../../utils/html-utils";
 import { movePerson, newGame } from "../../logic/game-logic";
-import { Cell, CellPositionWithTableIndex, findPerson, GameFieldData, hasPerson, isSameCell, isTable, PlacedPerson } from "../../types";
+import {
+  Cell,
+  CellPositionWithTableIndex,
+  findPerson,
+  GameFieldData,
+  hasPerson,
+  isSameCell,
+  isTable,
+  PlacedPerson
+} from "../../types";
 import { createWinScreen } from "../win-screen/win-screen";
 import { createCellElement, updateCellOccupancy, updatePersonPanicState } from "./cell-component";
 import { getTranslation, TranslationKey } from "../../translations/i18n";
@@ -16,6 +25,7 @@ import { getOnboardingData, OnboardingData, wasOnboarding } from "../../logic/on
 import { getMiniHelpContent } from "../help/help";
 import { getOnboardingArrow } from "../onboarding/onboarding-components";
 import { calculateScore } from "../../logic/score";
+import initDragDrop from "../../logic/drag-drop";
 
 let mainContainer: HTMLElement | undefined;
 let gameFieldElem: HTMLElement | undefined;
@@ -41,6 +51,8 @@ export const enum CssClass {
   HAS_PERSON = "has-person",
   HAS_LEFT = "has-left",
   HAS_RIGHT = "has-right",
+  CELL = "cell",
+  IS_DRAGGING = "is-dragging",
 }
 
 export async function initializeEmptyGameField() {
@@ -280,7 +292,33 @@ export function generateGameFieldElement(gameFieldData: GameFieldData) {
     cellElements.push(rowElements);
   });
 
+  initDragDrop(
+    gameField,
+    CssClass.HAS_PERSON,
+    CssClass.CELL,
+    (dragEl) => {
+      gameField.classList.add(CssClass.IS_DRAGGING);
+      resetSelection(getElementCell(gameFieldData, dragEl), true);
+      return [...dragEl.children].find(el => el.classList.contains('person')).cloneNode(true) as HTMLElement
+    },
+    (dragEl, dropEl) => {
+      gameField.classList.remove(CssClass.IS_DRAGGING);
+      const dropCell = getElementCell(gameFieldData, dropEl);
+      if (!isTable(dropCell) && !hasPerson(globals.placedPersons, dropCell)) {
+        dragEl.click()
+        dropEl.click()
+      }
+    }
+  );
+
   return gameField;
+}
+
+function getElementCell(gameFieldData: GameFieldData, el: HTMLElement): Cell | undefined {
+  for (const row in cellElements) {
+    const column = cellElements[row].indexOf(el);
+    if (column !== -1) return gameFieldData[row][column];
+  }
 }
 
 export async function initializePersonsOnGameField(persons: PlacedPerson[]) {

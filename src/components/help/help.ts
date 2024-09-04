@@ -47,7 +47,7 @@ export function getMiniHelpContent(cell?: Cell): HTMLElement {
     miniHelpContent.append(exampleHeading, helpText);
 
     const placeholder = createElement({
-      cssClass: "cell",
+      cssClass: CssClass.CELL,
       text: "?",
     });
 
