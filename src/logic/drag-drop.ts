@@ -1,6 +1,11 @@
 const hasClass = (node: Element, className: string) => node.classList.contains(className);
 const firstParent = (e: TouchEvent | MouseEvent, cssClass: string): HTMLElement | undefined => {
-  let el: any = "touches" in e ? document.elementFromPoint(e.touches[0].pageX, e.touches[0].pageY) : e.target;
+  let touchList = (e as TouchEvent).touches;
+  if (!touchList?.length) {
+    touchList = (e as TouchEvent).changedTouches;
+  }
+
+  let el: any = touchList ? document.elementFromPoint(touchList[0].pageX, touchList[0].pageY) : e.target;
   while (el !== document) {
     if (hasClass(el, cssClass)) return el;
     el = el.parentNode;
@@ -25,11 +30,11 @@ export default (
   let isDragging, dragEl, overlayEl, dropEl;
 
   const pointerdown = (e) => {
-    e.preventDefault();
     isDragging = 1;
     dragEl = firstParent(e, dragClass);
     overlayEl = dragEl && createOverlay(dragEl);
     if (overlayEl) {
+      e.preventDefault();
       rootEl.appendChild(overlayEl);
       Object.assign(overlayEl.style, {
         position: "fixed",
@@ -40,15 +45,15 @@ export default (
     }
   };
   const pointermove = (e) => {
-    e.preventDefault();
     if (isDragging && overlayEl) {
+      e.preventDefault();
       Object.assign(overlayEl.style, getOverlayPosition(e));
     }
   };
   const pointerup = (e) => {
-    e.preventDefault();
     isDragging = 0;
     if (overlayEl) {
+      e.preventDefault();
       overlayEl.remove();
       dropEl = firstParent(e, dropClass);
       dropEl && onDrop(dragEl, dropEl);

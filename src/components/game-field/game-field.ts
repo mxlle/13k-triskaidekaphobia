@@ -2,16 +2,7 @@ import "./game-field.scss";
 
 import { createButton, createElement } from "../../utils/html-utils";
 import { movePerson, newGame } from "../../logic/game-logic";
-import {
-  Cell,
-  CellPositionWithTableIndex,
-  findPerson,
-  GameFieldData,
-  hasPerson,
-  isSameCell,
-  isTable,
-  PlacedPerson
-} from "../../types";
+import { Cell, CellPositionWithTableIndex, findPerson, GameFieldData, hasPerson, isSameCell, isTable, PlacedPerson } from "../../types";
 import { createWinScreen } from "../win-screen/win-screen";
 import { createCellElement, updateCellOccupancy, updatePersonPanicState } from "./cell-component";
 import { getTranslation, TranslationKey } from "../../translations/i18n";
@@ -299,16 +290,16 @@ export function generateGameFieldElement(gameFieldData: GameFieldData) {
     (dragEl) => {
       gameField.classList.add(CssClass.IS_DRAGGING);
       resetSelection(getElementCell(gameFieldData, dragEl), true);
-      return [...dragEl.children].find(el => el.classList.contains('person')).cloneNode(true) as HTMLElement
+      return [...dragEl.children].find((el) => el.classList.contains("person")).cloneNode(true) as HTMLElement;
     },
     (dragEl, dropEl) => {
       gameField.classList.remove(CssClass.IS_DRAGGING);
       const dropCell = getElementCell(gameFieldData, dropEl);
       if (!isTable(dropCell) && !hasPerson(globals.placedPersons, dropCell)) {
-        dragEl.click()
-        dropEl.click()
+        dragEl.click();
+        dropEl.click();
       }
-    }
+    },
   );
 
   return gameField;
@@ -376,7 +367,7 @@ export async function updatePanicStates(gameFieldData: GameFieldData, placedPers
 
 export function updateStateForSelection(placedPersons: PlacedPerson[], selectedPerson: PlacedPerson | undefined) {
   placedPersons.forEach((person) => {
-    person.personElement.classList.remove(CssClass.SCARY, CssClass.SCARED);
+    person.personElement.classList.remove(CssClass.SCARY, CssClass.SCARED, CssClass.SELECTED);
   });
 
   if (!selectedPerson) {
