@@ -79,6 +79,7 @@ export async function startNewGame() {
   clickedCell = undefined;
   lastClickedCell = undefined;
   moves = 0;
+  updateMiniHelp();
 
   if (globals.gameFieldData.length && gameFieldElem) {
     // reset old game field
@@ -319,7 +320,7 @@ export async function initializePersonsOnGameField(persons: PlacedPerson[]) {
   for (let i = 0; i < persons.length; i++) {
     const person = persons[i];
     const cellElement = getCellElement(person);
-    cellElement.append(person.personElement);
+    cellElement.innerHTML = "";
     updateCellOccupancy(person, cellElement);
     await requestAnimationFrameWithTimeout(TIMEOUT_CELL_APPEAR);
   }
