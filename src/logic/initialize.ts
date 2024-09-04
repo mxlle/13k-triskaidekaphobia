@@ -1,15 +1,4 @@
-import {
-  BasePerson,
-  Cell,
-  CellType,
-  GameFieldData,
-  getGameFieldCopy,
-  isChair,
-  isEmptyChair,
-  isTable,
-  Person,
-  PlacedPerson,
-} from "../types";
+import { BasePerson, Cell, CellType, GameFieldData, isChair, isEmptyChair, isTable, Person, PlacedPerson } from "../types";
 import { getRandomPhobia, getRandomPhobiaExcluding, Phobia } from "../phobia";
 import { getOnboardingData, OnboardingData } from "./onboarding";
 import { globals } from "../globals";
@@ -88,8 +77,7 @@ function getGameFieldObject(type: CellType, row: number, column: number, onboard
   return obj;
 }
 
-function generateCharactersForGame(baseGameField: GameFieldData, iteration: number = 0): Person[] {
-  const gameFieldCopy = getGameFieldCopy(baseGameField);
+function generateCharactersForGame(gameField: GameFieldData, iteration: number = 0): Person[] {
   const placedPersons: PlacedPerson[] = [];
   const { minAmount, maxAmount, chanceForBigFear, chanceForSmallFear } = globals.settings;
   const amount = getRandomIntFromInterval(minAmount, maxAmount);
@@ -97,7 +85,7 @@ function generateCharactersForGame(baseGameField: GameFieldData, iteration: numb
 
   while (characters.length < amount) {
     const newPerson = generatePerson(chanceForBigFear, chanceForSmallFear);
-    const chair = findValidChair(gameFieldCopy, placedPersons, newPerson);
+    const chair = findValidChair(gameField, placedPersons, newPerson);
 
     if (chair) {
       characters.push(newPerson);
@@ -112,7 +100,7 @@ function generateCharactersForGame(baseGameField: GameFieldData, iteration: numb
   if (table1Guests.length === 13 || table2Guests.length === 13) {
     if (iteration < 10) {
       console.info("triskaidekaphobia is triggered, recreating");
-      return generateCharactersForGame(baseGameField, iteration + 1);
+      return generateCharactersForGame(gameField, iteration + 1);
     }
 
     console.warn("did not find valid gamefield after 10 iterations, might not be solvable");
@@ -200,6 +188,11 @@ function randomlyApplyCharactersOnBoard(
   const shuffledRequiredChairs = shuffleArray(allChairs).slice(0, copyOfCharacters.length);
   shuffledRequiredChairs.forEach((chair: Cell) => {
     const person = copyOfCharacters.pop();
+
+    if (!person) {
+      return;
+    }
+
     const { row, column, tableIndex } = chair;
     placedPersons.push({ ...person, row, column, tableIndex });
   });
