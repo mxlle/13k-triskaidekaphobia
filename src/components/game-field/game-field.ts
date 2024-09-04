@@ -292,12 +292,15 @@ export function generateGameFieldElement(gameFieldData: GameFieldData) {
       resetSelection(getElementCell(gameFieldData, dragEl), true);
       return [...dragEl.children].find((el) => el.classList.contains("person")).cloneNode(true) as HTMLElement;
     },
-    (dragEl, dropEl) => {
+    (dragEl, dropEl, isTouch) => {
       gameField.classList.remove(CssClass.IS_DRAGGING);
       const dropCell = getElementCell(gameFieldData, dropEl);
+      const dragCell = getElementCell(gameFieldData, dragEl);
       if (!isTable(dropCell) && !hasPerson(globals.placedPersons, dropCell)) {
         dragEl.click();
         dropEl.click();
+      } else if (isTouch && dropCell === dragCell) {
+        dragEl.click();
       }
     },
   );

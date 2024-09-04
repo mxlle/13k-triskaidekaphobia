@@ -25,7 +25,7 @@ export default (
   dragClass: string,
   dropClass: string,
   createOverlay: (dragEl: HTMLElement) => HTMLElement,
-  onDrop: (dragEl: HTMLElement, dropEl: HTMLElement) => void,
+  onDrop: (dragEl: HTMLElement, dropEl: HTMLElement, isTouch: boolean) => void,
 ) => {
   let isDragging, dragEl, overlayEl, dropEl;
 
@@ -56,7 +56,8 @@ export default (
       e.preventDefault();
       overlayEl.remove();
       dropEl = firstParent(e, dropClass);
-      dropEl && onDrop(dragEl, dropEl);
+      const isTouch = e.type === "touchend";
+      dropEl && onDrop(dragEl, dropEl, isTouch);
     }
   };
   rootEl.addEventListener("mousedown", pointerdown);
