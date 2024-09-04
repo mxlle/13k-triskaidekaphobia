@@ -10,6 +10,7 @@ import { getChairsAtTable, getGuestsOnTable } from "../../logic/checks";
 import { globals } from "../../globals";
 import { getOnboardingData } from "../../logic/onboarding";
 import { baseField } from "../../logic/base-field";
+import { CssClass } from "../game-field/game-field";
 
 let helpDialog: Dialog | undefined;
 
@@ -25,7 +26,7 @@ export function getMiniHelpContent(cell?: Cell): HTMLElement {
   const person = cell ? findPerson(globals.placedPersons, cell) : undefined;
 
   const miniHelpContent = createElement({
-    cssClass: "mini-help",
+    cssClass: "help",
   });
 
   const helpText = createElement({});
@@ -34,7 +35,7 @@ export function getMiniHelpContent(cell?: Cell): HTMLElement {
     const exampleHeading = createElement({
       tag: "h3",
       text: getTranslation(TranslationKey.WELCOME),
-      cssClass: "welcome",
+      cssClass: "hi",
     });
 
     const goalText = getOnboardingData() ? getTranslation(TranslationKey.GOAL) : getTranslation(TranslationKey.GOAL_2);
@@ -65,7 +66,7 @@ export function getMiniHelpContent(cell?: Cell): HTMLElement {
     updateCellOccupancy(cell, helpCellElement, true);
     const personElement = createPersonElement(person);
     helpCellElement.append(personElement);
-    helpCellElement.classList.toggle("has-person", true);
+    helpCellElement.classList.toggle(CssClass.HAS_PERSON, true);
     const { fear, smallFear } = person;
 
     const isGerman = isGermanLanguage();
@@ -133,7 +134,7 @@ function getSatisfactionStats(person: PlacedPerson): HTMLElement {
   const noSmallFear = !hasTable ? undefined : person.afraidOf.filter((otherCell) => person.smallFear === otherCell.name).length === 0;
 
   const satisfactionStats = createElement({
-    cssClass: "satisfaction-stats",
+    cssClass: "stats",
   });
 
   const statsGrid = createElement({
@@ -159,7 +160,7 @@ function getSatisfactionStats(person: PlacedPerson): HTMLElement {
     .filter(({ phobia }) => !!phobia)
     .forEach(({ satisfied, explainText }) => {
       const stat = createElement({
-        cssClass: `stat${satisfied !== undefined ? (satisfied ? " satisfied" : " unsatisfied") : ""}`,
+        cssClass: `stat${satisfied !== undefined ? (satisfied ? " good" : " bad") : ""}`,
       });
 
       const elems = [satisfied !== undefined ? (satisfied ? "✔" : "X") : "?", explainText];

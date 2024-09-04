@@ -2,7 +2,7 @@
 
 @use "../../theme";
 
-.mini-help {
+.help {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -16,7 +16,7 @@
   color: theme.$text-tertiary;
 
   h3 {
-    &.welcome {
+    &.hi {
       font-family: theme.$font-family-special;
       font-size: 1.6em;
       color: theme.$text-primary;
@@ -103,7 +103,7 @@
   }
 }
 
-.satisfaction-stats {
+.stats {
   background: theme.$bg-alpha-05;
   padding: 0.5rem 0.75rem;
   border-radius: theme.$border-radius;
@@ -126,19 +126,12 @@
       font-weight: bold;
     }
 
-    &.satisfied {
+    &.good {
       color: theme.$success-color;
     }
 
-    &.unsatisfied {
+    &.bad {
       color: theme.$danger-color-contrast;
-    }
-
-    em {
-      font-style: normal;
-      font-weight: bold;
-      font-size: 1.3em;
-      color: theme.$danger-color;
     }
   }
 }
