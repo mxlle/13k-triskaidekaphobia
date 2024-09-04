@@ -22,7 +22,7 @@ export function createWinScreen(score: number, isComplete: boolean) {
   if (!winDialog) {
     const winContentElem = getWinScreenContent(score, isComplete);
 
-    winDialog = createDialog(winContentElem, getConfirmText(isComplete), undefined, true);
+    winDialog = createDialog(winContentElem, getConfirmText(isComplete));
   } else {
     winDialog.recreateDialogContent(getWinScreenContent(score, isComplete));
     updateConfirmText(isComplete);

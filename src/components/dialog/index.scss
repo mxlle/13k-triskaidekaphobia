@@ -21,10 +21,6 @@
     height: auto;
   }
 
-  &.shine-through {
-    background: theme.$dialog-bg-shine-through;
-  }
-
   &:not(.open) {
     transform: translateY(100%);
     opacity: 0;

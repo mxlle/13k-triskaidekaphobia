@@ -1,37 +1,20 @@
 import "./index.scss";
 
 import { createButton, createElement } from "./utils/html-utils";
-import { newGame } from "./logic/game-logic";
-import { createDialog, Dialog } from "./components/dialog/dialog";
 import { PubSubEvent, pubSubService } from "./utils/pub-sub-service";
 import { initializeEmptyGameField, startNewGame } from "./components/game-field/game-field";
 import { initAudio, togglePlayer } from "./audio/music-control";
 import { getLocalStorageItem, LocalStorageKey } from "./utils/local-storage";
-import { initPoki, pokiSdk } from "./poki-integration";
+import { initPoki } from "./poki-integration";
 import { isOnboarding } from "./logic/onboarding";
 import { globals } from "./globals";
 import { getTranslation, TranslationKey } from "./translations/i18n";
 import { createWinScreen } from "./components/win-screen/win-screen";
 
-let configDialog: Dialog;
-
 let scoreElement: HTMLElement;
 let currentScore = 0;
 
 const initializeMuted = getLocalStorageItem(LocalStorageKey.MUTED) === "true";
-
-function onNewGameClick() {
-  pokiSdk.gameplayStop();
-  newGame();
-}
-
-function openConfig() {
-  if (!configDialog) {
-    configDialog = createDialog(createElement({ text: "Config :-)" }), undefined, "Title :-)");
-  }
-
-  configDialog.open();
-}
 
 function init() {
   const header = createElement({

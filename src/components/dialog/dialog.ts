@@ -3,7 +3,7 @@ import { createButton, createElement } from "../../utils/html-utils";
 import "./index.scss";
 import { getTranslation, TranslationKey } from "../../translations/i18n";
 
-let zIndexCounter = 10; // start at 5 to be above regular content
+let zIndexCounter = 50; // start at 50 to be above regular content
 
 export interface Dialog {
   open: (openImmediately?: boolean) => Promise<boolean>;
@@ -18,17 +18,12 @@ export function createDialog(
   innerElement: HTMLElement,
   submitButtonText?: string,
   headerText?: string,
-  shineThrough: boolean = false,
   autoHeight: boolean = false,
 ): Dialog {
   const dialog = createElement({
     cssClass: "dialog",
     onClick: (event) => event.stopPropagation(), // TODO - why?
   });
-
-  if (shineThrough) {
-    dialog.classList.add("shine-through");
-  }
 
   if (autoHeight) {
     dialog.classList.add("auto-height");
