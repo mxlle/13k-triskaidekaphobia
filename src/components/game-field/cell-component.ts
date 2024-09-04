@@ -10,7 +10,7 @@ import {
   PlacedPerson,
 } from "../../types";
 import { createElement } from "../../utils/html-utils";
-import { getNearestTableCell } from "../../logic/checks";
+import { getNearestTableCell, isHappy } from "../../logic/checks";
 import { globals } from "../../globals";
 import { CssClass, getCellElement } from "./game-field";
 
@@ -73,7 +73,7 @@ export function updateCellOccupancy(cell: CellPositionWithTableIndex, cellElemen
 }
 
 export function updatePersonPanicState(person: PlacedPerson, personElement: HTMLElement = person.personElement): void {
-  const hasPanic = person.hasPanic || person.tableIndex === undefined || person.triskaidekaphobia;
+  const hasPanic = !isHappy(person);
   personElement.classList.toggle(CssClass.PANIC, hasPanic);
   personElement.classList.toggle(CssClass.P_T13A, person.triskaidekaphobia && !person.hasPanic);
 }

@@ -1,4 +1,14 @@
-import { Cell, CellPositionWithTableIndex, GameFieldData, isAtTable, isChair, isSameCell, isTable, PlacedPerson } from "../types";
+import {
+  Cell,
+  CellPositionWithTableIndex,
+  GameFieldData,
+  isAtTable,
+  isChair,
+  isEmptyChair,
+  isSameCell,
+  isTable,
+  PlacedPerson,
+} from "../types";
 
 export function checkTableStates(gameFieldData: GameFieldData, placedPersons: PlacedPerson[]) {
   const panickedTableCells: Cell[] = [];
@@ -63,8 +73,24 @@ export function getNearestTableCell(gameFieldData: GameFieldData, cell: CellPosi
   return tableCells.find((tableCell) => tableCell.row === cell.row);
 }
 
+export function isUnhappy(person: PlacedPerson): boolean {
+  return !isHappy(person);
+}
+
+export function isUnhappyIgnoreTriskaidekaphobia(person: PlacedPerson): boolean {
+  return !isAtTable(person) || person.hasPanic;
+}
+
+export function isHappy(person: PlacedPerson): boolean {
+  return isAtTable(person) && !person.hasPanic && !person.triskaidekaphobia;
+}
+
 export function getHappyGuests(persons: PlacedPerson[]) {
-  return persons.filter((guest) => isAtTable(guest) && !guest.hasPanic && !guest.triskaidekaphobia);
+  return persons.filter(isHappy);
+}
+
+export function getEmptyChairs(gameFieldData: GameFieldData, placedPersons: PlacedPerson[]) {
+  return gameFieldData.flat().filter((cell) => isEmptyChair(placedPersons, cell));
 }
 
 export function getHappyStats(persons: PlacedPerson[]) {

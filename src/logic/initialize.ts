@@ -1,22 +1,12 @@
-import {
-  BasePerson,
-  Cell,
-  CellType,
-  GameFieldData,
-  getGameFieldCopy,
-  isChair,
-  isEmptyChair,
-  isTable,
-  Person,
-  PlacedPerson,
-} from "../types";
+import { BasePerson, Cell, CellType, GameFieldData, getGameFieldCopy, isChair, isTable, Person, PlacedPerson } from "../types";
 import { getRandomPhobia, getRandomPhobiaExcluding, Phobia } from "../phobia";
 import { getOnboardingData, OnboardingData } from "./onboarding";
 import { globals } from "../globals";
 import { getRandomIntFromInterval, shuffleArray } from "../utils/random-utils";
-import { checkTableStates, getGuestsOnTable, getNeighbors } from "./checks";
+import { checkTableStates, getEmptyChairs, getGuestsOnTable, getNeighbors } from "./checks";
 import { baseField } from "./base-field";
 import { createPersonElement } from "../components/game-field/cell-component";
+import { calculatePar } from "./par";
 
 export function placePersonsInitially(gameFieldData: GameFieldData): PlacedPerson[] {
   let onboardingData: OnboardingData | undefined = getOnboardingData();
@@ -28,8 +18,14 @@ export function placePersonsInitially(gameFieldData: GameFieldData): PlacedPerso
   } else {
     const charactersForGame = generateCharactersForGame(gameFieldData);
     placedPersons = randomlyApplyCharactersOnBoard(gameFieldData, charactersForGame, globals.settings.minInitialPanic);
+
+    const time = performance.now();
+    const par = calculatePar(gameFieldData, [...placedPersons]);
+    console.info("PAR CALCULATION TOOK", performance.now() - time);
+    console.info("FINAL PAR", par);
+
     globals.metaData = {
-      minMoves: Math.max(globals.settings.minInitialPanic - 1, 1),
+      minMoves: par, // Math.max(globals.settings.minInitialPanic - 1, 1),
       maxMoves: charactersForGame.length,
     };
   }
@@ -121,8 +117,8 @@ function generateCharactersForGame(baseGameField: GameFieldData, iteration: numb
   return characters;
 }
 
-function findValidChair(gameFieldData: GameFieldData, placedPersons: PlacedPerson[], person: Person): Cell | undefined {
-  const emptyChairs = gameFieldData.flat().filter((cell) => isEmptyChair(placedPersons, cell));
+export function findValidChair(gameFieldData: GameFieldData, placedPersons: PlacedPerson[], person: Person): Cell | undefined {
+  const emptyChairs = getEmptyChairs(gameFieldData, placedPersons);
 
   for (let chair of emptyChairs) {
     if (!isTriggeringPhobia(placedPersons, chair, person)) {
@@ -131,7 +127,7 @@ function findValidChair(gameFieldData: GameFieldData, placedPersons: PlacedPerso
   }
 }
 
-function isTriggeringPhobia(placedPersons: PlacedPerson[], cell: Cell, person: Person): boolean {
+export function isTriggeringPhobia(placedPersons: PlacedPerson[], cell: Cell, person: Person): boolean {
   const tableGuests = getGuestsOnTable(placedPersons, cell.tableIndex);
 
   for (let guest of tableGuests) {
