@@ -4,7 +4,7 @@ import { deTranslations } from "./de";
 
 export const enum TranslationKey {
   INFO_TRISKAIDEKAPHOBIA,
-  EXAMPLE_TRISKAIDEKAPHOBIA,
+  TRISKAIDEKAPHOBIA,
   WELCOME,
   GOAL,
   GOAL_2,
@@ -13,8 +13,8 @@ export const enum TranslationKey {
   PLAY_AGAIN,
   CONTINUE,
   CANCEL,
-  EXAMPLE_BIG_FEAR,
-  EXAMPLE_SMALL_FEAR,
+  BIG_FEAR,
+  SMALL_FEAR,
   INFO_BIG_FEAR,
   INFO_SMALL_FEAR,
   INFO_FOMO,
@@ -26,6 +26,7 @@ export const enum TranslationKey {
   INFO_TABLE_OCCUPANCY,
   INFO_DECOR,
   INFO_EMPTY,
+  INFO_PHOBIAS,
   DIFFICULTY,
   DIFFICULTY_EASY,
   DIFFICULTY_MEDIUM,

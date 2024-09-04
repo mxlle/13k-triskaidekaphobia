@@ -70,6 +70,7 @@ export function getMiniHelpContent(cell?: Cell): HTMLElement {
 
     return miniHelpContent;
   }
+
   let helpCellElement: HTMLElement | undefined;
   let statsElem: HTMLElement | undefined;
 
@@ -87,16 +88,21 @@ export function getMiniHelpContent(cell?: Cell): HTMLElement {
     const fearName = getPhobiaName(fear, isGerman);
     const smallFearName = getPhobiaName(smallFear, isGerman);
 
-    const helpTexts = [
-      person.triskaidekaphobia ? getTranslation(TranslationKey.EXAMPLE_TRISKAIDEKAPHOBIA) : "",
-      fear ? getTranslation(TranslationKey.EXAMPLE_BIG_FEAR, fearName, fear) : "",
-      smallFear ? getTranslation(TranslationKey.EXAMPLE_SMALL_FEAR, smallFearName, smallFear) : "",
+    const phobias = [
+      getTranslation(TranslationKey.TRISKAIDEKAPHOBIA) + " [13]",
+      fear ? getTranslation(TranslationKey.BIG_FEAR, fearName + " " + fear) : "",
+      smallFear ? getTranslation(TranslationKey.SMALL_FEAR, smallFearName + " " + smallFear) : "",
     ];
 
-    helpText.innerHTML = helpTexts
-      .filter(Boolean)
-      .map((text) => `<p>${text}</p>`)
-      .join("");
+    helpText.innerHTML = getTranslation(
+      TranslationKey.INFO_PHOBIAS,
+      "<ul>" +
+        phobias
+          .filter(Boolean)
+          .map((text) => `<li>${text}</li>`)
+          .join("") +
+        "</ul>",
+    );
   } else {
     helpCellElement = createCellElement(cell, true);
 

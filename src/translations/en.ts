@@ -2,7 +2,7 @@ import { TranslationKey } from "./i18n";
 
 export const enTranslations: Record<TranslationKey, string> = {
   [TranslationKey.INFO_TRISKAIDEKAPHOBIA]: "never <em>13</em> at a table",
-  [TranslationKey.EXAMPLE_TRISKAIDEKAPHOBIA]: "<em class='t13a'>Triskaidekaphobia</em>: 13 must not be seated at a table.",
+  [TranslationKey.TRISKAIDEKAPHOBIA]: "Triskaidekaphobia",
   [TranslationKey.WELCOME]: "Welcome to the Society of Multiphobics",
   [TranslationKey.GOAL]: "🏁 Seat all emojis at the tables without triggering any phobias.",
   [TranslationKey.GOAL_2]: "🏁 What a mess! Re-sort the emojis at the tables until all phobias are resolved.",
@@ -11,11 +11,12 @@ export const enTranslations: Record<TranslationKey, string> = {
   [TranslationKey.PLAY_AGAIN]: "Play again",
   [TranslationKey.CONTINUE]: "Continue",
   [TranslationKey.CANCEL]: "Cancel",
-  [TranslationKey.EXAMPLE_BIG_FEAR]: "Big <em>{0}</em>: {1} must not sit at the same table.",
-  [TranslationKey.EXAMPLE_SMALL_FEAR]: "Small <em>{0}</em>: {1} must not sit next to or opposite.",
+  [TranslationKey.BIG_FEAR]: "Big {0}",
+  [TranslationKey.SMALL_FEAR]: "Small {0}",
   [TranslationKey.INFO_BIG_FEAR]: "no {0} at the same table (A)",
   [TranslationKey.INFO_SMALL_FEAR]: "no {0} next to or opposite (B)",
   [TranslationKey.INFO_FOMO]: "assigned to a seat at the table 🍽️",
+  [TranslationKey.INFO_PHOBIAS]: "Phobias: {0}",
   [TranslationKey.RULES]: "Rules",
   [TranslationKey.RULES_CONTENT]: `🏁 The goal is to seat all emojis at the tables without anybody being frightened.
 

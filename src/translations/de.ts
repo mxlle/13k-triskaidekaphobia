@@ -2,7 +2,7 @@ import { TranslationKey } from "./i18n";
 
 export const deTranslations: Record<TranslationKey, string> = {
   [TranslationKey.INFO_TRISKAIDEKAPHOBIA]: "niemals <em>13</em> an einem Tisch",
-  [TranslationKey.EXAMPLE_TRISKAIDEKAPHOBIA]: "<em class='t13a'>Triskaidekaphobie</em>: 13 dürfen nicht an einem Tisch sitzen.",
+  [TranslationKey.TRISKAIDEKAPHOBIA]: "Triskaidekaphobie",
   [TranslationKey.WELCOME]: "Willkommen bei der Gesellschaft der Multiphobiker",
   [TranslationKey.GOAL]: "🏁 Platziere alle Emojis an den Tischen ohne ihre Phobien auszulösen.",
   [TranslationKey.GOAL_2]: "🏁 Was für ein Chaos! Sortiere die Emojis um, bis alle Phobien aufgelöst sind.",
@@ -11,11 +11,12 @@ export const deTranslations: Record<TranslationKey, string> = {
   [TranslationKey.PLAY_AGAIN]: "Nochmal spielen",
   [TranslationKey.CONTINUE]: "Weiter",
   [TranslationKey.CANCEL]: "Abbrechen",
-  [TranslationKey.EXAMPLE_BIG_FEAR]: "Große <em>{0}</em>: {1} darf nicht am selben Tisch sitzen.",
-  [TranslationKey.EXAMPLE_SMALL_FEAR]: "Kleine <em>{0}</em>: {1} darf nicht daneben oder gegenüber sitzen.",
+  [TranslationKey.BIG_FEAR]: "Große {0}",
+  [TranslationKey.SMALL_FEAR]: "Kleine {0}",
   [TranslationKey.INFO_BIG_FEAR]: "keine {0} am selben Tisch (A)",
   [TranslationKey.INFO_SMALL_FEAR]: "keine {0} daneben oder gegenüber (B)",
   [TranslationKey.INFO_FOMO]: "einem Sitzplatz zugewiesen 🍽️",
+  [TranslationKey.INFO_PHOBIAS]: "Phobien: {0}",
   [TranslationKey.RULES]: "Regeln",
   [TranslationKey.RULES_CONTENT]: `🏁 Das Ziel ist es, alle Emojis an den Tischen zu platzieren, ohne dass sich jemand fürchtet.
 
