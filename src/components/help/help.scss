@@ -2,29 +2,6 @@
 
 @use "../../theme";
 
-.rules {
-  margin: 1rem auto;
-  white-space: pre-line;
-  text-align: left;
-  max-width: 800px;
-  padding: 0 1rem;
-}
-
-.rules,
-.mini-help {
-  em {
-    font-style: normal;
-    font-weight: bold;
-    font-size: 1.2em;
-    font-family: theme.$font-family-special;
-    color: theme.$danger-color-contrast;
-
-    &.t13a {
-      font-size: 1.8em;
-    }
-  }
-}
-
 .mini-help {
   display: flex;
   flex-direction: column;
@@ -158,7 +135,8 @@
     }
 
     em {
-      font-family: theme.$font-family;
+      font-style: normal;
+      font-weight: bold;
       font-size: 1.3em;
       color: theme.$danger-color;
     }

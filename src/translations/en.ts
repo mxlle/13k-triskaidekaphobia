@@ -17,14 +17,6 @@ export const enTranslations: Record<TranslationKey, string> = {
   [TranslationKey.INFO_SMALL_FEAR]: "no {0} next to or opposite (B)",
   [TranslationKey.INFO_FOMO]: "assigned to a seat at the table 🍽️",
   [TranslationKey.INFO_PHOBIAS]: "Phobias: {0}",
-  [TranslationKey.RULES]: "Rules",
-  [TranslationKey.RULES_CONTENT]: `🏁 The goal is to seat all emojis at the tables without anybody being frightened.
-
-😱 Emojis are afraid of certain other emojis. Click on an emoji to see who they are afraid of.
-
-1️⃣3️⃣🙀 Also all emojis suffer from <em>Triskaidekaphobia</em>.
-
-😀 If all emojis are happy, you win! 🎉`,
   [TranslationKey.INFO_PLACEHOLDER]: "Select an emoji to learn more about it.",
   [TranslationKey.INFO_CHAIR]: "A chair. Someone can sit here.",
   [TranslationKey.INFO_TABLE]: "Table {0}",

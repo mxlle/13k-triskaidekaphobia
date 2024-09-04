@@ -4,11 +4,12 @@ import { createElement } from "../../utils/html-utils";
 import { getTranslation, isGermanLanguage, TranslationKey } from "../../translations/i18n";
 import { Cell, CellType, findPerson, isChair, isEmpty, isTable, PlacedPerson } from "../../types";
 import { getPhobiaName, Phobia } from "../../phobia";
-import { createDialog, Dialog } from "../dialog/dialog";
+import { Dialog } from "../dialog/dialog";
 import { createCellElement, createPersonElement, updateCellOccupancy } from "../game-field/cell-component";
 import { getChairsAtTable, getGuestsOnTable } from "../../logic/checks";
 import { globals } from "../../globals";
 import { getOnboardingData } from "../../logic/onboarding";
+import { baseField } from "../../logic/base-field";
 
 let helpDialog: Dialog | undefined;
 
@@ -16,23 +17,6 @@ interface HappyStat {
   phobia: Phobia | CellType.CHAIR | "😱";
   satisfied: boolean;
   explainText: string;
-}
-
-export function openHelp() {
-  if (!helpDialog) {
-    const helpContent = createElement({
-      cssClass: "rules",
-    });
-
-    const helpText = createElement({});
-    helpText.innerHTML = getTranslation(TranslationKey.RULES_CONTENT);
-
-    helpContent.append(helpText);
-
-    helpDialog = createDialog(helpContent, undefined, getTranslation(TranslationKey.RULES));
-  }
-
-  helpDialog.open();
 }
 
 export function getMiniHelpContent(cell?: Cell): HTMLElement {
@@ -87,22 +71,22 @@ export function getMiniHelpContent(cell?: Cell): HTMLElement {
     const isGerman = isGermanLanguage();
     const fearName = getPhobiaName(fear, isGerman);
     const smallFearName = getPhobiaName(smallFear, isGerman);
+    const showTriskaidekaphobia = globals.gameFieldData.length === baseField.length;
 
     const phobias = [
-      getTranslation(TranslationKey.TRISKAIDEKAPHOBIA) + " [13]",
+      showTriskaidekaphobia ? getTranslation(TranslationKey.TRISKAIDEKAPHOBIA) + " [13]" : "",
       fear ? getTranslation(TranslationKey.BIG_FEAR, fearName + " " + fear) : "",
       smallFear ? getTranslation(TranslationKey.SMALL_FEAR, smallFearName + " " + smallFear) : "",
     ];
 
-    helpText.innerHTML = getTranslation(
-      TranslationKey.INFO_PHOBIAS,
-      "<ul>" +
-        phobias
-          .filter(Boolean)
-          .map((text) => `<li>${text}</li>`)
-          .join("") +
-        "</ul>",
-    );
+    const filterPhobias = phobias.filter(Boolean);
+
+    if (filterPhobias.length !== 0) {
+      helpText.innerHTML = getTranslation(
+        TranslationKey.INFO_PHOBIAS,
+        "<ul>" + filterPhobias.map((text) => `<li>${text}</li>`).join("") + "</ul>",
+      );
+    }
   } else {
     helpCellElement = createCellElement(cell, true);
 

@@ -17,14 +17,6 @@ export const deTranslations: Record<TranslationKey, string> = {
   [TranslationKey.INFO_SMALL_FEAR]: "keine {0} daneben oder gegenüber (B)",
   [TranslationKey.INFO_FOMO]: "einem Sitzplatz zugewiesen 🍽️",
   [TranslationKey.INFO_PHOBIAS]: "Phobien: {0}",
-  [TranslationKey.RULES]: "Regeln",
-  [TranslationKey.RULES_CONTENT]: `🏁 Das Ziel ist es, alle Emojis an den Tischen zu platzieren, ohne dass sich jemand fürchtet.
-
-😱 Emojis fürchten sich vor bestimmten anderen Emojis. Klicke auf ein Emoji, um zu sehen, vor wem sie sich fürchten.
-
-1️⃣3️⃣🙀 Außerdem leiden alle Emojis an <em>Triskaidekaphobie</em>.
-
-😀 Wenn alle Emojis glücklich sind, hast du gewonnen! 🎉`,
   [TranslationKey.INFO_PLACEHOLDER]: "Wähle ein Emoji aus, um mehr darüber zu erfahren.",
   [TranslationKey.INFO_CHAIR]: "Ein Stuhl. Jemand kann hier sitzen.",
   [TranslationKey.INFO_TABLE]: "Tisch {0}",

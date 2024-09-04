@@ -18,8 +18,6 @@ export const enum TranslationKey {
   INFO_BIG_FEAR,
   INFO_SMALL_FEAR,
   INFO_FOMO,
-  RULES,
-  RULES_CONTENT,
   INFO_PLACEHOLDER,
   INFO_CHAIR,
   INFO_TABLE,

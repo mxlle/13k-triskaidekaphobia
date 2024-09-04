@@ -7,7 +7,6 @@ import { PubSubEvent, pubSubService } from "./utils/pub-sub-service";
 import { initializeEmptyGameField, startNewGame } from "./components/game-field/game-field";
 import { initAudio, togglePlayer } from "./audio/music-control";
 import { getLocalStorageItem, LocalStorageKey } from "./utils/local-storage";
-import { openHelp } from "./components/help/help";
 import { initPoki, pokiSdk } from "./poki-integration";
 import { isOnboarding } from "./logic/onboarding";
 import { globals } from "./globals";
@@ -52,8 +51,6 @@ function init() {
   });
 
   btnContainer.append(muteButton);
-
-  btnContainer.append(createButton({ text: "❓", onClick: openHelp, iconBtn: true }));
 
   header.append(btnContainer);
 
