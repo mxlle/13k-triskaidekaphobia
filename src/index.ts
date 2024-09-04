@@ -10,6 +10,7 @@ import { getLocalStorageItem, LocalStorageKey } from "./utils/local-storage";
 import { initPoki, pokiSdk } from "./poki-integration";
 import { isOnboarding } from "./logic/onboarding";
 import { globals } from "./globals";
+import { getTranslation, TranslationKey } from "./translations/i18n";
 
 let configDialog: Dialog;
 
@@ -35,11 +36,15 @@ function init() {
     tag: "header",
   });
 
+  scoreElement = createElement({
+    cssClass: "score",
+  });
+
+  header.append(scoreElement);
+
   const btnContainer = createElement({
     cssClass: "h-btns",
   });
-
-  btnContainer.append(createButton({ text: "🔄", onClick: onNewGameClick, iconBtn: true }));
 
   const muteButton = createButton({
     text: initializeMuted ? "🔇" : "🔊",
@@ -54,21 +59,7 @@ function init() {
 
   header.append(btnContainer);
 
-  // header.append(
-  //   createElement({
-  //     tag: "h1",
-  //     text: `${getTranslation(TranslationKey.WELCOME)}`,
-  //   }),
-  // );
-  // header.append(
-  //   createButton({ text: "⚙️", onClick: openConfig, iconBtn: true }),
-  // );
-
-  scoreElement = createElement({
-    cssClass: "score",
-  });
-
-  header.append(scoreElement);
+  btnContainer.append(createButton({ text: "🔄", onClick: onNewGameClick, iconBtn: true }));
 
   document.body.append(header);
 
@@ -90,7 +81,7 @@ function init() {
 
     //  | Par: ${globals.metaData.minMoves}
 
-    const scoreText = `Moves: ${moves} | ${formatNumber(score)}⭐️`;
+    const scoreText = `${getTranslation(TranslationKey.MOVES)}: ${moves} | ${formatNumber(score)}⭐️`;
     scoreElement.textContent = scoreText;
   });
 }

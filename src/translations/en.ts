@@ -28,4 +28,5 @@ export const enTranslations: Record<TranslationKey, string> = {
   [TranslationKey.DIFFICULTY_MEDIUM]: "Medium",
   [TranslationKey.DIFFICULTY_HARD]: "Hard",
   [TranslationKey.DIFFICULTY_EXTREME]: "Extreme",
+  [TranslationKey.MOVES]: "Moves",
 };

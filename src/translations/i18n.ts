@@ -30,6 +30,7 @@ export const enum TranslationKey {
   DIFFICULTY_MEDIUM,
   DIFFICULTY_HARD,
   DIFFICULTY_EXTREME,
+  MOVES,
 }
 
 function getTranslationRecords(): Record<TranslationKey, string> {

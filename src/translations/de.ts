@@ -28,4 +28,5 @@ export const deTranslations: Record<TranslationKey, string> = {
   [TranslationKey.DIFFICULTY_MEDIUM]: "Mittel",
   [TranslationKey.DIFFICULTY_HARD]: "Schwer",
   [TranslationKey.DIFFICULTY_EXTREME]: "Extrem",
+  [TranslationKey.MOVES]: "Züge",
 };
