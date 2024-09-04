@@ -19,6 +19,7 @@ import { calculateScore } from "../../logic/score";
 
 let mainContainer: HTMLElement | undefined;
 let gameFieldElem: HTMLElement | undefined;
+let startButton: HTMLElement | undefined;
 let miniHelp: HTMLElement | undefined;
 let clickedCell: PlacedPerson | undefined;
 let lastClickedCell: Cell | undefined;
@@ -54,7 +55,7 @@ export async function initializeEmptyGameField() {
 
   gameFieldElem = generateGameFieldElement(baseData);
 
-  const startButton = createButton({
+  startButton = createButton({
     text: getTranslation(TranslationKey.START_GAME),
     onClick: (event: MouseEvent) => {
       newGame();
@@ -70,6 +71,7 @@ export async function initializeEmptyGameField() {
 
 export async function startNewGame() {
   document.body.classList.remove(CssClass.SELECTING);
+  startButton?.remove();
   hasMadeFirstMove = false;
   clickedCell = undefined;
   lastClickedCell = undefined;
@@ -228,7 +230,7 @@ function updateState(gameFieldData: Cell[][], placedPersons: PlacedPerson[], ski
   const { hasWon } = getHappyStats(placedPersons);
 
   if (hasWon && !skipWinCheck) {
-    createWinScreen(score);
+    createWinScreen(score, true);
 
     pokiSdk.gameplayStop();
   }

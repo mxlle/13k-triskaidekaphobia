@@ -59,7 +59,7 @@ export function createDialog(
     buttons = createElement({ cssClass: "btns" });
 
     cancelButton = createButton({
-      text: getTranslation(TranslationKey.CANCEL),
+      text: getTranslation(TranslationKey.BACK),
       onClick: closeDialog,
     });
     buttons.appendChild(cancelButton);

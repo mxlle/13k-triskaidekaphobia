@@ -11,10 +11,12 @@ import { initPoki, pokiSdk } from "./poki-integration";
 import { isOnboarding } from "./logic/onboarding";
 import { globals } from "./globals";
 import { getTranslation, TranslationKey } from "./translations/i18n";
+import { createWinScreen } from "./components/win-screen/win-screen";
 
 let configDialog: Dialog;
 
 let scoreElement: HTMLElement;
+let currentScore = 0;
 
 const initializeMuted = getLocalStorageItem(LocalStorageKey.MUTED) === "true";
 
@@ -59,7 +61,7 @@ function init() {
 
   header.append(btnContainer);
 
-  btnContainer.append(createButton({ text: "🔄", onClick: onNewGameClick, iconBtn: true }));
+  btnContainer.append(createButton({ text: "⚙️", onClick: () => createWinScreen(currentScore, false), iconBtn: true }));
 
   document.body.append(header);
 
@@ -81,6 +83,7 @@ function init() {
 
     //  | Par: ${globals.metaData.minMoves}
 
+    currentScore = score;
     const scoreText = `${getTranslation(TranslationKey.MOVES)}: ${moves} | ${formatNumber(score)}⭐️`;
     scoreElement.textContent = scoreText;
   });
