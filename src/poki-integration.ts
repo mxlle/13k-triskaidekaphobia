@@ -10,37 +10,25 @@ interface PokiSDK {
 
 declare const PokiSDK: PokiSDK;
 
-const fallbackPokiSdk: PokiSDK = {
-  init: () => Promise.resolve(),
-  gameLoadingFinished: () => {},
-  gameplayStart: () => {},
-  gameplayStop: () => {},
-  commercialBreak: () => Promise.resolve(),
-};
-
 export let pokiSdk: PokiSDK | undefined;
-let isFallback = false;
 
-try {
-  pokiSdk = PokiSDK;
-} catch (error) {
-  console.log("Failed to load Poki SDK", error);
-}
+const createElement = (tag, props) => Object.assign(document.createElement(tag), props)
+const loadScript = (src) => new Promise((onload, onerror) => document.head.appendChild(createElement('script', { src, onload, onerror })))
 
-if (!pokiSdk) {
-  console.log("Poki SDK not found, using fallback");
-  pokiSdk = fallbackPokiSdk;
-  isFallback = true;
-}
+export async function initPoki(continueToGame: () => Promise<void>) {
+  if (process.env.POKI_ENABLED !== 'true') return continueToGame();
 
-export function initPoki(continueToGame: () => Promise<void>) {
+  try {
+    await loadScript('https://game-cdn.poki.com/scripts/v2/poki-sdk.js');
+    pokiSdk = PokiSDK;
+  } catch (error) {
+    console.log("Failed to load Poki SDK", error);
+  }
+
   pokiSdk
     .init()
     .then(() => {
-      if (!isFallback) {
-        console.log("Poki SDK successfully initialized");
-      }
-
+      console.log("Poki SDK successfully initialized");
       return continueToGame();
     })
     .then(() => {
@@ -54,6 +42,7 @@ export function initPoki(continueToGame: () => Promise<void>) {
 }
 
 export function handlePokiCommercial(): Promise<void> {
+  if (process.env.POKI_ENABLED !== 'true') return;
   // pause your game here if it isn't already
   return pokiSdk
     .commercialBreak(() => {

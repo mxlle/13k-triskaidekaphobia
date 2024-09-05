@@ -19,6 +19,7 @@
     "rimraf": "^6.0.1",
     "rollup": "^4.21.0",
     "rollup-plugin-copy": "^3.5.0",
+    "rollup-plugin-dotenv": "^0.5.1",
     "rollup-plugin-html-bundle": "^0.0.3",
     "rollup-plugin-livereload": "^2.0.5",
     "rollup-plugin-serve": "^2.0.2",

@@ -77,7 +77,10 @@ function formatNumber(num: number): string {
 }
 
 // INIT
-initPoki(async () => {
+const initApp = async () => {
   init();
   await initAudio(initializeMuted);
-});
+}
+
+if (process.env.POKI_ENABLED === 'true') initPoki(initApp);
+else initApp();

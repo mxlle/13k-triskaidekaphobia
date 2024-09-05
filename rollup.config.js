@@ -7,6 +7,7 @@ import terser from "@rollup/plugin-terser";
 import copy from "rollup-plugin-copy";
 import typescript from "@rollup/plugin-typescript";
 import svg from "rollup-plugin-svg-import";
+import dotenv from 'rollup-plugin-dotenv';
 
 const production = !process.env.ROLLUP_WATCH;
 const outputDir = production ? "dist" : "out";
@@ -22,6 +23,7 @@ export default {
     svg(),
     typescript(),
     nodeResolve(),
+    dotenv(),
     styles({
       minimize: production,
     }),
