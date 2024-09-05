@@ -14,9 +14,10 @@ const firstParent = (e: TouchEvent | MouseEvent, cssClass: string): HTMLElement 
 
 const getOverlayPosition = (e: any) => {
   e = e.touches?.[0] ?? e;
+  const target = e.target;
   return {
-    left: `${e.pageX - 8}px`,
-    top: `${e.pageY - 8}px`,
+    left: `${e.pageX - target.offsetWidth / 4}px`,
+    top: `${e.pageY - target.offsetHeight / 4}px`,
   };
 };
 
