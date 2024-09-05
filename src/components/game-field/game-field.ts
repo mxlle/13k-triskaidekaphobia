@@ -44,6 +44,7 @@ export const enum CssClass {
   HAS_RIGHT = "has-right",
   CELL = "cell",
   IS_DRAGGING = "is-dragging",
+  IS_DRAGGED = "is-dragged",
 }
 
 export async function initializeEmptyGameField() {
@@ -291,12 +292,16 @@ export function generateGameFieldElement(gameFieldData: GameFieldData) {
     (dragEl) => {
       gameField.classList.add(CssClass.IS_DRAGGING);
       resetSelection(getElementCell(gameFieldData, dragEl), true);
-      return [...dragEl.children].find((el) => el.classList.contains("person")).cloneNode(true) as HTMLElement;
+      const personEl = getPersonElement(dragEl);
+      personEl.classList.add(CssClass.IS_DRAGGED);
+      return personEl.cloneNode(true) as HTMLElement;
     },
     (dragEl, dropEl, isTouch) => {
       gameField.classList.remove(CssClass.IS_DRAGGING);
       const dropCell = getElementCell(gameFieldData, dropEl);
       const dragCell = getElementCell(gameFieldData, dragEl);
+      const personEl = getPersonElement(dragEl);
+      personEl.classList.remove(CssClass.IS_DRAGGED);
       if (!isTable(dropCell) && !hasPerson(globals.placedPersons, dropCell)) {
         dragEl.click();
         dropEl.click();
@@ -307,6 +312,10 @@ export function generateGameFieldElement(gameFieldData: GameFieldData) {
   );
 
   return gameField;
+}
+
+function getPersonElement(dragEl: HTMLElement): HTMLElement {
+  return [...dragEl.children].find((el) => el.classList.contains("person")) as HTMLElement;
 }
 
 function getElementCell(gameFieldData: GameFieldData, el: HTMLElement): Cell | undefined {

@@ -42,7 +42,7 @@ $border-style: outset;
   }
 
   &.is-dragging .cell:not(.has-person):not(.table):hover::after {
-    content: '';
+    content: "";
     position: absolute;
     height: 100%;
     width: 100%;
@@ -157,6 +157,10 @@ $border-style: outset;
       animation: scale-pulse 1.5s infinite;
       pointer-events: none;
     }
+  }
+
+  .is-dragged {
+    opacity: 0.5;
   }
 
   &.has-person {
