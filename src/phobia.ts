@@ -1,9 +1,9 @@
 import { getRandomItem } from "./utils/array-utils";
 import { CellType, isChair } from "./types";
 
-export const ONBOARDING_PHOBIAS_EMOJIS = ["👴", "🤡", "🐸", "🐶", "💃", "🦋", "🐴", "🦐", "🐔"] as const;
+export const ONBOARDING_PHOBIAS_EMOJIS = ["🦆", "👴", "🐙", "🐸", "🐶", "🐦", "💃", "🦋", "🐴", "🦐", "🐔"] as const;
 
-export const OTHER_EMOJIS = ["🔢", "💰", "🎈", "🪞", "🍌", "☀️", "🧄", "📰", "🥇", "📚"] as const;
+export const OTHER_EMOJIS = ["🔢", "💰", "🎈", "🍌", "☀️", "📰", "🥇", "📚"] as const;
 
 export const PHOBIAS_EMOJIS = [...ONBOARDING_PHOBIAS_EMOJIS, ...OTHER_EMOJIS];
 
@@ -15,10 +15,12 @@ export type OtherEmojiIndex = Indices<typeof OTHER_EMOJIS>;
 export type Phobia = (typeof ONBOARDING_PHOBIAS_EMOJIS)[OnboardingEmojiIndex] | (typeof OTHER_EMOJIS)[OtherEmojiIndex];
 
 const PhobiaNameMap: Record<Phobia, string> = {
+  "🦆": "Anatidaephobia",
   "👴": "Peladphobia",
-  "🤡": "Coulrophobia",
+  "🐙": "Chapodiphobia",
   "🐸": "Ranidaphobia",
   "🐶": "Cynophobia",
+  "🐦": "Ornithophobia",
   "💃": "Chorophobia",
   "🦋": "Lepidopterophobia",
   "🐴": "Equinophobia",
@@ -27,10 +29,8 @@ const PhobiaNameMap: Record<Phobia, string> = {
   "🔢": "Arithmophobia",
   "💰": "Plutophobia",
   "🎈": "Globophobia",
-  "🪞": "Eisoptrophobia",
   "🍌": "Bananaphobia",
   "☀️": "Heliophobia",
-  "🧄": "Alliumphobia",
   "📰": "Chloephobia",
   "🥇": "Aurophobia",
   "📚": "Bibliophobia",
