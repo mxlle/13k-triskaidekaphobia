@@ -280,6 +280,10 @@ body {
   }
 }
 
+.drag-overlay {
+  scale: 1.5;
+}
+
 @keyframes scary-pulse {
   0% {
     transform: scale(1);

@@ -36,6 +36,7 @@ export default (
     if (overlayEl) {
       e.preventDefault();
       rootEl.appendChild(overlayEl);
+      overlayEl.classList.add("drag-overlay");
       Object.assign(overlayEl.style, {
         position: "fixed",
         pointerEvents: "none",
