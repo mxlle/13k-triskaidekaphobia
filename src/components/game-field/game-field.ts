@@ -16,7 +16,7 @@ import { getOnboardingData, OnboardingData, wasOnboarding } from "../../logic/on
 import { getMiniHelpContent } from "../help/help";
 import { getOnboardingArrow } from "../onboarding/onboarding-components";
 import { calculateScore } from "../../logic/score";
-import initDragDrop from "../../logic/drag-drop";
+import initDragDrop from "../../utils/drag-drop";
 
 let mainContainer: HTMLElement | undefined;
 let gameFieldElem: HTMLElement | undefined;
@@ -86,7 +86,7 @@ export async function startNewGame() {
     // reset old game field
     pubSubService.publish(PubSubEvent.UPDATE_SCORE, { score: 0, moves: 0 });
     await cleanGameField(globals.gameFieldData, globals.placedPersons);
-    if (process.env.POKI_ENABLED === 'true') await handlePokiCommercial();
+    if (process.env.POKI_ENABLED === "true") await handlePokiCommercial();
     await requestAnimationFrameWithTimeout(TIMEOUT_BETWEEN_GAMES);
 
     if (wasOnboarding()) {
@@ -137,7 +137,7 @@ function appendGameField() {
 function cellClickHandler(rowIndex: number, columnIndex: number, onboardingArrow?: HTMLElement) {
   if (!hasMadeFirstMove) {
     hasMadeFirstMove = true;
-    if (process.env.POKI_ENABLED === 'true') pokiSdk.gameplayStart();
+    if (process.env.POKI_ENABLED === "true") pokiSdk.gameplayStart();
   }
 
   const cell = globals.gameFieldData[rowIndex][columnIndex];
@@ -237,7 +237,7 @@ function updateState(gameFieldData: Cell[][], placedPersons: PlacedPerson[], ski
   if (hasWon && !skipWinCheck) {
     createWinScreen(score, true);
 
-    if (process.env.POKI_ENABLED === 'true') pokiSdk.gameplayStop();
+    if (process.env.POKI_ENABLED === "true") pokiSdk.gameplayStop();
   }
 
   return hasWon;
