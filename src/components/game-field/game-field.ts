@@ -290,13 +290,11 @@ export function generateGameFieldElement(gameFieldData: GameFieldData) {
     CssClass.HAS_PERSON,
     CssClass.CELL,
     (dragEl) => {
-      if (clickedCell) {
-        clickedCell.personElement.classList.remove(CssClass.SELECTED);
-        clickedCell = undefined;
-      }
-
+      const cell = getElementCell(gameFieldData, dragEl);
+      const person = findPerson(globals.placedPersons, cell);
+      updateStateForSelection(globals.placedPersons, person);
+      clickedCell = undefined; // todo - improve logic (needed because later faking a click)
       gameField.classList.add(CssClass.IS_DRAGGING);
-      resetSelection(getElementCell(gameFieldData, dragEl), true);
       const personEl = getPersonElement(dragEl);
       personEl.classList.add(CssClass.IS_DRAGGED);
       return personEl.cloneNode(true) as HTMLElement;
