@@ -41,7 +41,6 @@ export default (
     if (dragTimeout) {
       clearTimeout(dragTimeout);
       dragTimeout = undefined;
-      return;
     }
 
     dropping(e);
@@ -74,6 +73,7 @@ export default (
     if (overlayEl) {
       e.preventDefault();
       overlayEl.remove();
+      overlayEl = undefined;
       dropEl = firstParent(e, dropClass);
       const isTouch = e.type === "touchend";
       dropEl && onDrop(dragEl, dropEl, isTouch);
