@@ -1,6 +1,6 @@
 import { getShortLanguageName } from "../utils/language-util";
 import { enTranslations } from "./en";
-import { deTranslations, getDeTranslationMap } from "./de";
+import { getDeTranslationMap } from "./de";
 
 export const enum TranslationKey {
   INFO_TRISKAIDEKAPHOBIA,

@@ -15,7 +15,7 @@ export const enTranslations: Record<TranslationKey, string> = {
   [TranslationKey.SMALL_FEAR]: "Small {0}",
   [TranslationKey.INFO_BIG_FEAR]: "no {0} at the same table (A)",
   [TranslationKey.INFO_SMALL_FEAR]: "no {0} next to or opposite (B)",
-  [TranslationKey.INFO_FOMO]: "assigned to a seat at the table 🍽️",
+  [TranslationKey.INFO_FOMO]: "assigned to a seat at a table 🍽️",
   [TranslationKey.INFO_PHOBIAS]: "Phobias: {0}",
   [TranslationKey.INFO_PLACEHOLDER]: "Select an emoji to learn more about it.",
   [TranslationKey.INFO_CHAIR]: "A chair. Someone can sit here.",
