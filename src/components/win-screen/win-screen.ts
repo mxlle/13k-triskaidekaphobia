@@ -53,7 +53,9 @@ function getConfirmText(isComplete: boolean) {
 }
 
 function getWinScreenContent(score: number, isComplete: boolean) {
-  setDifficultyHighscore(globals.difficulty, score);
+  if (isComplete) {
+    setDifficultyHighscore(globals.difficulty, score);
+  }
 
   const winContentElem = createElement({
     cssClass: "win-screen",
