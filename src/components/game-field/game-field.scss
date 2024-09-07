@@ -195,22 +195,22 @@ $border-style: outset;
     }
 
     .emoji {
-      animation: tremble 0.2s 5;
+      animation: tremble 0.15s 10;
     }
   }
 
-  $scary-scale-props: 3s infinite step-end;
+  $scary-scale-props: 2s infinite ease-out;
 
   .scary {
     .emoji {
-      z-index: 3;
       animation: scary-pulse $scary-scale-props;
     }
   }
 
   .scared:not(.scary) {
     .emoji {
-      animation: scared-pulse $scary-scale-props;
+      animation: tremble 0.15s infinite;
+      scale: 1.2;
     }
   }
 
@@ -295,7 +295,7 @@ body {
   transform: scale(1.5);
 
   @media (max-width: 600px) {
-    transform: scale(3.5);
+    transform: scale(3);
   }
 }
 
@@ -303,11 +303,8 @@ body {
   0% {
     transform: scale(1);
   }
-  25% {
-    transform: scale(1.2);
-  }
-  50% {
-    transform: scale(1.6);
+  30% {
+    transform: scale(1.5);
   }
   100% {
     transform: scale(1);
@@ -318,29 +315,11 @@ body {
   0% {
     transform: scale(1, 1);
   }
-  25% {
-    transform: scale(1.05, 1.015);
-  }
-  50% {
-    transform: scale(1.15, 1.05);
+  30% {
+    transform: scale(1.1, 1.025);
   }
   100% {
     transform: scale(1, 1);
-  }
-}
-
-@keyframes scared-pulse {
-  0% {
-    transform: scale(1);
-  }
-  25% {
-    transform: scale(0.8);
-  }
-  50% {
-    transform: scale(0.4);
-  }
-  100% {
-    transform: scale(1);
   }
 }
 
