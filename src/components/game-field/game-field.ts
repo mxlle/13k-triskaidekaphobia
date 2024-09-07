@@ -286,6 +286,7 @@ export function generateGameFieldElement(gameFieldData: GameFieldData) {
       const cell = getElementCell(gameFieldData, dragEl);
       const person = findPerson(globals.placedPersons, cell);
       updateStateForSelection(globals.placedPersons, person);
+      updateMiniHelp(cell);
       document.body.classList.toggle(CssClass.SELECTING, true);
       clickedCell = undefined; // todo - improve logic (needed because later faking a click)
       gameField.classList.add(CssClass.IS_DRAGGING);

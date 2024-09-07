@@ -5,7 +5,7 @@ import { getTranslation, TranslationKey } from "../../translations/i18n";
 import { Cell, CellType, findPerson, isChair, isEmpty, isTable, PlacedPerson } from "../../types";
 import { getPhobiaName, Phobia } from "../../phobia";
 import { Dialog } from "../dialog/dialog";
-import { createCellElement, createPersonElement, updateCellOccupancy } from "../game-field/cell-component";
+import { createCellElement, createPersonElement } from "../game-field/cell-component";
 import { getChairsAtTable, getGuestsOnTable } from "../../logic/checks";
 import { globals } from "../../globals";
 import { getOnboardingData } from "../../logic/onboarding";
@@ -63,7 +63,6 @@ export function getMiniHelpContent(cell?: Cell): HTMLElement {
     statsElem = getSatisfactionStats(person);
 
     helpCellElement = createCellElement(cell);
-    updateCellOccupancy(cell, helpCellElement, true);
     const personElement = createPersonElement(person);
     helpCellElement.append(personElement);
     helpCellElement.classList.toggle(CssClass.HAS_PERSON, true);

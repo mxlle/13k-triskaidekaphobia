@@ -50,11 +50,11 @@ export function createCellElement(cell: Cell, isInMiddle: boolean = false, isOnT
   return cellElem;
 }
 
-export function updateCellOccupancy(cell: CellPositionWithTableIndex, cellElement: HTMLElement, shouldCopyPerson: boolean = false): void {
+export function updateCellOccupancy(cell: CellPositionWithTableIndex, cellElement: HTMLElement): void {
   const person: PlacedPerson | undefined = findPerson(globals.placedPersons, cell);
 
   if (person && hasPerson(globals.placedPersons, cell)) {
-    const personElement: HTMLElement = shouldCopyPerson ? (person.personElement.cloneNode(true) as HTMLElement) : person.personElement;
+    const personElement: HTMLElement = person.personElement;
     cellElement.append(personElement);
 
     updatePersonPanicState(person, personElement);
