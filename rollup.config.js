@@ -10,6 +10,7 @@ import svg from "rollup-plugin-svg-import";
 import dotenv from "rollup-plugin-dotenv";
 
 const production = !process.env.ROLLUP_WATCH;
+const poki = process.env.NODE_ENV === "poki";
 const outputDir = production ? "dist" : "out";
 
 export default {
