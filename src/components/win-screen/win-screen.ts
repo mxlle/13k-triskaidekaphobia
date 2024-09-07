@@ -65,6 +65,8 @@ function getWinScreenContent(score: number, isComplete: boolean) {
     const scoreText = isOnboarding() ? "" : "<br/>" + score + "⭐️";
 
     winContentElem.innerHTML = getTranslation(TranslationKey.WIN) + scoreText;
+  } else {
+    winContentElem.innerHTML = getTranslation(TranslationKey.NEW_GAME);
   }
 
   difficultyElement = createElement({
