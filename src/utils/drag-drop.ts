@@ -28,9 +28,26 @@ export default (
   createOverlay: (dragEl: HTMLElement) => HTMLElement,
   onDrop: (dragEl: HTMLElement, dropEl: HTMLElement, isTouch: boolean) => void,
 ) => {
-  let isDragging, dragEl, overlayEl, dropEl;
+  let dragTimeout, isDragging, dragEl, overlayEl, dropEl;
 
   const pointerdown = (e) => {
+    dragTimeout = setTimeout(() => {
+      dragTimeout = undefined;
+      startDragging(e);
+    }, 200);
+  };
+
+  const pointerup = (e) => {
+    if (dragTimeout) {
+      clearTimeout(dragTimeout);
+      dragTimeout = undefined;
+      return;
+    }
+
+    dropping(e);
+  };
+
+  const startDragging = (e) => {
     isDragging = 1;
     dragEl = firstParent(e, dragClass);
     overlayEl = dragEl && createOverlay(dragEl);
@@ -52,7 +69,7 @@ export default (
       Object.assign(overlayEl.style, getOverlayPosition(e));
     }
   };
-  const pointerup = (e) => {
+  const dropping = (e) => {
     isDragging = 0;
     if (overlayEl) {
       e.preventDefault();
