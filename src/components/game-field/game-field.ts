@@ -185,7 +185,7 @@ function cellClickHandler(rowIndex: number, columnIndex: number) {
     movePerson(clickedCell, cell);
     updateCellOccupancy(prevCell, clickedCellElement);
     updateCellOccupancy(cell, getCellElement(cell));
-    removeOnboardingArrowIfApplicable(prevCell);
+    removeOnboardingArrowIfApplicable();
     moves++;
     const hasWon = updateState(globals.gameFieldData, globals.placedPersons);
     resetSelection(cell, !hasWon);
@@ -344,11 +344,15 @@ function addOnboardingArrowIfApplicable() {
   }
 }
 
-function removeOnboardingArrowIfApplicable(cell: CellPositionWithTableIndex) {
-  const isCellWithOnboardingArrow = onboardingArrow && getOnboardingData()?.arrow && isSameCell(getOnboardingData().arrow, cell);
+function removeOnboardingArrowIfApplicable() {
+  if (!onboardingArrow) {
+    return;
+  }
+  const onboardingData = getOnboardingData();
+  const hasOnboardingCellPerson = onboardingData?.arrow && hasPerson(globals.placedPersons, onboardingData.arrow);
 
-  if (isCellWithOnboardingArrow) {
-    onboardingArrow?.remove();
+  if (!hasOnboardingCellPerson) {
+    onboardingArrow.remove();
     onboardingArrow = undefined;
   }
 }
