@@ -22,6 +22,7 @@ let mainContainer: HTMLElement | undefined;
 let gameFieldElem: HTMLElement | undefined;
 let startButton: HTMLElement | undefined;
 let miniHelp: HTMLElement | undefined;
+let onboardingArrow: HTMLElement | undefined;
 let clickedCell: PlacedPerson | undefined;
 let lastClickedCell: Cell | undefined;
 let hasMadeFirstMove = false;
@@ -113,6 +114,8 @@ export async function startNewGame() {
 
   await initializePersonsOnGameField(globals.placedPersons);
 
+  addOnboardingArrowIfApplicable();
+
   updateState(globals.gameFieldData, globals.placedPersons);
 }
 
@@ -134,17 +137,13 @@ function appendGameField() {
   updateMiniHelp();
 }
 
-function cellClickHandler(rowIndex: number, columnIndex: number, onboardingArrow?: HTMLElement) {
+function cellClickHandler(rowIndex: number, columnIndex: number) {
   if (!hasMadeFirstMove) {
     hasMadeFirstMove = true;
     if (process.env.POKI_ENABLED === "true") pokiSdk.gameplayStart();
   }
 
   const cell = globals.gameFieldData[rowIndex][columnIndex];
-
-  if (onboardingArrow) {
-    onboardingArrow.remove();
-  }
 
   if (!hasPerson(globals.placedPersons, cell) && lastClickedCell && isSameCell(cell, lastClickedCell)) {
     updateMiniHelp();
@@ -186,6 +185,7 @@ function cellClickHandler(rowIndex: number, columnIndex: number, onboardingArrow
     movePerson(clickedCell, cell);
     updateCellOccupancy(prevCell, clickedCellElement);
     updateCellOccupancy(cell, getCellElement(cell));
+    removeOnboardingArrowIfApplicable(prevCell);
     moves++;
     const hasWon = updateState(globals.gameFieldData, globals.placedPersons);
     resetSelection(cell, !hasWon);
@@ -267,15 +267,8 @@ export function generateGameFieldElement(gameFieldData: GameFieldData) {
       const isOnTheRightOfATable = leftNeighbor ? isTable(leftNeighbor) : false;
       const cellElement = createCellElement(cell, isInMiddle, isOnTheRightOfATable);
 
-      let arrow: HTMLElement | undefined;
-
-      if (onboardingData?.arrow && onboardingData.arrow.row === rowIndex && onboardingData.arrow.column === columnIndex) {
-        arrow = getOnboardingArrow(onboardingData.arrow.direction);
-        cellElement.append(arrow);
-      }
-
       cellElement.addEventListener("click", () => {
-        cellClickHandler(rowIndex, columnIndex, arrow);
+        cellClickHandler(rowIndex, columnIndex);
       });
 
       rowElem.append(cellElement);
@@ -335,6 +328,26 @@ export async function initializePersonsOnGameField(persons: PlacedPerson[]) {
     cellElement.innerHTML = "";
     updateCellOccupancy(person, cellElement);
     await requestAnimationFrameWithTimeout(TIMEOUT_CELL_APPEAR);
+  }
+}
+
+function addOnboardingArrowIfApplicable() {
+  const onboardingData = getOnboardingData();
+
+  if (onboardingData?.arrow) {
+    onboardingArrow = getOnboardingArrow(onboardingData.arrow.direction);
+    const cell = globals.gameFieldData[onboardingData.arrow.row][onboardingData.arrow.column];
+    const cellElement = getCellElement(cell);
+    cellElement.append(onboardingArrow);
+  }
+}
+
+function removeOnboardingArrowIfApplicable(cell: CellPositionWithTableIndex) {
+  const isCellWithOnboardingArrow = onboardingArrow && getOnboardingData()?.arrow && isSameCell(getOnboardingData().arrow, cell);
+
+  if (isCellWithOnboardingArrow) {
+    onboardingArrow?.remove();
+    onboardingArrow = undefined;
   }
 }
 

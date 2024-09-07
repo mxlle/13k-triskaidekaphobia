@@ -157,6 +157,10 @@ $border-style: outset;
       animation: scale-pulse 1.5s infinite;
       pointer-events: none;
     }
+
+    + .arrow {
+      display: none;
+    }
   }
 
   .is-dragged {
