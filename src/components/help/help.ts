@@ -1,7 +1,7 @@
 import "./help.scss";
 
 import { createElement } from "../../utils/html-utils";
-import { getTranslation, isGermanLanguage, TranslationKey } from "../../translations/i18n";
+import { getTranslation, TranslationKey } from "../../translations/i18n";
 import { Cell, CellType, findPerson, isChair, isEmpty, isTable, PlacedPerson } from "../../types";
 import { getPhobiaName, Phobia } from "../../phobia";
 import { Dialog } from "../dialog/dialog";
@@ -69,9 +69,8 @@ export function getMiniHelpContent(cell?: Cell): HTMLElement {
     helpCellElement.classList.toggle(CssClass.HAS_PERSON, true);
     const { fear, smallFear } = person;
 
-    const isGerman = isGermanLanguage();
-    const fearName = getPhobiaName(fear, isGerman);
-    const smallFearName = getPhobiaName(smallFear, isGerman);
+    const fearName = getPhobiaName(fear);
+    const smallFearName = getPhobiaName(smallFear);
     const showTriskaidekaphobia = globals.gameFieldData.length === baseField.length;
 
     const phobias = [

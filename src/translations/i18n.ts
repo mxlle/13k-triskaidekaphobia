@@ -1,6 +1,6 @@
 import { getShortLanguageName } from "../utils/language-util";
 import { enTranslations } from "./en";
-import { deTranslations } from "./de";
+import { deTranslations, getDeTranslationMap } from "./de";
 
 export const enum TranslationKey {
   INFO_TRISKAIDEKAPHOBIA,
@@ -34,8 +34,10 @@ export const enum TranslationKey {
 }
 
 function getTranslationRecords(): Record<TranslationKey, string> {
-  if (isGermanLanguage()) {
-    return deTranslations;
+  if (process.env.GERMAN_ENABLED === "true") {
+    if (isGermanLanguage()) {
+      return getDeTranslationMap();
+    }
   }
 
   return enTranslations;
@@ -46,7 +48,13 @@ export function isGermanLanguage() {
 }
 
 export function getTranslation(key, ...args) {
-  const language = isGermanLanguage() ? "de" : "en";
+  let language = "en";
+
+  if (process.env.GERMAN_ENABLED === "true") {
+    if (isGermanLanguage()) {
+      language = "de";
+    }
+  }
 
   document.documentElement.setAttribute("lang", language);
 

@@ -1,5 +1,5 @@
 import { getRandomItem } from "./utils/array-utils";
-import { CellType, isChair } from "./types";
+import { isGermanLanguage } from "./translations/i18n";
 
 export const ONBOARDING_PHOBIAS_EMOJIS = ["🦆", "👴", "🐙", "🐸", "🐶", "🐦", "💃", "🦋", "🐴", "🦐", "🐔"] as const;
 
@@ -36,19 +36,17 @@ const PhobiaNameMap: Record<Phobia, string> = {
   "📚": "Bibliophobia",
 };
 
-export function getPhobiaName(phobia: Phobia | CellType.CHAIR | undefined, isGerman: boolean = false): string {
+export function getPhobiaName(phobia: Phobia | undefined): string {
   if (!phobia) {
     return "";
   }
 
-  if (isChair(phobia)) {
-    return "FOMO";
-  }
-
   let phobiaName = PhobiaNameMap[phobia];
 
-  if (isGerman) {
-    phobiaName = phobiaName.replace("phobia", "phobie");
+  if (process.env.GERMAN_ENABLED === "true") {
+    if (isGermanLanguage()) {
+      phobiaName = phobiaName.replace("phobia", "phobie");
+    }
   }
 
   return phobiaName;

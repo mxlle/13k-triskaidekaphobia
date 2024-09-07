@@ -7,9 +7,11 @@ import terser from "@rollup/plugin-terser";
 import copy from "rollup-plugin-copy";
 import typescript from "@rollup/plugin-typescript";
 import svg from "rollup-plugin-svg-import";
-import dotenv from 'rollup-plugin-dotenv';
+import dotenv from "rollup-plugin-dotenv";
 
 const production = !process.env.ROLLUP_WATCH;
+const js13k = true; // Set to true to enable js13k optimizations
+const poki = false; // Set to true to enable Poki optimizations
 const outputDir = production ? "dist" : "out";
 
 export default {
@@ -20,14 +22,15 @@ export default {
     format: "iife",
   },
   plugins: [
+    dotenv(),
     svg(),
     typescript(),
     nodeResolve(),
-    dotenv(),
     styles({
       minimize: production,
     }),
     production &&
+      !poki &&
       terser({
         mangle: {
           properties: {

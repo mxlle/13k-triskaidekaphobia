@@ -1,6 +1,14 @@
 import { TranslationKey } from "./i18n";
 
-export const deTranslations: Record<TranslationKey, string> = {
+export function getDeTranslationMap(): Record<TranslationKey, string> {
+  if (process.env.GERMAN_ENABLED === "true") {
+    return deTranslations;
+  }
+
+  throw new Error("German language is not enabled.");
+}
+
+const deTranslations: Record<TranslationKey, string> = {
   [TranslationKey.INFO_TRISKAIDEKAPHOBIA]: "nie genau 13 an einem Tisch",
   [TranslationKey.TRISKAIDEKAPHOBIA]: "Triskaidekaphobie",
   [TranslationKey.WELCOME]: "Willkommen bei der Gesellschaft der Multiphobiker",
