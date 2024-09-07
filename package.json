@@ -4,7 +4,7 @@
   "main": "index",
   "type": "module",
   "scripts": {
-    "build": "npm rum clean && rollup -c --environment NODE_ENV:ninja",
+    "build": "npm rum clean && rollup -c",
     "build-js13k": "npm rum clean && rollup -c --environment NODE_ENV:js13k && npm rum package",
     "build-poki": "npm rum clean && rollup -c --environment NODE_ENV:poki && npm rum package",
     "package": "node scripts/package.js",
