@@ -41,12 +41,18 @@ $border-style: outset;
     z-index: 6;
   }
 
-  &.is-dragging .cell:not(.has-person):not(.table):hover::after {
-    content: "";
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    background: rgba(#fff, 0.1);
+  &.is-dragging {
+    .cell {
+      cursor: grabbing !important;
+
+      &:not(.has-person):not(.table):hover::after {
+        content: "";
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        background: rgba($success-color-light, 0.1);
+      }
+    }
   }
 }
 
@@ -168,7 +174,7 @@ $border-style: outset;
   }
 
   &.has-person {
-    cursor: pointer;
+    cursor: grab;
 
     .emoji {
       z-index: 1;
