@@ -290,6 +290,11 @@ export function generateGameFieldElement(gameFieldData: GameFieldData) {
     CssClass.HAS_PERSON,
     CssClass.CELL,
     (dragEl) => {
+      if (clickedCell) {
+        clickedCell.personElement.classList.remove(CssClass.SELECTED);
+        clickedCell = undefined;
+      }
+
       gameField.classList.add(CssClass.IS_DRAGGING);
       resetSelection(getElementCell(gameFieldData, dragEl), true);
       const personEl = getPersonElement(dragEl);
