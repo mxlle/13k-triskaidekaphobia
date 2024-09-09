@@ -22,7 +22,9 @@ All the information is displayed within the game, but here are some backup infos
 - My husband supported me an additional ~10 hours (DevOps + the drag&drop feature)
 - 10% of the coding happened on a plane over the Atlantic Ocean ✈️ and another ~30% while travelling the US 🇺🇸 
 - I spent around 4 hours on the music using SoundBox. I used the only song I know how to play on the piano 🎹 and added some drums and bass
-- I did around 10 iterations with Poki playtests, which gave me some good insights, especially to improve the tutorial
+- I did around 15 iterations with Poki playtests, which gave me some good insights, especially to improve the tutorial
+  - The first couple of playtest recordings were quite brutal to watch 😨
+  - But in my last iteration, I finally had all 10 testers at least doing the first tutorial, half of them doing all 3 tutorials and 1 person even doing a couple of regular levels
 - I like emojis 🙃
 
 ## Nest steps if I had more time and space
