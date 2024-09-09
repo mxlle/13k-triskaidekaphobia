@@ -44,7 +44,8 @@ export function simplifiedCalculateParViaChains(placedPersons: PlacedPerson[]): 
 
 function getPersonsWithSmallFearTriggered(placedPersons: PlacedPerson[]): PlacedPerson[] {
   return placedPersons.filter((p) => {
-    if (!p.smallFear) {
+    // do also not include if person has a big fear too
+    if (!p.smallFear || p.fear) {
       return false;
     }
 
