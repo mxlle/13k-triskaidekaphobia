@@ -6,7 +6,7 @@ import { getRandomIntFromInterval, shuffleArray } from "../utils/random-utils";
 import { checkTableStates, getEmptyChairs, getGuestsOnTable, getNeighbors } from "./checks";
 import { baseField } from "./base-field";
 import { createPersonElement } from "../components/game-field/cell-component";
-import { calculateParViaChains } from "./par";
+import { simplifiedCalculateParViaChains } from "./par";
 
 export function placePersonsInitially(gameFieldData: GameFieldData): PlacedPerson[] {
   let onboardingData: OnboardingData | undefined = getOnboardingData();
@@ -19,23 +19,19 @@ export function placePersonsInitially(gameFieldData: GameFieldData): PlacedPerso
     const charactersForGame = generateCharactersForGame(gameFieldData);
     placedPersons = randomlyApplyCharactersOnBoard(gameFieldData, charactersForGame, globals.settings.minInitialPanic);
 
-    const time = performance.now();
-    const par = calculateParViaChains(gameFieldData, copyPlacedPersons(placedPersons));
+    //const time = performance.now();
+    const par = simplifiedCalculateParViaChains(placedPersons);
     // const par = calculatePar(gameFieldData, [...placedPersons]);
-    console.info("PAR CALCULATION TOOK", performance.now() - time);
+    // console.info("PAR CALCULATION TOOK", performance.now() - time);
     console.info("FINAL PAR", par);
 
     globals.metaData = {
-      minMoves: Math.max(globals.settings.minInitialPanic - 1, 1),
+      minMoves: par,
       maxMoves: charactersForGame.length,
     };
   }
 
   return placedPersons;
-}
-
-function copyPlacedPersons(placedPersons: PlacedPerson[]): PlacedPerson[] {
-  return placedPersons.map((person) => ({ ...person }));
 }
 
 export function getGameFieldData(): GameFieldData {
