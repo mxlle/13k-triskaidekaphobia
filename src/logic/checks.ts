@@ -77,8 +77,8 @@ export function isUnhappy(person: PlacedPerson): boolean {
   return !isHappy(person);
 }
 
-export function isUnhappyIgnoreTriskaidekaphobia(person: PlacedPerson): boolean {
-  return !isAtTable(person) || person.hasPanic;
+export function hasPanic(person: PlacedPerson): boolean {
+  return person.hasPanic;
 }
 
 export function isHappy(person: PlacedPerson): boolean {

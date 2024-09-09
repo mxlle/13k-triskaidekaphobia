@@ -1,5 +1,6 @@
 import { Cell, GameFieldData, hasPerson, isEmpty, isSameCell, PlacedPerson } from "../types";
-import { checkTableStates, getEmptyChairs, isUnhappy, isUnhappyIgnoreTriskaidekaphobia } from "./checks";
+import { checkTableStates, getEmptyChairs, hasPanic, isUnhappy } from "./checks";
+import { shuffleArray } from "../utils/random-utils";
 
 interface Constellation {
   persons: PlacedPerson[];
@@ -23,55 +24,74 @@ export function calculatePar(
   }
 
   checkTableStates(gameFieldData, placedPersons);
-  const remainingUnhappyCells = placedPersons.filter(isUnhappy);
-  const unhappyCount = remainingUnhappyCells.length;
 
-  if (unhappyCount === 0) {
-    return 0;
+  const remainingPanickedCells = placedPersons.filter(hasPanic);
+  const panickedCount = remainingPanickedCells.length;
+
+  if (panickedCount === 0) {
+    const remainingUnhappyCells = placedPersons.filter(isUnhappy);
+    const unhappyCount = remainingUnhappyCells.length;
+
+    if (unhappyCount === 0) {
+      return 0;
+    } else {
+      const unseatedPersons = placedPersons.filter((p) => p.tableIndex === undefined);
+      if (unseatedPersons.length > 0) {
+        return calculateParForFomo(gameFieldData, placedPersons, iteration);
+      }
+
+      return calculateParForTriskaidekaphobia(gameFieldData, placedPersons, iteration);
+    }
   }
 
   if (iteration > 8) {
     debugger;
     console.info("Par too complex, returning fallback value");
 
-    return unhappyCount;
+    return panickedCount;
   }
 
   const cellsRelatedToUnhappyPersons = placedPersons.filter((p) => {
-    const isUnhappyCell = isUnhappy(p);
-    const isMakingMoreThanOnePersonUnhappy = remainingUnhappyCells.filter((t) => t.afraidOf.some((a) => isSameCell(a, p))).length > 1;
+    const isPanickedCell = hasPanic(p);
+    const numOfPeopleThatAreAfraidOfThem = remainingPanickedCells.filter((t) => t.afraidOf.some((a) => isSameCell(a, p))).length;
+    const isMakingMoreThanOnePersonUnhappy = numOfPeopleThatAreAfraidOfThem > 1;
+    const existsMoreThanOnceAndScaresSomeone =
+      placedPersons.filter((t) => t.name === p.name).length > 1 && numOfPeopleThatAreAfraidOfThem > 0;
 
-    return isUnhappyCell || isMakingMoreThanOnePersonUnhappy;
+    if (existsMoreThanOnceAndScaresSomeone) {
+      console.debug("existsMoreThanOnceAndScaresSomeone", p);
+    }
+
+    return isPanickedCell || isMakingMoreThanOnePersonUnhappy || existsMoreThanOnceAndScaresSomeone;
   });
 
   const emptyChairs = getEmptyChairs(gameFieldData, placedPersons);
-  const emptyField = gameFieldData.flat().find((c) => isEmpty(c) && !hasPerson(placedPersons, c));
-
-  const MAX = 1000;
+  const emptyFields = gameFieldData.flat().filter((c) => isEmpty(c) && !hasPerson(placedPersons, c));
 
   // intelligent solution to find the smallest number of required moves
-  let par = MAX;
+  let par = 1000;
 
-  for (let personToMove of cellsRelatedToUnhappyPersons) {
+  // todo - check if slice ok
+  for (let personToMove of cellsRelatedToUnhappyPersons.slice(0, 3)) {
     const unhappyCellCounts = emptyChairs.map((chair) => {
       const subPlacedPersons = placedPersons.map((p) =>
-        isSameCell(p, personToMove) ? { ...p, row: chair.row, column: chair.column, tableIndex: chair.tableIndex } : p,
+        isSameCell(p, personToMove) ? { ...p, row: chair.row, column: chair.column, tableIndex: chair.tableIndex } : { ...p },
       );
       checkTableStates(gameFieldData, subPlacedPersons);
 
-      return subPlacedPersons.filter(isUnhappyIgnoreTriskaidekaphobia).length;
+      return subPlacedPersons.filter(hasPanic).length;
     });
 
     const smallestUnhappyCellCount = Math.min(...unhappyCellCounts);
 
     let validCellsWithSmallestUnhappyCellCount: Cell[];
 
-    if (smallestUnhappyCellCount >= unhappyCount) {
+    if (smallestUnhappyCellCount >= panickedCount) {
       if (wasEmptyCell) {
         continue;
       }
 
-      validCellsWithSmallestUnhappyCellCount = [emptyField];
+      validCellsWithSmallestUnhappyCellCount = shuffleArray([...emptyFields]).slice(0, 2); // todo - check if ok
     } else {
       validCellsWithSmallestUnhappyCellCount = emptyChairs.filter((_, i) => unhappyCellCounts[i] === smallestUnhappyCellCount);
     }
@@ -88,8 +108,11 @@ export function calculatePar(
         return prevConst.par;
       }
 
+      const newConstellation = { persons: subPlacedPersons, par: 2000 }; // todo - check if ok
+      previousConstellations.push(newConstellation);
+
       const subPar = calculatePar(gameFieldData, subPlacedPersons, iteration + 1, wasEmptyCell) + 1;
-      previousConstellations.push({ persons: subPlacedPersons, par: subPar });
+      newConstellation.par = subPar;
 
       if (subPar < par) {
         par = subPar;
@@ -104,4 +127,17 @@ export function calculatePar(
   console.log("PAR", par);
 
   return par;
+}
+
+function calculateParForFomo(_gameFieldData: GameFieldData, placedPersons: PlacedPerson[], _iteration: number): number {
+  console.debug("Calculating par for fomo");
+  const unseatedPersons = placedPersons.filter((p) => p.tableIndex === undefined);
+
+  return unseatedPersons.length; // todo - implement
+}
+
+function calculateParForTriskaidekaphobia(_gameFieldData: GameFieldData, _placedPersons: PlacedPerson[], _iteration: number): number {
+  console.debug("Calculating par for triskaidekaphobia");
+
+  return 2; // todo - implement
 }
