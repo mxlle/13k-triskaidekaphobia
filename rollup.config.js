@@ -11,9 +11,11 @@ import dotenv from "rollup-plugin-dotenv";
 import clear from "rollup-plugin-clear";
 import { minify as htmlMinifier } from "html-minifier";
 import { transformAsset } from "./rollupTransformAsset.mjs";
+import manifestJSON from "rollup-plugin-manifest-json";
 
 const production = !process.env.ROLLUP_WATCH;
 const poki = process.env.NODE_ENV === "poki";
+const js13k = process.env.NODE_ENV === "js13k";
 const outputDir = production ? "dist" : "out";
 
 export default {
@@ -53,11 +55,12 @@ export default {
           drop_console: true,
         },
       }),
-    // manifestJSON({
-    //   input: 'src/manifest.json',
-    //   minify: production,
-    //   output: 'manifest.json',
-    // }),
+    !js13k &&
+      manifestJSON({
+        input: "src/manifest.json",
+        minify: production,
+        output: "manifest.json",
+      }),
     html({
       title: "The Society of Multiphobics",
       meta: [
