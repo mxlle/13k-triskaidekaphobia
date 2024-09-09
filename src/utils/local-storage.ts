@@ -1,4 +1,4 @@
-const LOCAL_STORAGE_PREFIX = "mxlle-13th";
+const LOCAL_STORAGE_PREFIX = "mxlle13";
 
 export const enum LocalStorageKey {
   MUTED = "muted",

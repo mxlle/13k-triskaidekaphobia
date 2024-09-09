@@ -8,10 +8,10 @@ import { getOnboardingData, increaseOnboardingStepIfApplicable, isOnboarding } f
 import {
   difficulties,
   difficultyEmoji,
-  getDifficultyHighscore,
+  getDifficultyStats,
   getDifficultyText,
   setDifficulty,
-  setDifficultyHighscore,
+  setDifficultyStats,
 } from "../../logic/difficulty";
 import { globals } from "../../globals";
 
@@ -53,8 +53,8 @@ function getConfirmText(isComplete: boolean) {
 }
 
 function getWinScreenContent(score: number, isComplete: boolean) {
-  if (isComplete) {
-    setDifficultyHighscore(globals.difficulty, score);
+  if (isComplete && !isOnboarding()) {
+    setDifficultyStats(globals.difficulty, score);
   }
 
   const winContentElem = createElement({
@@ -87,9 +87,11 @@ function getWinScreenContent(score: number, isComplete: boolean) {
       },
     });
 
+    const stats = getDifficultyStats(difficulty);
+
     const high = createElement({
       cssClass: "high",
-      text: "" + getDifficultyHighscore(difficulty) + "⭐️",
+      text: `${getTranslation(TranslationKey.HIGHSCORE)} ${stats.highscore}⭐ – ${getTranslation(TranslationKey.AVERAGE)} ${stats.average}⭐️`,
     });
 
     inner.append(btn, high);

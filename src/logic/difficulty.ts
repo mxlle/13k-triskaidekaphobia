@@ -10,6 +10,12 @@ export const enum Difficulty {
   EXTREME,
 }
 
+export interface DifficultyStats {
+  highscore: number;
+  average: number;
+  count: number;
+}
+
 export function setDifficulty(difficulty: Difficulty) {
   globals.settings = difficultySettings[difficulty];
   globals.difficulty = difficulty;
@@ -69,18 +75,23 @@ export function getDifficultyText(difficulty: Difficulty): string {
   }
 }
 
-export function getDifficultyHighscore(difficulty: Difficulty): number {
-  const storedScore = getLocalStorageItem(getStorageKey(difficulty));
+export function getDifficultyStats(difficulty: Difficulty): DifficultyStats {
+  const storedScoreStats = getLocalStorageItem(getStorageKey(difficulty));
 
-  if (!storedScore) return 0;
+  if (!storedScoreStats) return { highscore: 0, average: 0, count: 0 };
 
-  return Number(storedScore);
+  const [highscore, average, count] = storedScoreStats.split(",").map(Number);
+
+  return { highscore, average, count };
 }
 
-export function setDifficultyHighscore(difficulty: Difficulty, score: number) {
-  if (score > getDifficultyHighscore(difficulty)) {
-    setLocalStorageItem(getStorageKey(difficulty), score.toString());
-  }
+export function setDifficultyStats(difficulty: Difficulty, score: number) {
+  const stats = getDifficultyStats(difficulty);
+  console.log(stats);
+  const newCount = stats.count + 1;
+  const newAverage = (stats.average * stats.count + score) / newCount;
+
+  setLocalStorageItem(getStorageKey(difficulty), [Math.max(stats.highscore, score), newAverage, newCount].join(","));
 }
 
 function getStorageKey(difficulty: Difficulty): LocalStorageKey {
