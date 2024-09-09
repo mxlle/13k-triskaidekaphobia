@@ -17,6 +17,7 @@ import { getMiniHelpContent } from "../help/help";
 import { getOnboardingArrow } from "../onboarding/onboarding-components";
 import { calculateScore } from "../../logic/score";
 import initDragDrop from "../../utils/drag-drop";
+import { CssClass } from "../../utils/css-class";
 
 let mainContainer: HTMLElement | undefined;
 let gameFieldElem: HTMLElement | undefined;
@@ -31,22 +32,6 @@ const cellElements: HTMLElement[][] = [];
 
 const TIMEOUT_BETWEEN_GAMES = 300;
 const TIMEOUT_CELL_APPEAR = 30;
-
-export const enum CssClass {
-  SELECTING = "selecting",
-  SELECTED = "selected",
-  PANIC = "panic",
-  SCARED = "scared",
-  SCARY = "scary",
-  T13A = "t13a",
-  P_T13A = "p-t13a",
-  HAS_PERSON = "has-person",
-  HAS_LEFT = "has-left",
-  HAS_RIGHT = "has-right",
-  CELL = "cell",
-  IS_DRAGGING = "is-dragging",
-  IS_DRAGGED = "is-dragged",
-}
 
 export async function initializeEmptyGameField() {
   document.body.classList.remove(CssClass.SELECTING);
@@ -245,7 +230,7 @@ function updateState(gameFieldData: Cell[][], placedPersons: PlacedPerson[], ski
 
 export function generateGameFieldElement(gameFieldData: GameFieldData) {
   const gameField = createElement({
-    cssClass: "field",
+    cssClass: CssClass.FIELD,
   });
   cellElements.length = 0;
 
@@ -313,7 +298,7 @@ export function generateGameFieldElement(gameFieldData: GameFieldData) {
 }
 
 function getPersonElement(dragEl: HTMLElement): HTMLElement {
-  return [...dragEl.children].find((el) => el.classList.contains("person")) as HTMLElement;
+  return [...dragEl.children].find((el) => el.classList.contains(CssClass.PERSON)) as HTMLElement;
 }
 
 function getElementCell(gameFieldData: GameFieldData, el: HTMLElement): Cell | undefined {

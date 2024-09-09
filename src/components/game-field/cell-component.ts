@@ -12,7 +12,8 @@ import {
 import { createElement } from "../../utils/html-utils";
 import { getNearestTableCell, isHappy } from "../../logic/checks";
 import { globals } from "../../globals";
-import { CssClass, getCellElement } from "./game-field";
+import { getCellElement } from "./game-field";
+import { CssClass } from "../../utils/css-class";
 
 export function createCellElement(cell: Cell, isInMiddle: boolean = false, isOnTheRightOfATable: boolean = false): HTMLElement {
   const cellElem = createElement({
@@ -20,18 +21,18 @@ export function createCellElement(cell: Cell, isInMiddle: boolean = false, isOnT
   });
 
   if (isTable(cell)) {
-    cellElem.classList.add("table");
+    cellElem.classList.add(CssClass.TABLE);
 
     if (isInMiddle) {
-      cellElem.classList.add("middle");
+      cellElem.classList.add(CssClass.MIDDLE);
     }
 
     const plateElem1 = createElement({
-      cssClass: "plate",
+      cssClass: CssClass.PLATE,
       text: "🍽️",
     });
     const plateElem2 = createElement({
-      cssClass: "plate",
+      cssClass: CssClass.PLATE,
       text: "🍽️",
     });
 
@@ -40,10 +41,10 @@ export function createCellElement(cell: Cell, isInMiddle: boolean = false, isOnT
   }
 
   if (isChair(cell)) {
-    cellElem.classList.add("chair");
+    cellElem.classList.add(CssClass.CHAIR);
 
     if (isOnTheRightOfATable) {
-      cellElem.classList.add("right");
+      cellElem.classList.add(CssClass.RIGHT);
     }
   }
 
@@ -80,12 +81,12 @@ export function updatePersonPanicState(person: PlacedPerson, personElement: HTML
 
 export function createPersonElement(person: BasePerson): HTMLElement {
   const personElem = createElement({
-    cssClass: "person",
+    cssClass: CssClass.PERSON,
   });
 
   const personTextElem = createElement({
     tag: "span",
-    cssClass: "emoji",
+    cssClass: CssClass.EMOJI,
     text: person.name,
   });
 

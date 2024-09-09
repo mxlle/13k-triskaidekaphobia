@@ -1,6 +1,7 @@
 @use "../../theme";
+@import "../../names";
 
-.arrow {
+.#{$ARROW} {
   position: absolute;
   z-index: 50;
   width: 100%;
@@ -8,19 +9,19 @@
   display: grid;
   place-items: center;
 
-  &.left {
+  &.#{$LEFT} {
     transform: translate(100%, 0) rotate(180deg);
   }
 
-  //&.right {
+  //&.#{$RIGHT} {
   //  transform: translate(-100%, 0);
   //}
 
-  &.up {
+  &.#{$UP} {
     transform: translate(0, 100%) rotate(270deg);
   }
 
-  //&.down {
+  //&.#{$DOWN} {
   //  transform: translate(0, -100%) rotate(90deg);
   //}
 }

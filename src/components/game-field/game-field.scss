@@ -1,10 +1,11 @@
 @use "../../grid-mixins";
 
 @import "../../theme";
+@import "../../names";
 
 $border-style: outset;
 
-.field {
+.#{$FIELD} {
   --t: #{$tile-color-1};
   position: relative;
   margin: 0 auto;
@@ -19,7 +20,7 @@ $border-style: outset;
     display: contents;
 
     &:nth-child(even) {
-      .cell {
+      .#{$CELL} {
         &:nth-child(odd) {
           --t: #{$tile-color-2};
         }
@@ -27,7 +28,7 @@ $border-style: outset;
     }
 
     &:nth-child(odd) {
-      .cell:not(:nth-child(odd)) {
+      .#{$CELL}:not(:nth-child(odd)) {
         --t: #{$tile-color-2};
       }
     }
@@ -41,11 +42,11 @@ $border-style: outset;
     z-index: 6;
   }
 
-  &.is-dragging {
-    .cell {
+  &.#{$IS_DRAGGING} {
+    .#{$CELL} {
       cursor: grabbing !important;
 
-      &:not(.has-person):not(.table):hover::after {
+      &:not(.#{$HAS_PERSON}):not(.#{$TABLE}):hover::after {
         content: "";
         position: absolute;
         height: 100%;
@@ -56,7 +57,7 @@ $border-style: outset;
   }
 }
 
-.cell {
+.#{$CELL} {
   background-color: var(--t);
   display: grid;
   place-items: center;
@@ -64,7 +65,7 @@ $border-style: outset;
   // width: 100%;
   // height: 100%;
 
-  .person {
+  .#{$PERSON} {
     border: 0.125rem dotted transparent;
     position: relative;
     display: grid;
@@ -73,11 +74,11 @@ $border-style: outset;
     height: 100%;
   }
 
-  > .person {
+  > .#{$PERSON} {
     grid-area: 1 / 1;
   }
 
-  &.chair {
+  &.#{$CHAIR} {
     &::before {
       content: "";
       grid-area: 1 / 1;
@@ -89,22 +90,22 @@ $border-style: outset;
       border-left-width: 0.35rem;
     }
 
-    &.right::before {
+    &.#{$RIGHT}::before {
       transform: rotate(180deg);
     }
   }
 
-  &.has-person {
+  &.#{$HAS_PERSON} {
     &::before {
       opacity: 0.3;
     }
   }
 
-  &.table {
+  &.#{$TABLE} {
     border: none;
     $tableHeight: var(--table-height, 8);
 
-    &.middle {
+    &.#{$MIDDLE} {
       z-index: 2;
 
       &::after {
@@ -120,7 +121,7 @@ $border-style: outset;
       }
     }
 
-    .plate {
+    .#{$PLATE} {
       display: none;
       position: absolute;
       z-index: 4;
@@ -128,27 +129,27 @@ $border-style: outset;
       transform: rotate(90deg);
       left: 1px;
 
-      + .plate {
+      + .#{$PLATE} {
         transform: rotate(-90deg);
         right: 1px;
         left: auto;
       }
     }
 
-    &.has-left {
-      .plate:first-of-type {
+    &.#{$HAS_LEFT} {
+      .#{$PLATE}:first-of-type {
         display: block;
       }
     }
 
-    &.has-right {
-      .plate + .plate {
+    &.#{$HAS_RIGHT} {
+      .#{$PLATE} + .#{$PLATE} {
         display: block;
       }
     }
   }
 
-  .selected {
+  .#{$SELECTED} {
     z-index: 4;
 
     &:after {
@@ -164,61 +165,61 @@ $border-style: outset;
       pointer-events: none;
     }
 
-    + .arrow {
+    + .#{$ARROW} {
       display: none;
     }
   }
 
-  .is-dragged {
+  .#{$IS_DRAGGED} {
     opacity: 0.5;
   }
 
-  &.has-person {
+  &.#{$HAS_PERSON} {
     cursor: grab;
 
-    .emoji {
+    .#{$EMOJI} {
       z-index: 1;
     }
   }
 
-  &:not(.chair) {
-    .panic {
+  &:not(.#{$CHAIR}) {
+    .#{$PANIC} {
       border-color: $warning-color;
     }
   }
 
-  .panic {
+  .#{$PANIC} {
     border-color: $danger-color;
 
-    &.p-t13a {
+    &.#{$P_T13A} {
       border-color: mix($danger-color, $warning-color, 40%);
     }
 
-    .emoji {
+    .#{$EMOJI} {
       animation: tremble 0.15s 10;
     }
   }
 
   $scary-scale-props: 2s infinite ease-out;
 
-  .scary {
-    .emoji {
+  .#{$SCARY} {
+    .#{$EMOJI} {
       animation: scary-pulse $scary-scale-props;
     }
   }
 
-  .scared:not(.scary) {
-    .emoji {
+  .#{$SCARED}:not(.#{$SCARY}) {
+    .#{$EMOJI} {
       animation: tremble 0.15s infinite;
       scale: 1.2;
     }
   }
 
-  &.t13a {
+  &.#{$T13A} {
     z-index: 2;
 
-    &.table {
-      &.middle {
+    &.#{$TABLE} {
+      &.#{$MIDDLE} {
         z-index: 5;
         animation: scary-pulse-table $scary-scale-props;
 
@@ -230,7 +231,7 @@ $border-style: outset;
           color: $danger-color-contrast;
         }
 
-        .plate {
+        .#{$PLATE} {
           display: none;
         }
       }
@@ -238,7 +239,7 @@ $border-style: outset;
   }
 
   span,
-  .person {
+  .#{$PERSON} {
     pointer-events: none;
   }
 }
@@ -279,9 +280,9 @@ $border-style: outset;
 }
 
 body {
-  &.selecting {
-    .cell {
-      &.chair:not(.has-person) {
+  &.#{$SELECTING} {
+    .#{$CELL} {
+      &.#{$CHAIR}:not(.#{$HAS_PERSON}) {
         cursor: pointer;
 
         &:after {
