@@ -88,7 +88,7 @@ export function isSameCell(cell1: CellPosition, cell2: CellPosition) {
   return cell1.row === cell2.row && cell1.column === cell2.column;
 }
 
-export function pushCellIfNotInList(cell: Cell, list: Cell[]) {
+export function pushCellIfNotInList(cell: CellPosition, list: CellPosition[]) {
   if (!list.find((c) => isSameCell(c, cell))) {
     list.push(cell);
   }

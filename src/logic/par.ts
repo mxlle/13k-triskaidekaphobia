@@ -1,5 +1,5 @@
-import { Cell, GameFieldData, hasPerson, isEmpty, isSameCell, PlacedPerson } from "../types";
-import { checkTableStates, getEmptyChairs, hasPanic, isUnhappy } from "./checks";
+import { Cell, GameFieldData, hasPerson, isEmpty, isSameCell, PlacedPerson, pushCellIfNotInList } from "../types";
+import { checkTableStates, getEmptyChairs, getNeighbors, hasPanic, isUnhappy } from "./checks";
 import { shuffleArray } from "../utils/random-utils";
 
 interface Constellation {
@@ -12,6 +12,7 @@ function isSameConstellation(constellation1: PlacedPerson[], constellation2: Pla
 }
 
 let previousConstellations: Constellation[] = [];
+let skippedPersons: PlacedPerson[] = [];
 
 export function calculatePar(
   gameFieldData: GameFieldData,
@@ -52,6 +53,165 @@ export function calculatePar(
   }
 
   return innerParCalc(gameFieldData, placedPersons, iteration, wasEmptyCell, remainingPanickedCells);
+}
+
+export function getChains(placedPersons: PlacedPerson[]): PlacedPerson[][] {
+  const personsWithBigFear = placedPersons.filter((p) => p.fear !== undefined);
+  const personsThatTriggerBigFear = placedPersons.filter((p) => personsWithBigFear.some((t) => t.fear === p.name));
+  const personsWithRelevantBigFear = personsWithBigFear.filter((p) => personsThatTriggerBigFear.some((t) => t.name === p.fear));
+  let involvedPersons = personsWithRelevantBigFear.concat(personsThatTriggerBigFear);
+
+  const chains: PlacedPerson[][] = [];
+  while (involvedPersons.length > 0) {
+    const chain: PlacedPerson[] = [];
+    const relatedPersons = [involvedPersons.pop()];
+    while (relatedPersons.length > 0) {
+      const currentPerson = relatedPersons.pop();
+      pushCellIfNotInList(currentPerson, chain);
+      relatedPersons.push(...involvedPersons.filter((p) => p.name === currentPerson.fear || p.fear === currentPerson.name));
+      involvedPersons = involvedPersons.filter((p) => !relatedPersons.some((t) => isSameCell(t, p)));
+    }
+    chains.push(chain.sort(sortByName));
+  }
+
+  return chains.sort((a, b) => b.length - a.length);
+}
+
+export function calculateParViaChains(gameFieldData: GameFieldData, placedPersons: PlacedPerson[], iteration: number = 0): number {
+  if (iteration === 0) {
+    skippedPersons = [];
+  }
+
+  const chains = getChains(placedPersons);
+  let par = 0;
+
+  for (let chain of chains) {
+    const tables = splitChainIntoTables(chain);
+    console.debug("Tables", tables);
+    const variant1MismatchCount = getMismatchCount(tables, 0, 1);
+    const variant2MismatchCount = getMismatchCount(tables, 1, 0);
+    console.debug("Mismatch counts", variant1MismatchCount, variant2MismatchCount);
+
+    let subPar = 0;
+
+    if (variant1MismatchCount < variant2MismatchCount) {
+      subPar = resolveTableConstraints(gameFieldData, placedPersons, tables, 0, 1);
+    } else {
+      subPar = resolveTableConstraints(gameFieldData, placedPersons, tables, 1, 0);
+    }
+
+    par += subPar;
+  }
+
+  console.debug("Skipped persons", skippedPersons);
+
+  for (let person of skippedPersons) {
+    const validChair = findValidChair(gameFieldData, placedPersons, person, person.tableIndex === 0 ? 1 : 0);
+    if (validChair) {
+      assignChairToPerson(person, validChair);
+      par += 1;
+    } else {
+      console.debug("Still no valid empty chair found for skipped person", person);
+    }
+  }
+
+  console.debug("Par from chains", par);
+
+  return par + calculatePar(gameFieldData, placedPersons, 0);
+}
+
+function resolveTableConstraints(
+  gameFieldData: GameFieldData,
+  placedPersons: PlacedPerson[],
+  tables: TableSplit,
+  index0: 0 | 1,
+  index1: 0 | 1,
+): number {
+  let par = resolveTableConstraintsInner(gameFieldData, placedPersons, tables[0], index0);
+  par += resolveTableConstraintsInner(gameFieldData, placedPersons, tables[1], index1);
+
+  return par;
+}
+
+function resolveTableConstraintsInner(
+  gameFieldData: GameFieldData,
+  placedPersons: PlacedPerson[],
+  table: PlacedPerson[],
+  index: 0 | 1,
+): number {
+  let par = 0;
+  for (let person of table) {
+    if (person.tableIndex !== index) {
+      const validChair = findValidChair(gameFieldData, placedPersons, person, index);
+
+      if (!validChair) {
+        skippedPersons.push(person);
+        console.debug("No valid empty chairs found, skip for now");
+        continue;
+      }
+
+      assignChairToPerson(person, validChair);
+      par += 1;
+    }
+  }
+
+  return par;
+}
+
+function findValidChair(gameFieldData: GameFieldData, placedPersons: PlacedPerson[], person: PlacedPerson, index: 0 | 1): Cell {
+  const emptyChairs = getEmptyChairs(gameFieldData, placedPersons).filter((c) => c.tableIndex === index);
+  const validEmptyChairs = emptyChairs.filter((c) => {
+    const neighbors = getNeighbors(placedPersons, c);
+
+    return neighbors.every((n) => n.smallFear !== person.name && n.name !== person.smallFear);
+  });
+
+  return validEmptyChairs[0];
+}
+
+function assignChairToPerson(placedPerson: PlacedPerson, chair: Cell): void {
+  placedPerson.row = chair.row;
+  placedPerson.column = chair.column;
+  placedPerson.tableIndex = chair.tableIndex;
+}
+
+function getMismatchCount(tables: TableSplit, index0: 0 | 1, index1: 0 | 1): number {
+  const mismatchCount0 = tables[0].filter((p) => p.tableIndex !== index0).length;
+  const mismatchCount1 = tables[1].filter((p) => p.tableIndex !== index1).length;
+
+  return mismatchCount0 + mismatchCount1;
+}
+
+type TableSplit = [PlacedPerson[], PlacedPerson[]];
+
+function splitChainIntoTables(chain: PlacedPerson[]): TableSplit {
+  const tables: TableSplit = [[], []];
+  let remainingPersons = [...chain];
+
+  while (remainingPersons.length > 0) {
+    const person = remainingPersons.pop();
+    const oppositePersons = remainingPersons.filter((p) => p.name === person.fear || p.fear === person.name);
+    const canAddOppositesTo0 = oppositePersons.every((p) => canAddToTable(tables[0], p));
+    const canAddPersonTo1 = canAddToTable(tables[1], person);
+    if (canAddOppositesTo0 && canAddPersonTo1) {
+      tables[0].push(...oppositePersons);
+      tables[1].push(person);
+    } else {
+      tables[1].push(...oppositePersons);
+      tables[0].push(person);
+    }
+    remainingPersons = remainingPersons.filter((p) => !oppositePersons.some((t) => isSameCell(t, p)));
+  }
+
+  return tables;
+}
+
+function canAddToTable(table: PlacedPerson[], person: PlacedPerson): boolean {
+  return table.every((t) => t.name !== person.fear && t.fear !== person.name);
+}
+
+function sortByName(a: PlacedPerson, b: PlacedPerson): number {
+  return a.name.localeCompare(b.name);
 }
 
 function innerParCalc(
