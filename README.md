@@ -7,6 +7,7 @@ Your task is to assign all the guests to chairs at the tables in such a way that
 All the information is displayed within the game, but here are some backup infos just in case:
 - the guests are represented by emojis
 - the phobias of each emoji are represented below the emoji (again with emojis) 
+- everyone suffers from triskaidekaphobia
 - select the emoji to get a larger preview and more information about the phobias
 - change the position by using drag and drop or clicking an empty chair
 - you can also use the empty fields as intermediate storage
