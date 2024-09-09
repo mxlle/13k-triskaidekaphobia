@@ -8,36 +8,16 @@ let zIndexCounter = 50; // start at 50 to be above regular content
 export interface Dialog {
   open: (openImmediately?: boolean) => Promise<boolean>;
   close: (isSubmit?: boolean) => void;
-  changeHeader: (headerText: string) => void;
   toggleSubmitDisabled: (isDisabled: boolean) => void;
   recreateDialogContent: (newInnerElement: HTMLElement) => void;
   changeSubmitText: (newText: string) => void;
 }
 
-export function createDialog(
-  innerElement: HTMLElement,
-  submitButtonText?: string,
-  headerText?: string,
-  autoHeight: boolean = false,
-): Dialog {
+export function createDialog(innerElement: HTMLElement, submitButtonText?: string): Dialog {
   const dialog = createElement({
     cssClass: "dialog",
     onClick: (event) => event.stopPropagation(), // TODO - why?
   });
-
-  if (autoHeight) {
-    dialog.classList.add("auto-height");
-  }
-
-  let header;
-  if (headerText) {
-    header = createElement({
-      tag: "h2",
-      text: headerText,
-    });
-    dialog.appendChild(header);
-    dialog.classList.add("has-header");
-  }
 
   const dialogContent = createElement({ cssClass: "content" });
   dialogContent.appendChild(innerElement);
@@ -46,7 +26,6 @@ export function createDialog(
   function closeDialog() {
     zIndexCounter--;
     dialog.classList.remove("open");
-    //setTimeout(() => document.body.removeChild(dialog), 700);
   }
 
   let buttons, cancelButton, submitButton;
@@ -62,7 +41,7 @@ export function createDialog(
       text: submitButtonText,
       onClick: closeDialog,
     });
-    submitButton.classList.add("primary-btn");
+    submitButton.classList.add("prm");
     buttons.appendChild(submitButton);
     dialog.appendChild(buttons);
   }
@@ -82,7 +61,7 @@ export function createDialog(
         setTimeout(() => dialog.classList.add("open"), 0);
       }
 
-      dialogContent.classList.toggle("is-overflowing", dialogContent.scrollHeight > dialogContent.clientHeight);
+      dialogContent.classList.toggle("ovrflw", dialogContent.scrollHeight > dialogContent.clientHeight);
 
       dialogContent.scrollTop = 0;
 
@@ -98,9 +77,6 @@ export function createDialog(
       }
 
       closeDialog();
-    },
-    changeHeader: (newHeaderText) => {
-      if (header) header.innerText = newHeaderText;
     },
     toggleSubmitDisabled: (isDisabled) => {
       if (submitButton) submitButton.disabled = isDisabled;

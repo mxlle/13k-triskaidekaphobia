@@ -67,7 +67,7 @@ export async function initializeEmptyGameField() {
       (event.target as HTMLElement)?.remove();
     },
   });
-  startButton.classList.add("start-button", "primary-btn");
+  startButton.classList.add("start-button", "prm");
 
   gameFieldElem.append(startButton);
 
@@ -245,7 +245,7 @@ function updateState(gameFieldData: Cell[][], placedPersons: PlacedPerson[], ski
 
 export function generateGameFieldElement(gameFieldData: GameFieldData) {
   const gameField = createElement({
-    cssClass: "game-field",
+    cssClass: "field",
   });
   cellElements.length = 0;
 

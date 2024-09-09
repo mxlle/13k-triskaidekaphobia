@@ -4,7 +4,7 @@
 
 $border-style: outset;
 
-.game-field {
+.field {
   @include grid-mixins.board-tile-grid;
   @include grid-mixins.board-tile-grid-variables;
 
@@ -284,7 +284,17 @@ body {
       &.chair:not(.has-person) {
         cursor: pointer;
 
-        @include selectable($success-color-light);
+        &:after {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba($success-color-light, 0.3);
+          pointer-events: none;
+          animation: opacityBlink 1s infinite;
+        }
       }
     }
   }

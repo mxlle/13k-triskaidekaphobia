@@ -108,30 +108,30 @@
   padding: 0.5rem 0.75rem;
   border-radius: theme.$border-radius;
   width: fit-content;
+}
 
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(2, auto);
-    gap: 0.5rem;
-    align-items: center;
-    line-height: 1;
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  gap: 0.5rem;
+  align-items: center;
+  line-height: 1;
+}
+
+.stat {
+  display: contents;
+
+  > :first-child {
+    font-size: 1.4em;
+    font-family: monospace;
+    font-weight: bold;
   }
 
-  .stat {
-    display: contents;
+  &.good {
+    color: theme.$success-color;
+  }
 
-    > :first-child {
-      font-size: 1.4em;
-      font-family: monospace;
-      font-weight: bold;
-    }
-
-    &.good {
-      color: theme.$success-color;
-    }
-
-    &.bad {
-      color: theme.$danger-color-contrast;
-    }
+  &.bad {
+    color: theme.$danger-color-contrast;
   }
 }

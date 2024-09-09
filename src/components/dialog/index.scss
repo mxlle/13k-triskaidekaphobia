@@ -17,18 +17,10 @@
     transform 0.5s,
     opacity 0.5s;
 
-  &.auto-height {
-    height: auto;
-  }
-
   &:not(.open) {
     transform: translateY(100%);
     opacity: 0;
     pointer-events: none;
-  }
-
-  &.has-header {
-    grid-template-rows: min-content 1fr min-content;
   }
 
   .content {
@@ -36,7 +28,7 @@
     overflow-y: auto;
     overflow-x: hidden;
 
-    &.is-overflowing {
+    &.ovrflw {
       align-content: start;
     }
   }
@@ -49,17 +41,12 @@
 }
 
 .btns {
-  background: theme.$dialog-bg;
   display: grid;
   gap: 1rem;
   padding: 1rem;
   grid-template-columns: repeat(2, minmax(auto, 1fr));
-  align-items: center;
-  justify-content: center;
-  justify-self: center;
-  width: 100%;
 
-  button {
+  > * {
     white-space: nowrap;
   }
 }

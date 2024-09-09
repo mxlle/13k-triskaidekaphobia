@@ -58,7 +58,7 @@ function getWinScreenContent(score: number, isComplete: boolean) {
   }
 
   const winContentElem = createElement({
-    cssClass: "win-screen",
+    cssClass: "menu",
   });
 
   if (isComplete) {
@@ -70,7 +70,7 @@ function getWinScreenContent(score: number, isComplete: boolean) {
   }
 
   difficultyElement = createElement({
-    cssClass: "difficulty",
+    cssClass: "d8y",
   });
 
   winContentElem.append(difficultyElement);

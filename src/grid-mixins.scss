@@ -12,8 +12,8 @@ $font-size: calc(0.6 * var(--s-size));
 
 @mixin board-tile-grid {
   display: grid;
-  grid-template-columns: repeat(var(--columns, $squareCount), var(--s-size));
-  grid-template-rows: repeat(var(--rows, $squareCount), var(--s-size));
+  grid-template-columns: repeat($squareCount, var(--s-size));
+  grid-template-rows: repeat($squareCount, var(--s-size));
   font-size: $font-size;
   line-height: 1;
 }
