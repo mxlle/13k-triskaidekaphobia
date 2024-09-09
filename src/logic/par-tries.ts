@@ -55,6 +55,7 @@ export function calculatePar(
   return innerParCalc(gameFieldData, placedPersons, iteration, wasEmptyCell, remainingPanickedCells);
 }
 
+// can probably be replaced with getChainsAndSplitToTables
 export function getChains(placedPersons: PlacedPerson[]): PlacedPerson[][] {
   const personsWithBigFear = placedPersons.filter((p) => p.fear !== undefined);
   const personsThatTriggerBigFear = placedPersons.filter((p) => personsWithBigFear.some((t) => t.fear === p.name));
