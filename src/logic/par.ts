@@ -51,6 +51,16 @@ export function calculatePar(
     return panickedCount;
   }
 
+  return innerParCalc(gameFieldData, placedPersons, iteration, wasEmptyCell, remainingPanickedCells);
+}
+
+function innerParCalc(
+  gameFieldData: GameFieldData,
+  placedPersons: PlacedPerson[],
+  iteration: number,
+  wasEmptyCell: boolean,
+  remainingPanickedCells: PlacedPerson[],
+): number {
   const cellsRelatedToUnhappyPersons = placedPersons.filter((p) => {
     const isPanickedCell = hasPanic(p);
     const numOfPeopleThatAreAfraidOfThem = remainingPanickedCells.filter((t) => t.afraidOf.some((a) => isSameCell(a, p))).length;
@@ -86,7 +96,7 @@ export function calculatePar(
 
     let validCellsWithSmallestUnhappyCellCount: Cell[];
 
-    if (smallestUnhappyCellCount >= panickedCount) {
+    if (smallestUnhappyCellCount >= remainingPanickedCells.length) {
       if (wasEmptyCell) {
         continue;
       }
