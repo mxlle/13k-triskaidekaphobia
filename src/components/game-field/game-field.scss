@@ -5,15 +5,15 @@
 $border-style: outset;
 
 .field {
-  @include grid-mixins.board-tile-grid;
-  @include grid-mixins.board-tile-grid-variables;
-
+  --t: #{$tile-color-1};
   position: relative;
   margin: 0 auto;
   justify-content: center;
   height: fit-content;
-  --t: #{$tile-color-1};
   border: calc(var(--s-size) / 4) solid $tile-color-alpha;
+
+  @include grid-mixins.board-tile-grid;
+  @include grid-mixins.board-tile-grid-variables;
 
   .row {
     display: contents;
