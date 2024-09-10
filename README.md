@@ -27,7 +27,7 @@ All the information is displayed within the game, but here are some backup infos
   - But in my last iteration, I finally had all 10 testers at least doing the first tutorial, half of them doing all 3 tutorials and 1 person even doing a couple of regular levels
 - I like emojis 🙃
 
-## Nest steps if I had more time and space
+## Next steps if I had more time and space
 - improve scoring system
 - additional modes, e.g. time-based or gambling
 - add custom svgs
