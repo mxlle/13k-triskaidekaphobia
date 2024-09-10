@@ -12,9 +12,7 @@ export function addCanvasToBody() {
 }
 
 type HTMLTagName = keyof HTMLElementTagNameMap | keyof HTMLElementDeprecatedTagNameMap | string;
-type ElementByTag<TagName extends HTMLTagName> = TagName extends keyof HTMLElementTagNameMap
-  ? HTMLElementTagNameMap[TagName]
-  : HTMLElement;
+type ElementByTag<TagName extends HTMLTagName> = TagName extends keyof HTMLElementTagNameMap ? HTMLElementTagNameMap[TagName] : HTMLElement;
 
 export function createElement<TagName extends HTMLTagName = "div">({
   tag,
@@ -28,7 +26,7 @@ export function createElement<TagName extends HTMLTagName = "div">({
   onClick?: (this: ElementByTag<TagName>, evt: MouseEvent & { target: ElementByTag<TagName> }) => void;
 } = {}) {
   const elem = document.createElement(tag || "div") as ElementByTag<TagName>;
-  if (cssClass) elem.classList.add(...cssClass.split(" "));
+  if (cssClass) elem.classList.add(...cssClass.split(" ").filter(Boolean));
   if (text) {
     const textNode = document.createTextNode(text);
     elem.appendChild(textNode);
@@ -77,11 +75,7 @@ function absorbEvent_(event: Event) {
   return false;
 }
 
-export function convertLongPressToClick(
-  node: Node,
-  clickHandler?: (ev: TouchEvent) => void,
-  touchingClassTimeout = 300
-) {
+export function convertLongPressToClick(node: Node, clickHandler?: (ev: TouchEvent) => void, touchingClassTimeout = 300) {
   function onTouchEnd(event, promise, target) {
     promise.then(() => target.classList.remove("touching"));
     return absorbEvent_(event);
@@ -103,7 +97,7 @@ export function convertLongPressToClick(
 
       return absorbEvent_(event);
     },
-    explicitPassiveOption
+    explicitPassiveOption,
   );
 }
 
