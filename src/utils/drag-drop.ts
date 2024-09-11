@@ -7,6 +7,7 @@ const firstParent = (e: TouchEvent | MouseEvent, cssClass: string): HTMLElement 
 
   let el: any = touchList ? document.elementFromPoint(touchList[0].pageX, touchList[0].pageY) : e.target;
   while (el !== document) {
+    if (el === null) return;
     if (hasClass(el, cssClass)) return el;
     el = el.parentNode;
   }
@@ -27,6 +28,7 @@ export default (
   dropClass: string,
   createOverlay: (dragEl: HTMLElement) => HTMLElement,
   onDrop: (dragEl: HTMLElement, dropEl: HTMLElement, isTouch: boolean) => void,
+  onDragCancel: (dragEl: HTMLElement) => void,
 ) => {
   let dragTimeout, isDragging, dragEl, overlayEl, dropEl;
 
@@ -75,8 +77,12 @@ export default (
       overlayEl.remove();
       overlayEl = undefined;
       dropEl = firstParent(e, dropClass);
-      const isTouch = e.type === "touchend";
-      dropEl && onDrop(dragEl, dropEl, isTouch);
+      if (dropEl) {
+        const isTouch = e.type === "touchend";
+        onDrop(dragEl, dropEl, isTouch);
+      } else {
+        onDragCancel(dragEl);
+      }
     }
   };
   rootEl.addEventListener("mousedown", pointerdown);

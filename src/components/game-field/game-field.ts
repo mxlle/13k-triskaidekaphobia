@@ -292,6 +292,12 @@ export function generateGameFieldElement(gameFieldData: GameFieldData) {
         dragEl.click();
       }
     },
+    (dragEl) => {
+      gameField.classList.remove(CssClass.IS_DRAGGING);
+      const personEl = getPersonElement(dragEl);
+      personEl.classList.remove(CssClass.IS_DRAGGED);
+      dragEl.click();
+    },
   );
 
   return gameField;
