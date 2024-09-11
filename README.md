@@ -4,7 +4,9 @@ In this puzzle game you have the role of an Event Planner for the dinner of the 
 Your task is to assign all the guests to chairs at the tables in such a way that no phobia is triggered.
 
 ## Info & Controls
-All the information is displayed within the game, but here are some backup infos just in case:
+All levels are solvable.
+
+All the required information is displayed within the game, but here are some backup infos just in case:
 - the guests are represented by emojis
 - the phobias of each emoji are represented below the emoji (again with emojis) 
 - everyone suffers from triskaidekaphobia
@@ -12,9 +14,26 @@ All the information is displayed within the game, but here are some backup infos
 - change the position by using drag and drop or clicking an empty chair
 - you can also use the empty fields as intermediate storage
 - the game is won when all guests are seated correctly
+- intermediately triggered phobias are fine, as long as they are resolved in the end
+  - sometimes it is even required to temporarily trigger phobias in order to solve the level 
 
 
 - note: some guests are represented by object emojis, treat them as persons nevertheless, we don't want to discriminate anyone :)
+
+### About the score calculation
+The score is based on the amount of moves. 
+
+You get the highest score (9999⭐️) if you solve the level in the least amount of moves possible.
+
+When you need as much moves as the level has guests, you still get 2000⭐️. 
+
+Then it slowly decreases to 0⭐️ when you need more than ~3x the amount of moves.
+
+Note: Calculating the optimal amount of moves ("par") was one of the hardest parts to implement. 
+- I spent around 10 hrs trying to get it perfect, but in the end I had to settle for a good enough solution. 
+- Biggest issue was performance due to deep recursions. 
+- But now I am using an "educated guess" based on the amount of guests that have to switch tables, plus some additional checks. 
+- It is not perfect, but should be good enough for most cases.
 
 ## Stats & Fun Facts
 - this is my 4th time participating
