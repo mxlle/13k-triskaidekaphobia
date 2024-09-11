@@ -31,7 +31,7 @@ let moves: number = 0;
 const cellElements: HTMLElement[][] = [];
 
 const TIMEOUT_BETWEEN_GAMES = 300;
-const TIMEOUT_CELL_APPEAR = 30;
+const TIMEOUT_CELL_APPEAR = 20;
 
 export async function initializeEmptyGameField() {
   document.body.classList.remove(CssClass.SELECTING);
@@ -71,7 +71,7 @@ export async function startNewGame() {
   if (globals.gameFieldData.length && gameFieldElem) {
     // reset old game field
     pubSubService.publish(PubSubEvent.UPDATE_SCORE, { score: 0, moves: 0 });
-    await cleanGameField(globals.gameFieldData, globals.placedPersons);
+    await cleanGameField(globals.gameFieldData);
     if (process.env.POKI_ENABLED === "true") await handlePokiCommercial();
     await requestAnimationFrameWithTimeout(TIMEOUT_BETWEEN_GAMES);
 
@@ -348,21 +348,24 @@ function removeOnboardingArrowIfApplicable() {
   }
 }
 
-export async function cleanGameField(gameFieldData: GameFieldData, persons: PlacedPerson[]) {
-  gameFieldData
-    .flat()
-    .filter(isTable)
-    .forEach((tableCell) => {
-      const tableCellElement = getCellElement(tableCell);
-      tableCellElement.classList.remove(CssClass.T13A, CssClass.HAS_LEFT, CssClass.HAS_RIGHT);
-    });
+export async function cleanGameField(gameFieldData: GameFieldData) {
+  const allCells = gameFieldData.flat();
 
-  for (let i = 0; i < persons.length; i++) {
-    const cell = persons[i];
+  for (let i = 0; i < allCells.length; i++) {
+    const cell: Cell = allCells[i];
     const cellElement = getCellElement(cell);
-    cellElement.innerHTML = "";
-    cellElement.classList.remove(CssClass.HAS_PERSON);
-    await requestAnimationFrameWithTimeout(TIMEOUT_CELL_APPEAR);
+    if (isTable(cell)) {
+      cellElement.classList.remove(CssClass.T13A, CssClass.HAS_LEFT, CssClass.HAS_RIGHT);
+    } else {
+      const hadPerson = cellElement.classList.contains(CssClass.HAS_PERSON);
+
+      cellElement.innerHTML = "";
+      cellElement.classList.remove(CssClass.HAS_PERSON);
+
+      if (hadPerson) {
+        await requestAnimationFrameWithTimeout(TIMEOUT_CELL_APPEAR);
+      }
+    }
   }
 }
 
