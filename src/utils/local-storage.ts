@@ -2,7 +2,7 @@ const LOCAL_STORAGE_PREFIX = "mxlle13";
 
 export const enum LocalStorageKey {
   MUTED = "muted",
-  ONBOARDING_STEP = "oSt3",
+  ONBOARDING_STEP = "oSt",
   DIFFICULTY = "d8y",
   DIFFICULTY_EASY = "d8y0",
   DIFFICULTY_MEDIUM = "d8y1",
