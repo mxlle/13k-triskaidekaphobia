@@ -12,7 +12,7 @@ export async function initAudio(initializeMuted: boolean) {
 
   audioElem = document.createElement("audio");
   audioElem.loop = true;
-  audioElem.volume = 0.1;
+  audioElem.volume = 0.5;
   audioElem.playbackRate = 1;
 
   const player = new CPlayer();
