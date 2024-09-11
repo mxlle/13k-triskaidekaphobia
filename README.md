@@ -8,7 +8,7 @@ All the information is displayed within the game, but here are some backup infos
 - the guests are represented by emojis
 - the phobias of each emoji are represented below the emoji (again with emojis) 
 - everyone suffers from triskaidekaphobia
-- select the emoji to get a larger preview and more information about the phobias
+- select an emoji to get a larger preview and more information about the phobias
 - change the position by using drag and drop or clicking an empty chair
 - you can also use the empty fields as intermediate storage
 - the game is won when all guests are seated correctly
@@ -18,7 +18,7 @@ All the information is displayed within the game, but here are some backup infos
 
 ## Stats & Fun Facts
 - this is my 4th time participating
-- I worked ~80 hours on this game (longest time so far), but I had a lot of fun 😁
+- I worked ~90 hours on this game (longest time so far), but I had a lot of fun 😁
 - My husband supported me an additional ~10 hours (DevOps + the drag&drop feature)
 - 10% of the coding happened on a plane over the Atlantic Ocean ✈️ and another ~30% while travelling the US 🇺🇸 
 - I spent around 4 hours on the music using SoundBox. I used the only song I know how to play on the piano 🎹 and added some drums and bass
