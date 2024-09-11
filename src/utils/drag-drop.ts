@@ -13,12 +13,12 @@ const firstParent = (e: TouchEvent | MouseEvent, cssClass: string): HTMLElement 
   }
 };
 
-const getOverlayPosition = (e: any) => {
+const getOverlayPosition = (e: any, element?: HTMLElement) => {
   e = e.touches?.[0] ?? e;
-  const target = e.target;
+  const referenceElement = element ?? e.target;
   return {
-    left: `${e.pageX - target.offsetWidth / 4}px`,
-    top: `${e.pageY - target.offsetHeight / 4}px`,
+    left: `${e.pageX - referenceElement.offsetWidth / 4}px`,
+    top: `${e.pageY - referenceElement.offsetHeight / 4}px`,
   };
 };
 
@@ -31,6 +31,8 @@ export default (
   onDragCancel: (dragEl: HTMLElement) => void,
 ) => {
   let dragTimeout, isDragging, dragEl, overlayEl, dropEl;
+  const innerRoot = rootEl;
+  const outerRoot = document.body;
 
   const pointerdown = (e) => {
     dragTimeout = setTimeout(() => {
@@ -54,7 +56,7 @@ export default (
     overlayEl = dragEl && createOverlay(dragEl);
     if (overlayEl) {
       e.preventDefault();
-      rootEl.appendChild(overlayEl);
+      innerRoot.appendChild(overlayEl);
       overlayEl.classList.add("drag-overlay");
       Object.assign(overlayEl.style, {
         position: "fixed",
@@ -67,7 +69,7 @@ export default (
   const pointermove = (e) => {
     if (isDragging && overlayEl) {
       e.preventDefault();
-      Object.assign(overlayEl.style, getOverlayPosition(e));
+      Object.assign(overlayEl.style, getOverlayPosition(e, dragEl));
     }
   };
   const dropping = (e) => {
@@ -85,10 +87,10 @@ export default (
       }
     }
   };
-  rootEl.addEventListener("mousedown", pointerdown);
-  rootEl.addEventListener("touchstart", pointerdown);
-  rootEl.addEventListener("mousemove", pointermove);
-  rootEl.addEventListener("touchmove", pointermove, { passive: false });
-  rootEl.addEventListener("mouseup", pointerup);
-  rootEl.addEventListener("touchend", pointerup);
+  innerRoot.addEventListener("mousedown", pointerdown);
+  innerRoot.addEventListener("touchstart", pointerdown);
+  outerRoot.addEventListener("mousemove", pointermove);
+  outerRoot.addEventListener("touchmove", pointermove, { passive: false });
+  outerRoot.addEventListener("mouseup", pointerup);
+  outerRoot.addEventListener("touchend", pointerup);
 };
