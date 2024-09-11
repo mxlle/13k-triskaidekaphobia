@@ -51,14 +51,14 @@ export function createCellElement(cell: Cell, isInMiddle: boolean = false, isOnT
   return cellElem;
 }
 
-export function updateCellOccupancy(cell: CellPositionWithTableIndex, cellElement: HTMLElement): void {
+export function updateCellOccupancy(cell: CellPositionWithTableIndex, cellElement: HTMLElement, skipUpdatePanic: boolean = false): void {
   const person: PlacedPerson | undefined = findPerson(globals.placedPersons, cell);
 
   if (person && hasPerson(globals.placedPersons, cell)) {
     const personElement: HTMLElement = person.personElement;
     cellElement.append(personElement);
 
-    updatePersonPanicState(person, personElement);
+    if (!skipUpdatePanic) updatePersonPanicState(person, personElement);
   }
 
   cellElement.classList.toggle(CssClass.HAS_PERSON, !!person);

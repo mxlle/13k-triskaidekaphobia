@@ -331,7 +331,7 @@ export async function initializePersonsOnGameField(persons: PlacedPerson[]) {
     const person = persons[i];
     const cellElement = getCellElement(person);
     cellElement.innerHTML = "";
-    updateCellOccupancy(person, cellElement);
+    updateCellOccupancy(person, cellElement, true);
     await requestAnimationFrameWithTimeout(TIMEOUT_CELL_APPEAR);
   }
 }
@@ -394,7 +394,7 @@ export async function updatePanicStates(gameFieldData: GameFieldData, placedPers
       cellElement.classList.remove(CssClass.T13A);
     });
 
-  await requestAnimationFrameWithTimeout(0); // to trigger restart of tremble animation
+  await requestAnimationFrameWithTimeout(50); // to trigger restart of tremble animation
 
   placedPersons.forEach((person) => {
     updatePersonPanicState(person);
