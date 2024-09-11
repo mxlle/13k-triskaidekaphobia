@@ -27,7 +27,9 @@ export function getChainsAndSplitToTables(placedPersons: PlacedPerson[]): TableS
 
 export function simplifiedCalculateParViaChains(placedPersons: PlacedPerson[]): number {
   const tableSplits = getChainsAndSplitToTables(placedPersons);
-  let par = placedPersons.length === 32 ? 2 : 0;
+  let par = 0;
+  const difficultyBonus = placedPersons.length === 32 ? 3 : 0;
+  const personsWithOnlySmallFearTriggered = getPersonsWithSmallFearTriggered(placedPersons).length;
 
   for (let tables of tableSplits) {
     console.debug("Tables", tables);
@@ -38,8 +40,10 @@ export function simplifiedCalculateParViaChains(placedPersons: PlacedPerson[]): 
   }
 
   console.debug("Par from chains", par);
+  console.debug("Difficulty bonus", difficultyBonus);
+  console.debug("Persons with only small fear triggered", personsWithOnlySmallFearTriggered);
 
-  return par + getPersonsWithSmallFearTriggered(placedPersons).length;
+  return par + personsWithOnlySmallFearTriggered + difficultyBonus;
 }
 
 function getPersonsWithSmallFearTriggered(placedPersons: PlacedPerson[]): PlacedPerson[] {
