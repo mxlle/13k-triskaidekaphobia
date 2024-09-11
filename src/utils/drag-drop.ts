@@ -51,6 +51,15 @@ export default (
   };
 
   const startDragging = (e) => {
+    if (isDragging) {
+      return;
+    }
+
+    if (overlayEl) {
+      overlayEl.remove();
+      overlayEl = undefined;
+    }
+
     isDragging = 1;
     dragEl = firstParent(e, dragClass);
     overlayEl = dragEl && createOverlay(dragEl);
