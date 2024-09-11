@@ -96,6 +96,8 @@ $border-style: outset;
   }
 
   &.#{$HAS_PERSON} {
+    touch-action: none;
+
     &::before {
       opacity: 0.3;
     }
