@@ -4,6 +4,7 @@ export const enum PubSubEvent {
   UPDATE_SCORE,
   MUTE_MUSIC,
   UNMUTE_MUSIC,
+  CLOSE_DIALOG,
 }
 
 type EventDataTypes = {
@@ -12,6 +13,7 @@ type EventDataTypes = {
   [PubSubEvent.UPDATE_SCORE]: { score: number; moves: number };
   [PubSubEvent.MUTE_MUSIC]: undefined;
   [PubSubEvent.UNMUTE_MUSIC]: undefined;
+  [PubSubEvent.CLOSE_DIALOG]: boolean;
 };
 
 type Callback<Event extends PubSubEvent> = (data: EventDataTypes[Event]) => void;

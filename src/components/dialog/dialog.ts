@@ -2,6 +2,7 @@ import { createButton, createElement } from "../../utils/html-utils";
 
 import "./index.scss";
 import { getTranslation, TranslationKey } from "../../translations/i18n";
+import { PubSubEvent, pubSubService } from "../../utils/pub-sub-service";
 
 let zIndexCounter = 50; // start at 50 to be above regular content
 
@@ -23,9 +24,10 @@ export function createDialog(innerElement: HTMLElement, submitButtonText?: strin
   dialogContent.appendChild(innerElement);
   dialog.appendChild(dialogContent);
 
-  function closeDialog() {
+  function closeDialog(confirm: boolean) {
     zIndexCounter--;
     dialog.classList.remove("open");
+    pubSubService.publish(PubSubEvent.CLOSE_DIALOG, confirm);
   }
 
   let buttons, cancelButton, submitButton;
@@ -34,19 +36,21 @@ export function createDialog(innerElement: HTMLElement, submitButtonText?: strin
 
     cancelButton = createButton({
       text: getTranslation(TranslationKey.BACK),
-      onClick: closeDialog,
+      onClick: () => closeDialog(false),
     });
     buttons.appendChild(cancelButton);
     submitButton = createButton({
       text: submitButtonText,
-      onClick: closeDialog,
+      onClick: () => closeDialog(true),
     });
     submitButton.classList.add("prm");
     buttons.appendChild(submitButton);
     dialog.appendChild(buttons);
   }
 
-  dialog.appendChild(createButton({ text: "X", onClick: closeDialog, iconBtn: true }));
+  const closeBtn = createButton({ text: "X", onClick: () => closeDialog(false), iconBtn: true });
+
+  dialog.appendChild(closeBtn);
 
   document.body.appendChild(dialog);
 
@@ -66,17 +70,11 @@ export function createDialog(innerElement: HTMLElement, submitButtonText?: strin
       dialogContent.scrollTop = 0;
 
       return new Promise((resolve, _reject) => {
-        cancelButton?.addEventListener("click", () => resolve(false));
-        submitButton?.addEventListener("click", () => resolve(true));
+        pubSubService.subscribe(PubSubEvent.CLOSE_DIALOG, resolve);
       });
     },
     close: (isSubmit: boolean) => {
-      if (isSubmit) {
-        submitButton.click();
-        return;
-      }
-
-      closeDialog();
+      closeDialog(isSubmit);
     },
     toggleSubmitDisabled: (isDisabled) => {
       if (submitButton) submitButton.disabled = isDisabled;

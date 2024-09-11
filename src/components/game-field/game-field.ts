@@ -12,7 +12,7 @@ import { getGameFieldData, placePersonsInitially } from "../../logic/initialize"
 import { checkTableStates, getHappyStats } from "../../logic/checks";
 import { PubSubEvent, pubSubService } from "../../utils/pub-sub-service";
 import { handlePokiCommercial, pokiSdk } from "../../poki-integration";
-import { getOnboardingData, OnboardingData, wasOnboarding } from "../../logic/onboarding";
+import { getOnboardingData, increaseOnboardingStepIfApplicable, isOnboarding, OnboardingData, wasOnboarding } from "../../logic/onboarding";
 import { getMiniHelpContent } from "../help/help";
 import { getOnboardingArrow } from "../onboarding/onboarding-components";
 import { calculateScore } from "../../logic/score";
@@ -54,6 +54,9 @@ function addStartButton(buttonLabelKey: TranslationKey) {
   startButton = createButton({
     text: getTranslation(buttonLabelKey),
     onClick: (event: MouseEvent) => {
+      if (isOnboarding()) {
+        increaseOnboardingStepIfApplicable();
+      }
       newGame();
       (event.target as HTMLElement)?.remove();
     },
@@ -224,7 +227,7 @@ function updateState(gameFieldData: Cell[][], placedPersons: PlacedPerson[], ski
 
   if (hasWon && !skipWinCheck) {
     document.body.classList.add(CssClass.WON);
-    addStartButton(TranslationKey.NEW_GAME);
+    addStartButton(isOnboarding() ? TranslationKey.CONTINUE : TranslationKey.NEW_GAME);
     createWinScreen(score, true);
 
     if (process.env.POKI_ENABLED === "true") pokiSdk.gameplayStop();
