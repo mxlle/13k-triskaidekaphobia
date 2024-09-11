@@ -77,7 +77,7 @@ export async function startNewGame() {
 
   if (globals.gameFieldData.length && gameFieldElem) {
     // reset old game field
-    pubSubService.publish(PubSubEvent.UPDATE_SCORE, { score: 0, moves: 0 });
+    pubSubService.publish(PubSubEvent.UPDATE_SCORE, { score: 0, moves: 0, par: 0 });
     await cleanGameField(globals.gameFieldData);
     if (process.env.POKI_ENABLED === "true") await handlePokiCommercial();
     await requestAnimationFrameWithTimeout(TIMEOUT_BETWEEN_GAMES);
@@ -223,7 +223,7 @@ function updateState(gameFieldData: Cell[][], placedPersons: PlacedPerson[], ski
   const panickedTableCells = checkTableStates(gameFieldData, placedPersons);
   void updatePanicStates(gameFieldData, placedPersons, panickedTableCells);
   const score = calculateScore(placedPersons, moves);
-  pubSubService.publish(PubSubEvent.UPDATE_SCORE, { score, moves });
+  pubSubService.publish(PubSubEvent.UPDATE_SCORE, { score, moves, par: globals.metaData?.minMoves });
   const { hasWon } = getHappyStats(placedPersons);
 
   if (hasWon && !skipWinCheck) {

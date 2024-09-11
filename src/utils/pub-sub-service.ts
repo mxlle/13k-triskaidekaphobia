@@ -10,7 +10,7 @@ export const enum PubSubEvent {
 type EventDataTypes = {
   [PubSubEvent.NEW_GAME]: undefined;
   [PubSubEvent.GAME_OVER]: undefined;
-  [PubSubEvent.UPDATE_SCORE]: { score: number; moves: number };
+  [PubSubEvent.UPDATE_SCORE]: { score: number; moves: number; par: number };
   [PubSubEvent.MUTE_MUSIC]: undefined;
   [PubSubEvent.UNMUTE_MUSIC]: undefined;
   [PubSubEvent.CLOSE_DIALOG]: boolean;

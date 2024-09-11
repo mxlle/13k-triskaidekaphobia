@@ -58,16 +58,14 @@ function init() {
     void startNewGame();
   });
 
-  pubSubService.subscribe(PubSubEvent.UPDATE_SCORE, ({ score, moves }) => {
+  pubSubService.subscribe(PubSubEvent.UPDATE_SCORE, ({ score, moves, par }) => {
     if (isOnboarding() || !globals.metaData) {
       scoreElement.textContent = "";
       return;
     }
 
-    //  | Par: ${globals.metaData.minMoves}
-
     currentScore = score;
-    const scoreText = `${getTranslation(TranslationKey.MOVES)}: ${moves} | ${formatNumber(score)}⭐️`;
+    const scoreText = `${getTranslation(TranslationKey.MOVES)}: ${moves} | Par: ${par} | ${formatNumber(score)}⭐️`;
     scoreElement.textContent = scoreText;
   });
 }
@@ -80,7 +78,7 @@ function formatNumber(num: number): string {
 const initApp = async () => {
   init();
   await initAudio(initializeMuted);
-}
+};
 
-if (process.env.POKI_ENABLED === 'true') initPoki(initApp);
+if (process.env.POKI_ENABLED === "true") initPoki(initApp);
 else initApp();
