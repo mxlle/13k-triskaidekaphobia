@@ -36,4 +36,6 @@ export const enum CssClass {
   PERSON = "D",
   EMOJI = "E",
   FIELD = "F",
+  WON = "G",
+  START_BUTTON = "H",
 }

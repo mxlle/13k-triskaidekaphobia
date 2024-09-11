@@ -45,22 +45,25 @@ export async function initializeEmptyGameField() {
 
   gameFieldElem = generateGameFieldElement(baseData);
 
+  addStartButton(TranslationKey.START_GAME);
+
+  appendGameField();
+}
+
+function addStartButton(buttonLabelKey: TranslationKey) {
   startButton = createButton({
-    text: getTranslation(TranslationKey.START_GAME),
+    text: getTranslation(buttonLabelKey),
     onClick: (event: MouseEvent) => {
       newGame();
       (event.target as HTMLElement)?.remove();
     },
   });
-  startButton.classList.add("start-button", "prm");
-
+  startButton.classList.add(CssClass.START_BUTTON, "prm");
   gameFieldElem.append(startButton);
-
-  appendGameField();
 }
 
 export async function startNewGame() {
-  document.body.classList.remove(CssClass.SELECTING);
+  document.body.classList.remove(CssClass.SELECTING, CssClass.WON);
   startButton?.remove();
   hasMadeFirstMove = false;
   clickedCell = undefined;
@@ -220,6 +223,8 @@ function updateState(gameFieldData: Cell[][], placedPersons: PlacedPerson[], ski
   const { hasWon } = getHappyStats(placedPersons);
 
   if (hasWon && !skipWinCheck) {
+    document.body.classList.add(CssClass.WON);
+    addStartButton(TranslationKey.NEW_GAME);
     createWinScreen(score, true);
 
     if (process.env.POKI_ENABLED === "true") pokiSdk.gameplayStop();

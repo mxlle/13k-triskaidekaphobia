@@ -34,7 +34,7 @@ $border-style: outset;
     }
   }
 
-  .start-button {
+  .#{$START_BUTTON} {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -309,6 +309,16 @@ body {
 
   @media (max-width: 600px) {
     transform: scale(3);
+  }
+}
+
+.#{$WON} {
+  .#{$CELL} {
+    pointer-events: none;
+  }
+
+  .#{$START_BUTTON} {
+    font-size: 0.8rem;
   }
 }
 
