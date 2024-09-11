@@ -32,7 +32,7 @@ export function createWinScreen(score: number, isComplete: boolean) {
 
   winDialog.open().then((playAgain) => {
     if (playAgain) {
-      if (isComplete) {
+      if (isComplete || globals.isWon) {
         increaseOnboardingStepIfApplicable();
       }
       newGame();
@@ -46,7 +46,7 @@ function updateConfirmText(isComplete: boolean) {
 
 function getConfirmText(isComplete: boolean) {
   if (getOnboardingData()) {
-    return isComplete ? getTranslation(TranslationKey.CONTINUE) : getTranslation(TranslationKey.NEW_GAME);
+    return isComplete || globals.isWon ? getTranslation(TranslationKey.CONTINUE) : getTranslation(TranslationKey.NEW_GAME);
   }
 
   return getTranslation(TranslationKey.NEW_GAME) + " " + difficultyEmoji[globals.difficulty];
@@ -61,7 +61,7 @@ function getWinScreenContent(score: number, isComplete: boolean) {
     cssClass: "menu",
   });
 
-  if (isComplete) {
+  if (isComplete || globals.isWon) {
     const scoreText = isOnboarding() ? "" : "<br/>" + score + "⭐️";
 
     winContentElem.innerHTML = getTranslation(TranslationKey.WIN) + scoreText;

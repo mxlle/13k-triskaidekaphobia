@@ -67,6 +67,7 @@ function addStartButton(buttonLabelKey: TranslationKey) {
 
 export async function startNewGame() {
   document.body.classList.remove(CssClass.SELECTING, CssClass.WON);
+  globals.isWon = false;
   startButton?.remove();
   hasMadeFirstMove = false;
   clickedCell = undefined;
@@ -226,6 +227,7 @@ function updateState(gameFieldData: Cell[][], placedPersons: PlacedPerson[], ski
   const { hasWon } = getHappyStats(placedPersons);
 
   if (hasWon && !skipWinCheck) {
+    globals.isWon = true;
     document.body.classList.add(CssClass.WON);
     addStartButton(isOnboarding() ? TranslationKey.CONTINUE : TranslationKey.NEW_GAME);
     createWinScreen(score, true);

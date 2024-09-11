@@ -10,6 +10,7 @@ interface GameGlobals {
   language: string;
   difficulty: Difficulty;
   settings: Settings;
+  isWon: boolean;
   metaData?: GameMetaData;
 }
 
@@ -27,6 +28,7 @@ const defaultGlobals: GameGlobals = {
   language: "en",
   difficulty: initialDifficulty,
   settings: initialSettings,
+  isWon: false,
 };
 
 export const globals: GameGlobals = { ...defaultGlobals };
