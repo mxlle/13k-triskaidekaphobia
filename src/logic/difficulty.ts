@@ -89,7 +89,7 @@ export function setDifficultyStats(difficulty: Difficulty, score: number) {
   const stats = getDifficultyStats(difficulty);
   console.log(stats);
   const newCount = stats.count + 1;
-  const newAverage = (stats.average * stats.count + score) / newCount;
+  const newAverage = Math.round((stats.average * stats.count + score) / newCount);
 
   setLocalStorageItem(getStorageKey(difficulty), [Math.max(stats.highscore, score), newAverage, newCount].join(","));
 }
