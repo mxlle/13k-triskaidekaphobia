@@ -229,8 +229,10 @@ function updateState(gameFieldData: Cell[][], placedPersons: PlacedPerson[], ski
   if (hasWon && !skipWinCheck) {
     globals.isWon = true;
     document.body.classList.add(CssClass.WON);
-    addStartButton(isOnboarding() ? TranslationKey.CONTINUE : TranslationKey.NEW_GAME);
     createWinScreen(score, true);
+    setTimeout(() => {
+      addStartButton(isOnboarding() ? TranslationKey.CONTINUE : TranslationKey.NEW_GAME);
+    }, 300);
 
     if (process.env.POKI_ENABLED === "true") pokiSdk.gameplayStop();
   }
