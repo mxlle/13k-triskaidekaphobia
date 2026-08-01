@@ -1,4 +1,4 @@
-name: Build
+name: Build and Deploy
 
 on:
   push:
@@ -9,12 +9,15 @@ on:
         required: false
         type: boolean
 
+permissions:
+  contents: read
+
 jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         with:
@@ -27,23 +30,38 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Archive production artifacts
+      - name: Write CNAME for custom domain
+        if: github.ref == 'refs/heads/main' || inputs.deploy
+        run: printf 'triskaidekaphobia.okj.ninja' > dist/CNAME
+
+      - name: Upload Pages artifact
+        if: github.ref == 'refs/heads/main' || inputs.deploy
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - name: Archive build artifact (non-main)
+        if: github.ref != 'refs/heads/main' && !inputs.deploy
         uses: actions/upload-artifact@v4
         with:
           name: dist
           path: dist
 
   deploy:
-    name: Deploy
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || inputs.deploy
+    name: Deploy to GitHub Pages
     needs: build
+    if: github.ref == 'refs/heads/main' || inputs.deploy
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
+    concurrency:
+      group: pages
+      cancel-in-progress: false
     steps:
-      - name: Create Deployment
-        id: deploy
-        uses: abendigo/create-deployment@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          payload: ${{ github.run_id }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
